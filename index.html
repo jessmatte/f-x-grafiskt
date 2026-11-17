@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="sv" class="h-full overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grunderna i Funktionsnotering - Matematik 1a</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- Google Font: IBM Plex Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body {
+            user-select: none;
+            font-variant-numeric: tabular-nums;
+        }
+        canvas {
+            touch-action: none;
+        }
+        input[type="text"] {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body id="app-body" class="dark bg-slate-900 text-slate-100 h-full flex flex-col justify-between overflow-hidden transition-colors duration-200">
+
+    <!-- TOP APP HEADER & NAV TAB BAR -->
+    <header class="bg-slate-950 border-b border-slate-800 px-3 py-1.5 shrink-0 relative z-30">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-1.5">
+            
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-sm border border-indigo-400">
+                    f(x)
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-tight text-white leading-none">Grunderna i Funktionsnotering</h1>
+                    <p class="text-[11px] text-indigo-400 font-bold mt-0.5">Matematik 1a • Grafisk Lösning</p>
+                </div>
+            </div>
+
+            <!-- DROPDOWN GUIDE, MODE TOGGLE & TAB NAVIGATION -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                
+                <!-- COLLAPSIBLE PARENTHESES GUIDE DROPDOWN -->
+                <div class="relative" id="parenthesis-guide-wrapper">
+                    <button onclick="toggleGuideDropdown(event)" id="guide-dropdown-btn" class="px-3 py-1 rounded-lg text-xs font-bold border border-indigo-500/60 bg-indigo-950/80 text-indigo-200 hover:bg-indigo-900 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-question text-indigo-400"></i>
+                        <span>x eller y i parentesen?</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="guide-chevron"></i>
+                    </button>
+
+                    <!-- DROPDOWN POPOVER PANEL -->
+                    <div id="guide-dropdown-panel" class="hidden absolute left-0 sm:left-auto sm:right-0 mt-1.5 w-80 sm:w-96 dark:bg-slate-900 bg-white border-2 border-indigo-500 rounded-2xl p-3.5 shadow-2xl z-50 text-left space-y-2.5">
+                        <div class="flex justify-between items-center border-b dark:border-slate-800 border-slate-200 pb-1.5">
+                            <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">Så tolkar du parentesen</span>
+                            <button onclick="closeGuideDropdown()" class="text-slate-400 hover:text-slate-200 text-xs px-1">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <div class="dark:bg-slate-950 bg-blue-50 border border-blue-500/40 rounded-xl p-2.5 space-y-1">
+                            <div class="text-xs font-bold text-blue-500 flex items-center justify-between">
+                                <span>1. Ett TAL i parentesen</span>
+                                <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">Ex: f(3)</span>
+                            </div>
+                            <p class="text-xs dark:text-slate-200 text-slate-800 leading-relaxed">
+                                När det står ett tal inuti parentesen är <strong>x-värdet givet</strong> (x = 3). Du söker <strong>y-värdet</strong>.
+                            </p>
+                        </div>
+
+                        <div class="dark:bg-slate-950 bg-rose-50 border border-rose-500/40 rounded-xl p-2.5 space-y-1">
+                            <div class="text-xs font-bold text-rose-500 flex items-center justify-between">
+                                <span>2. Bokstaven x i parentesen</span>
+                                <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">Ex: f(x) = 7</span>
+                            </div>
+                            <p class="text-xs dark:text-slate-200 text-slate-800 leading-relaxed">
+                                När det står <strong>x</strong> inuti parentesen är <strong>y-värdet givet</strong> (y = 7). Du söker <strong>x-värdet</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DARK / LIGHT MODE TOGGLE -->
+                <button onclick="toggleProjectionMode()" id="proj-toggle-btn" class="px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300">
+                    <i class="fa-solid fa-sun text-xs"></i>
+                    <span id="mode-btn-label">Ljust läge</span>
+                </button>
+
+                <!-- PHASE TABS -->
+                <nav class="flex dark:bg-slate-900 bg-slate-100 p-1 rounded-xl border dark:border-slate-800 border-slate-300 overflow-x-auto">
+                    <button id="tab-btn-0" onclick="switchTab(0)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow shrink-0">
+                        Begrepp &amp; Graf
+                    </button>
+                    <button id="tab-btn-1" onclick="switchTab(1)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0">
+                        <span>1. x eller y?</span>
+                    </button>
+                    <button id="tab-btn-2" onclick="switchTab(2)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
+                        <i class="fa-solid fa-lock text-xs" id="tab-2-lock-icon"></i>
+                        <span>2. Guidad</span>
+                    </button>
+                    <button id="tab-btn-3" onclick="switchTab(3)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
+                        <i class="fa-solid fa-lock text-xs" id="tab-3-lock-icon"></i>
+                        <span>3. Direkt</span>
+                    </button>
+                    <button id="tab-btn-4" onclick="switchTab(4)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
+                        <i class="fa-solid fa-lock text-xs" id="tab-4-lock-icon"></i>
+                        <span>4. Utmaning</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN SINGLE-SCREEN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 py-1.5 overflow-hidden flex flex-col justify-center">
+
+        <!-- ================================================================= -->
+        <!-- FLIK 0 (UNNUMBERED): BEGREPP & GRAF (DEMO FAS, INGA FRÅGOR)       -->
+        <!-- ================================================================= -->
+        <section id="tab-content-0" class="tab-content h-full flex flex-col justify-between space-y-2">
+            
+            <!-- PRONUNCIATION AUDIO BANNER -->
+            <div class="dark:bg-amber-950/80 bg-amber-100 dark:border-amber-500/80 border-amber-400 border-2 rounded-xl p-2 shadow-md flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-base shrink-0">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-400 tracking-wider">Viktigt Uttal i Matematik 1a</div>
+                        <h2 class="text-sm sm:text-base font-bold dark:text-amber-100 text-slate-900">
+                            <span class="text-indigo-600 dark:text-indigo-400">f(x)</span> uttalas alltid: <span class="underline decoration-indigo-500 underline-offset-2 font-bold">"f av x"</span>
+                            <span class="text-xs text-amber-800 dark:text-amber-300 font-semibold ml-1.5">(ALDRIG "f gånger x"!)</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <button onclick="playPronunciation()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-xl text-xs transition flex items-center gap-1.5 shrink-0 shadow">
+                    <i class="fa-solid fa-play"></i> Lyssna
+                </button>
+            </div>
+
+            <!-- MAIN WORKSPACE: GRAPH & DATA TABLE -->
+            <div class="dark:bg-slate-950 bg-white rounded-2xl p-3 border dark:border-slate-800 border-slate-300 flex flex-col justify-between flex-grow shadow-sm space-y-2 overflow-hidden">
+                
+                <!-- TOP CONTROLS & FUNCTION SELECTOR -->
+                <div class="flex items-center justify-between border-b dark:border-slate-800 border-slate-200 pb-1.5 shrink-0 flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold dark:text-slate-300 text-slate-700">Välj Funktion:</span>
+                        <div class="flex gap-1.5">
+                            <button onclick="selectMachineFunc('f')" id="mfunc-f" class="mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow">
+                                f(x) = 2x + 1
+                            </button>
+                            <button onclick="selectMachineFunc('g')" id="mfunc-g" class="mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700">
+                                g(x) = −x + 4
+                            </button>
+                            <button onclick="selectMachineFunc('h')" id="mfunc-h" class="mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700">
+                                h(x) = x² − 4
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 text-xs">
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="ntoggle" value="coord" checked onchange="setNotationMode('coord')" class="accent-indigo-600 w-3.5 h-3.5">
+                            <span class="dark:text-slate-200 text-slate-800 font-bold">(x, y)</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="ntoggle" value="func" onchange="setNotationMode('func')" class="accent-indigo-600 w-3.5 h-3.5">
+                            <span class="dark:text-indigo-300 text-indigo-700 font-bold">(x, f(x))</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- DUAL COLUMNS: GRAPH CANVAS & INTERACTIVE VÄRDETABELL -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 flex-grow items-center overflow-hidden">
+                    
+                    <!-- LEFT COLUMN: CANVAS GRAPH -->
+                    <div class="md:col-span-6 flex flex-col items-center justify-center h-full">
+                        <div class="w-full flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold dark:text-slate-300 text-slate-700">Dra punkten på kurvan:</span>
+                            <span class="text-xs font-bold text-indigo-500" id="m-coord-tag">Punkt: (3, 7)</span>
+                        </div>
+                        <div class="relative w-full aspect-square max-h-[310px] max-w-[310px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                            <canvas id="exp-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: 3-COLUMN VÄRDETABELL -->
+                    <div class="md:col-span-6 flex flex-col justify-between h-full space-y-2">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold dark:text-amber-300 text-amber-800 uppercase tracking-wider">Värdetabell</span>
+                                <span class="text-[11px] text-slate-400">Klicka på en rad för att flytta punkten</span>
+                            </div>
+
+                            <div class="overflow-y-auto max-h-[260px] rounded-xl border border-slate-300 dark:border-slate-800 shadow-inner">
+                                <table class="w-full text-xs text-left border-collapse">
+                                    <thead class="sticky top-0 bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold uppercase text-[10px] tracking-wider border-b border-slate-300 dark:border-slate-800">
+                                        <tr>
+                                            <th class="p-2 text-center w-16 text-blue-600 dark:text-blue-400">x (In)</th>
+                                            <th class="p-2 text-center" id="table-calc-header">Substituering: f(x) = 2x + 1</th>
+                                            <th class="p-2 text-center w-24 text-rose-600 dark:text-rose-400" id="table-out-header">f(x) (Ut)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-center">
+                                        <!-- Dynamically generated rows x = -6 to 6 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- LIVE CALCULATION CALLOUT BANNER -->
+                        <div class="dark:bg-indigo-950/50 bg-indigo-50 border border-indigo-300 dark:border-indigo-800/70 rounded-xl p-2 text-xs flex items-center justify-between shrink-0">
+                            <span class="font-bold text-slate-700 dark:text-slate-300">Aktiv beräkning:</span>
+                            <span class="font-bold text-amber-600 dark:text-amber-300 text-sm" id="live-calc-callout">f(3) = 2 · (3) + 1 = 7</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- FLIK 1: FAS 1 — 1. x eller y? (RAPID-FIRE TOLKNING, 10 FRÅGOR)    -->
+        <!-- ================================================================= -->
+        <section id="tab-content-1" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
+            
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Fas 1 • Tolka funktionsnotering</span>
+                    <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900">Vilket värde är givet?</h2>
+                </div>
+                <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3 py-0.5 rounded-xl text-xs font-bold dark:text-amber-300 text-amber-800" id="f1-score">
+                    Framsteg: 0 / 10
+                </div>
+            </div>
+
+            <!-- CENTERED RAPID-FIRE CARD -->
+            <div class="flex-grow flex items-center justify-center">
+                <div class="w-full max-w-lg dark:bg-slate-950 bg-white rounded-2xl p-6 border dark:border-slate-800 border-slate-300 shadow-lg flex flex-col items-center text-center space-y-6">
+                    
+                    <div class="w-full border-b dark:border-slate-800 border-slate-200 pb-4">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Uppgift</div>
+                        <div id="f1-prompt-title" class="text-2xl sm:text-3xl font-bold dark:text-amber-300 text-slate-900">
+                            Bestäm f(4)
+                        </div>
+                    </div>
+
+                    <div class="w-full space-y-3">
+                        <div class="text-sm font-bold dark:text-slate-200 text-slate-800">Vilket värde är givet?</div>
+                        <div class="grid grid-cols-2 gap-4 max-w-xs mx-auto">
+                            <button id="f1-btn-x" onclick="answerFas1('givenX')" class="py-4 px-6 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-2xl font-bold transition shadow-sm">
+                                x
+                            </button>
+                            <button id="f1-btn-y" onclick="answerFas1('givenY')" class="py-4 px-6 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-2xl font-bold transition shadow-sm">
+                                y
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- RAPID FEEDBACK & ENTER-TO-NEXT -->
+                    <div id="f1-feedback-box" class="hidden w-full rounded-xl p-3 text-sm font-bold flex items-center justify-between gap-2">
+                        <span id="f1-feedback-text"></span>
+                        <button id="f1-next-btn" onclick="nextFas1Question()" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs transition shadow flex items-center gap-1.5 shrink-0">
+                            <span>Nästa</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- MILESTONE CHOICE BANNER (10 / 10) -->
+                    <div id="f1-milestone-banner" class="hidden w-full dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-4 text-left space-y-3">
+                        <div class="font-bold text-emerald-500 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-lg"></i>
+                            <span>Fas 1 avklarad! (10 / 10)</span>
+                        </div>
+                        <p class="text-xs dark:text-emerald-100 text-emerald-950 font-semibold">
+                            Fas 2 (Guidad) är nu upplåst. Vill du gå vidare till Fas 2 eller fortsätta träna här?
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button onclick="switchTab(2)" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2 px-3 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                <span>Gå till Fas 2: Guidad</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="continueFas1Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Fortsätt träna här</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- FLIK 2: FAS 2 — 2. Guidad                                         -->
+        <!-- ================================================================= -->
+        <section id="tab-content-2" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
+            
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Fas 2 • Guidad Steg-för-Steg Metod</span>
+                    <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900">Analysera och Lös Uppgiften</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3 py-0.5 rounded-xl text-xs font-bold dark:text-amber-300 text-amber-800" id="g1-score">
+                        Framsteg: 0 / 5
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-grow items-center overflow-hidden">
+                
+                <!-- LEFT COLUMN: GRAPH CANVAS -->
+                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
+                    <div class="w-full flex justify-between items-center mb-0.5">
+                        <span class="text-xs font-bold dark:text-slate-300 text-slate-700">Dra hjälplinjen från axeln:</span>
+                        <button onclick="resetG1Helplines()" class="text-[11px] text-indigo-500 hover:underline font-bold">
+                            Nollställ linjer
+                        </button>
+                    </div>
+
+                    <div class="relative w-full aspect-square max-h-[340px] max-w-[340px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                        <canvas id="g1-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                    </div>
+
+                    <div class="text-xs text-center dark:text-slate-300 text-slate-600 mt-0.5 font-semibold" id="g1-canvas-hint">
+                        Slutför steg 1–3 för att låsa upp hjälplinjen.
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: 4-STEP WORKFLOW -->
+                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-3 pb-12 border dark:border-slate-800 border-slate-300 flex flex-col justify-between h-full shadow-sm space-y-2 overflow-y-auto">
+                    
+                    <div class="space-y-2">
+                        <div class="border-b dark:border-slate-800 border-slate-200 pb-1">
+                            <h2 class="text-xl sm:text-2xl font-bold dark:text-amber-300 text-slate-900" id="g1-prompt-title">
+                                Bestäm f(3)
+                            </h2>
+                        </div>
+
+                        <!-- STEP 1: PURE X OR Y -->
+                        <div id="g1-step-1-box" class="dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2 space-y-1.5">
+                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">1</span>
+                                <span>Vilket värde är givet?</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 max-w-[220px]">
+                                <button onclick="answerG1Step1('givenX')" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-base font-bold transition">
+                                    x
+                                </button>
+                                <button onclick="answerG1Step1('givenY')" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-base font-bold transition">
+                                    y
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: SENTENCE FILL-IN (PURE LETTERS x / y) -->
+                        <div id="g1-step-2-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 space-y-1.5 opacity-40 pointer-events-none transition">
+                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded-full bg-slate-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">2</span>
+                                <span>Fyll i meningen:</span>
+                            </div>
+                            <div class="text-xs sm:text-sm font-semibold dark:text-slate-200 text-slate-800 leading-relaxed flex flex-wrap items-center gap-1.5">
+                                <span>Uppgiften ger värdet</span>
+                                <span class="inline-flex rounded-lg overflow-hidden border dark:border-slate-700 border-slate-300">
+                                    <button type="button" id="g1-s2-given-x" onclick="selectG1SentenceSlot('given', 'x')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition">x</button>
+                                    <button type="button" id="g1-s2-given-y" onclick="selectG1SentenceSlot('given', 'y')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
+                                </span>
+                                <span>, så jag behöver hitta värdet</span>
+                                <span class="inline-flex rounded-lg overflow-hidden border dark:border-slate-700 border-slate-300">
+                                    <button type="button" id="g1-s2-find-x" onclick="selectG1SentenceSlot('find', 'x')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition">x</button>
+                                    <button type="button" id="g1-s2-find-y" onclick="selectG1SentenceSlot('find', 'y')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
+                                </span>
+                                <span>.</span>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: WHICH AXIS TO START ON -->
+                        <div id="g1-step-3-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 space-y-1 opacity-40 pointer-events-none transition">
+                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded-full bg-slate-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">3</span>
+                                <span>Vilken axel börjar du på?</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <button onclick="answerG1Step3('x')" id="g1-s3-x-btn" class="p-1.5 dark:bg-slate-950 bg-white border border-blue-500 rounded-xl text-left transition">
+                                    <span class="block text-xs font-bold text-blue-600 dark:text-blue-400">x-axeln</span>
+                                </button>
+                                <button onclick="answerG1Step3('y')" id="g1-s3-y-btn" class="p-1.5 dark:bg-slate-950 bg-white border border-rose-500 rounded-xl text-left transition">
+                                    <span class="block text-xs font-bold text-rose-600 dark:text-rose-400">y-axeln</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4: FINAL ANSWER -->
+                        <div id="g1-step-4-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 space-y-1.5 opacity-40 pointer-events-none transition">
+                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded-full bg-slate-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">4</span>
+                                <span>Ange ditt svar:</span>
+                            </div>
+
+                            <div class="flex gap-1.5 items-center text-[11px] flex-wrap">
+                                <button type="button" onclick="insertG1Symbol('−')" class="px-2.5 py-0.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md font-bold transition shadow-sm">
+                                    −
+                                </button>
+                                <button type="button" onclick="insertG1FuncNotation()" id="g1-dyn-func-btn" class="px-2.5 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-bold transition shadow-sm">
+                                    f() =
+                                </button>
+                                <button type="button" onclick="insertG1XNotation()" class="px-2.5 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-bold transition shadow-sm">
+                                    x =
+                                </button>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="g1-final-input" autocomplete="off"
+                                       class="flex-grow dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-sm rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500">
+                                <button onclick="submitG1FinalAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow">
+                                    Svara
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FEEDBACK BANNER -->
+                    <div id="g1-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-2 text-xs space-y-1.5">
+                        <div id="g1-feedback-text" class="font-normal text-xs sm:text-sm"></div>
+                        <div id="g1-next-row" class="pt-1 border-t dark:border-slate-800 border-slate-300 flex justify-between items-center">
+                            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">Tryck Enter eller klicka för nästa:</span>
+                            <button onclick="generateNextFas2Question()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1.5">
+                                <span>Nästa</span> <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MILESTONE CHOICE BANNER (5 / 5) -->
+                    <div id="g1-milestone-banner" class="hidden dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-100 text-emerald-900 space-y-2 shadow-lg">
+                        <div class="font-bold text-emerald-500 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                            <span>Fas 2 avklarad! (5 / 5)</span>
+                        </div>
+                        <p class="text-xs leading-relaxed font-semibold">
+                            Fas 3 (Direkt) är nu upplåst. Vill du gå vidare till Fas 3 eller fortsätta träna här?
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button onclick="switchTab(3)" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                <span>Gå till Fas 3: Direkt</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="continueFas2Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Fortsätt träna här</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- FLIK 3: FAS 3 — 3. Direkt                                         -->
+        <!-- ================================================================= -->
+        <section id="tab-content-3" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
+            
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <span id="p-type-badge" class="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-900/80 text-blue-800 dark:text-blue-300 font-bold text-[11px] rounded-full border border-blue-300 dark:border-blue-700">
+                        Fas 3 • Direkt Träning
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-xs dark:text-slate-300 text-slate-700 font-bold" id="p-score">Klarade: 0 / 6</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-grow items-center overflow-hidden">
+                
+                <!-- LEFT COLUMN: GRAPH CANVAS -->
+                <div class="md:col-span-7 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
+                    <div class="relative w-full aspect-square max-h-[350px] max-w-[350px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                        <canvas id="p-canvas" class="w-full h-full cursor-pointer"></canvas>
+                    </div>
+                    <span class="text-[11px] dark:text-slate-400 text-slate-600 mt-0.5 font-medium">
+                        Läs av värdet på grafen och skriv ditt svar till höger.
+                    </span>
+                </div>
+
+                <!-- RIGHT COLUMN: QUESTION PROMPT & INPUT PANEL -->
+                <div class="md:col-span-5 dark:bg-slate-950 bg-white rounded-2xl p-3 pb-12 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between shadow-sm space-y-2.5 overflow-y-auto">
+                    
+                    <div class="space-y-2.5">
+                        <div class="border-b dark:border-slate-800 border-slate-200 pb-1.5">
+                            <h2 class="text-xl sm:text-2xl font-bold dark:text-amber-300 text-slate-900" id="p-question-title">
+                                Bestäm f(2)
+                            </h2>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex gap-2">
+                                <button type="button" onclick="insertPracticeSymbol('−')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold text-xs transition shadow-sm">
+                                    −
+                                </button>
+                                <button type="button" onclick="insertPracticeFuncNotation()" id="p-dyn-func-btn" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs transition shadow-sm">
+                                    f() =
+                                </button>
+                                <button type="button" onclick="insertPracticeXNotation()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs transition shadow-sm">
+                                    x =
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 pt-0.5">
+                            <input type="text" id="p-answer-input" autocomplete="off"
+                                   class="w-full dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-base rounded-xl px-3 py-2 outline-none focus:border-indigo-500 shadow-inner">
+                            
+                            <button onclick="checkPracticeAnswer()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2 rounded-xl transition shadow flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Skicka Svar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FEEDBACK BANNER -->
+                    <div id="p-next-banner" class="hidden dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-200 text-emerald-900 space-y-1.5">
+                        <div class="font-normal dark:text-emerald-300 text-emerald-900 flex items-center gap-1.5 text-xs sm:text-sm" id="p-feedback-msg">
+                            <i class="fa-solid fa-circle-check text-sm"></i> Rätt svar!
+                        </div>
+                        <div id="p-next-row" class="flex justify-between items-center pt-1 border-t dark:border-emerald-900 border-emerald-300">
+                            <span class="text-[11px]">Tryck Enter eller klicka:</span>
+                            <button onclick="generateNextPractice()" id="p-next-btn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1">
+                                <span>Nästa uppgift</span> <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MILESTONE CHOICE BANNER (6 / 6) -->
+                    <div id="p-handoff-banner" class="hidden dark:bg-amber-950/90 bg-amber-100 border-2 border-amber-500 rounded-2xl p-2.5 text-xs dark:text-amber-100 text-amber-950 space-y-2 shadow-lg">
+                        <div class="font-bold text-amber-500 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                            <span>Fas 3 avklarad! (6 / 6)</span>
+                        </div>
+                        <p class="text-xs leading-relaxed font-semibold">
+                            Fas 4 (Utmaning) är nu upplåst. Vill du gå vidare till Utmaningen eller fortsätta träna här?
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <button onclick="switchTab(4)" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                <span>Gå till Fas 4: Utmaning</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="continueFas3Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Fortsätt träna här</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- REVERT TO FAS 2 CALLOUT -->
+                    <div id="p-revert-banner" class="hidden bg-rose-900/90 border border-rose-500 rounded-2xl p-2.5 text-xs text-rose-100 space-y-1.5">
+                        <div class="font-bold text-rose-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
+                            <span>Behöver du repetera steg-för-steg metoden?</span>
+                        </div>
+                        <button onclick="switchTab(2)" class="w-full bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold px-3 py-1 rounded-xl text-xs transition shadow">
+                            Gå till Fas 2: Guidad
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- FLIK 4: FAS 4 — 4. Utmaning                                       -->
+        <!-- ================================================================= -->
+        <section id="tab-content-4" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
+            
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <span id="f5-level-badge" class="px-2.5 py-0.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-[11px] rounded-full border border-amber-500/40">
+                        Fas 4 • Utmaning
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-xs dark:text-slate-300 text-slate-700 font-bold" id="f5-score">Klarade: 0 / 6</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-grow items-center overflow-hidden">
+                
+                <!-- LEFT COLUMN: GRAPH CANVAS -->
+                <div class="md:col-span-7 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
+                    <div class="w-full flex justify-between items-center mb-0.5">
+                        <span class="text-xs font-bold dark:text-slate-300 text-slate-700" id="f5-canvas-title">Dra hjälplinjen på axeln:</span>
+                        <button onclick="resetF5Helplines()" class="text-[11px] text-indigo-500 hover:underline font-bold">
+                            Nollställ linjer
+                        </button>
+                    </div>
+
+                    <div class="relative w-full aspect-square max-h-[350px] max-w-[350px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                        <canvas id="f5-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                    </div>
+
+                    <span class="text-[11px] dark:text-slate-400 text-slate-600 mt-0.5 font-medium text-center">
+                        Använd hjälplinjen för att läsa av graferna i koordinatsystemet.
+                    </span>
+                </div>
+
+                <!-- RIGHT COLUMN: QUESTION & INPUTS -->
+                <div class="md:col-span-5 dark:bg-slate-950 bg-white rounded-2xl p-3 pb-12 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between shadow-sm space-y-2 overflow-y-auto">
+                    
+                    <div class="space-y-2">
+                        <div class="border-b dark:border-slate-800 border-slate-200 pb-1.5">
+                            <h2 class="text-base sm:text-lg font-bold dark:text-amber-300 text-slate-900 leading-snug break-words" id="f5-title">
+                                För vilket x gäller:<br><span class="text-amber-400">f(x) = g(x)?</span>
+                            </h2>
+                            <p class="text-xs text-slate-400 font-medium leading-snug mt-1" id="f5-prompt-desc">
+                                Ange lösningarna till ekvationen:
+                            </p>
+                        </div>
+
+                        <!-- 2-STEP WORKFLOW CONTAINER FOR COMPOSITE FUNCTIONS -->
+                        <div id="f5-composite-workflow" class="hidden space-y-2 pt-0.5">
+                            
+                            <!-- STEP 1 INNER -->
+                            <div id="f5-comp-step1" class="dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2.5 space-y-1.5">
+                                <span class="text-xs font-bold text-indigo-400 block" id="f5-cstep1-label">Steg 1: Bestäm inre värdet f(−1)</span>
+                                
+                                <div class="flex items-center gap-2">
+                                    <span class="text-base font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep1-prefix">f(−1) =</span>
+                                    <input type="text" id="f5-input-cstep1" autocomplete="off"
+                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-2.5 py-1 outline-none focus:border-indigo-500 text-center">
+                                    <button onclick="submitF5Step1()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow">
+                                        Lås in
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- SPECIALIZED ERROR DISPLAY BETWEEN STEP 1 & STEP 2 -->
+                            <div id="f5-step1-error-banner" class="hidden dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-xl p-2 text-xs text-rose-900 dark:text-rose-100 space-y-1">
+                                <div class="font-bold flex items-center gap-1.5">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                                    <span>Kontrollera funktionsval:</span>
+                                </div>
+                                <p id="f5-step1-error-text" class="leading-relaxed font-medium"></p>
+                            </div>
+
+                            <!-- STEP 2 OUTER -->
+                            <div id="f5-comp-step2" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2.5 space-y-1.5 opacity-40 pointer-events-none transition">
+                                <span class="text-xs font-bold dark:text-slate-300 text-slate-700 block" id="f5-cstep2-label">Steg 2: Bestäm nu y-värdet för yttre funktionen</span>
+                                
+                                <div class="flex items-center gap-2">
+                                    <span class="text-base font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep2-prefix">g(f(−1)) =</span>
+                                    <input type="text" id="f5-input-cstep2" autocomplete="off"
+                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-2.5 py-1 outline-none focus:border-indigo-500 text-center">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- STANDARD / DUAL ROOT INPUT SYSTEM -->
+                        <div id="f5-standard-workflow" class="space-y-2 pt-0.5">
+                            <div class="flex flex-col gap-2" id="f5-root-grid">
+                                <div class="flex items-center gap-2">
+                                    <label class="text-lg font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[65px]" id="f5-label-x1">x₁ =</label>
+                                    <input type="text" id="f5-input-x1" autocomplete="off"
+                                           class="w-28 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-3 py-1 outline-none focus:border-indigo-500">
+                                </div>
+                                <div id="f5-box-x2" class="hidden flex items-center gap-2">
+                                    <label class="text-lg font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[65px]">x₂ =</label>
+                                    <input type="text" id="f5-input-x2" autocomplete="off"
+                                           class="w-28 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-3 py-1 outline-none focus:border-indigo-500">
+                                </div>
+                            </div>
+
+                            <button onclick="toggleF5SecondInput()" id="f5-add-root-btn" class="w-full py-1.5 px-3 bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/70 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-plus-circle text-sm text-indigo-400"></i>
+                                <span>+ Lägg till lösning (om två rötter finns)</span>
+                            </button>
+                        </div>
+
+                        <button onclick="checkF5Answer()" id="f5-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2 rounded-xl transition shadow flex items-center justify-center gap-1.5 mt-1.5">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Skicka Svar</span>
+                        </button>
+                    </div>
+
+                    <!-- FEEDBACK BANNER -->
+                    <div id="f5-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-2.5 text-xs space-y-1.5">
+                        <div class="font-normal text-xs sm:text-sm" id="f5-feedback-msg"></div>
+
+                        <div id="f5-next-row" class="flex justify-between items-center pt-1 border-t dark:border-slate-800 border-slate-300">
+                            <span class="text-[11px] dark:text-slate-400 text-slate-600">Tryck Enter eller klicka:</span>
+                            <button onclick="nextF5Question()" id="f5-next-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1 opacity-50 cursor-not-allowed" disabled>
+                                <span>Nästa uppgift</span> <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CELEBRATION BANNER (6 POINTS) -->
+                    <div id="f5-celebration-banner" class="hidden dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-100 text-emerald-900 space-y-2 shadow-xl">
+                        <div class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                            <span>Grattis! Du har uppnått målet på 6 rätt!</span>
+                        </div>
+                        <p class="text-xs leading-relaxed font-semibold">
+                            Vill du fortsätta utmana dig själv med fler uppgifter eller är du klar för idag?
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 pt-0.5">
+                            <button onclick="continueF5Challenge()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 px-2 rounded-xl text-xs transition shadow">
+                                Fortsätt utmana
+                            </button>
+                            <button onclick="finishF5Challenge()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 px-2 rounded-xl text-xs transition shadow">
+                                Klar för idag!
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JS LOGIC ARCHITECTURE -->
+    <script>
+        const MINUS = "\u2212"; // True mathematical minus sign (−)
+
+        function fmtNum(n) {
+            return n < 0 ? `${MINUS}${Math.abs(n)}` : `${n}`;
+        }
+
+        function toAsciiMinus(str) {
+            return String(str).replace(/[\u2212\u2013\u2014]/g, "-");
+        }
+
+        /* ---------------- SMART MATH SPACING FOR INPUTS ---------------- */
+        function formatMathSmart(raw) {
+            let s = toAsciiMinus(raw).replace(/\s+/g, "");
+            if (!s) return "";
+
+            let out = "";
+            for (let i = 0; i < s.length; i++) {
+                const ch = s[i];
+                const prev = i > 0 ? s[i - 1] : "";
+
+                if (ch === "=") {
+                    if (prev === "=") continue;
+                    out += " = ";
+                } else if (ch === "+") {
+                    if (i === 0 || prev === "=" || prev === "(" || prev === "+" || prev === "-" || prev === "·" || prev === "*") {
+                        out += "+";
+                    } else {
+                        out += " + ";
+                    }
+                } else if (ch === "-") {
+                    if (i === 0 || prev === "=" || prev === "(" || prev === "+" || prev === "-" || prev === "·" || prev === "*") {
+                        out += MINUS;
+                    } else {
+                        out += ` ${MINUS} `;
+                    }
+                } else if (ch === "·" || ch === "*") {
+                    out += " · ";
+                } else {
+                    out += ch;
+                }
+            }
+
+            return out.replace(/^\s+/, "");
+        }
+
+        function attachSmartMathInput(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            input.addEventListener("input", (e) => {
+                if (e.inputType && e.inputType.startsWith("delete")) {
+                    return;
+                }
+
+                const rawVal = input.value;
+                const selStart = input.selectionStart || 0;
+                const nonSpaceBefore = rawVal.slice(0, selStart).replace(/\s+/g, "").length;
+                const atEnd = selStart >= rawVal.length;
+
+                const formatted = formatMathSmart(rawVal);
+                input.value = formatted;
+
+                if (atEnd) {
+                    input.setSelectionRange(formatted.length, formatted.length);
+                } else {
+                    let count = 0;
+                    let newPos = formatted.length;
+                    for (let i = 0; i < formatted.length; i++) {
+                        if (formatted[i] !== " ") {
+                            count++;
+                            if (count === nonSpaceBefore) {
+                                newPos = i + 1;
+                                if (formatted[newPos] === " ") {
+                                    newPos++;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    input.setSelectionRange(newPos, newPos);
+                }
+            });
+        }
+
+        /* ---------------- GLOBAL STATE ---------------- */
+        let activeTab = 0; // 0 = Begrepp & Graf (unnumbered), 1 = Fas 1, 2 = Fas 2, 3 = Fas 3, 4 = Fas 4
+        let notationMode = 'coord';
+        let isDarkMode = true;
+        let isPhase2Unlocked = false;
+        let isPhase3Unlocked = false;
+        let isPhase4Unlocked = false;
+
+        // Tab 0: Machine & Graph Functions State
+        let currentMachineFunc = 'f';
+        const machineDefs = {
+            f: { 
+                name: 'Funktionen f', 
+                expr: 'f(x) = 2x + 1', 
+                eval: (x) => 2 * x + 1, 
+                formatCalc: (x) => `2 · (${fmtNum(x)}) + 1`, 
+                fullCalc: (x) => `f(${fmtNum(x)}) = 2 · (${fmtNum(x)}) + 1 = ${fmtNum(2 * x + 1)}`
+            },
+            g: { 
+                name: 'Funktionen g', 
+                expr: `g(x) = ${MINUS}x + 4`, 
+                eval: (x) => -x + 4, 
+                formatCalc: (x) => `${MINUS}(${fmtNum(x)}) + 4`, 
+                fullCalc: (x) => `g(${fmtNum(x)}) = ${MINUS}(${fmtNum(x)}) + 4 = ${fmtNum(-x + 4)}`
+            },
+            h: { 
+                name: 'Funktionen h', 
+                expr: `h(x) = x² ${MINUS} 4`, 
+                eval: (x) => Math.pow(x, 2) - 4, 
+                formatCalc: (x) => `(${fmtNum(x)})² ${MINUS} 4`, 
+                fullCalc: (x) => `h(${fmtNum(x)}) = (${fmtNum(x)})² ${MINUS} 4 = ${fmtNum(Math.pow(x, 2) - 4)}`
+            }
+        };
+
+        let expX = 3.0;
+        let isExpDragging = false;
+
+        // Tab 1: Fas 1 (1. x eller y? — 10 rapid-fire questions)
+        let f1Current = null;
+        let f1Score = 0;
+        let f1Target = 10;
+        let f1Answered = false;
+        let f1MilestoneShown = false;
+        let f1LastSignature = "";
+
+        // Tab 2: Fas 2 (2. Guidad — 5 questions)
+        let g1Current = null;
+        let g1Score = 0;
+        let g1TotalTarget = 5;
+        let g1Step = 1;
+        let g1Answered = false;
+        let g1MilestoneShown = false;
+        let g1SentenceGiven = null;
+        let g1SentenceFind = null;
+        let g1UserLineX = null;
+        let g1UserLineY = null;
+        let activeDragLine = null;
+        let lastFas2Type = 'givenY';
+
+        // Tab 3: Fas 3 (3. Direkt — 6 questions)
+        let pCurrent = null;
+        let pScore = 0;
+        let pConsecutiveErrors = 0;
+        let pAnswered = false;
+        let pMilestoneShown = false;
+
+        // Tab 4: Fas 4 (4. Utmaning — 6 questions)
+        let f5QIndex = 0;
+        let f5Score = 0;
+        let f5UserLineVal = 0;
+        let f5ActiveDrag = false;
+        let isF5SecondInputActive = false;
+        let f5CurrentProblem = null;
+        let f5Step1Passed = false;
+        let f5Answered = false;
+        let f5MilestoneShown = false;
+
+        /* ---------------- DROPDOWN GUIDE CONTROLS ---------------- */
+        function toggleGuideDropdown(e) {
+            if (e) e.stopPropagation();
+            const panel = document.getElementById('guide-dropdown-panel');
+            const chevron = document.getElementById('guide-chevron');
+            const isHidden = panel.classList.contains('hidden');
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                panel.classList.add('hidden');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function closeGuideDropdown() {
+            const panel = document.getElementById('guide-dropdown-panel');
+            const chevron = document.getElementById('guide-chevron');
+            if (panel) panel.classList.add('hidden');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        }
+
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('parenthesis-guide-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                closeGuideDropdown();
+            }
+        });
+
+        /* ---------------- STRICT MATH NOTATION VALIDATION ---------------- */
+        function validateMathNotation(userInput, type, funcName, givenVal, expectedAns) {
+            if (!userInput) return false;
+            const clean = toAsciiMinus(userInput).replace(/\s+/g, '').toLowerCase();
+            const fn = funcName.toLowerCase();
+
+            if (!/[a-z=()]/.test(clean)) {
+                return false;
+            }
+
+            if (type === 'givenX') {
+                if (clean.includes('x=')) return false;
+                const targetFull = `${fn}(${givenVal})=${expectedAns}`;
+                const targetY = `y=${expectedAns}`;
+                return (clean === targetFull || clean === targetY);
+            } else if (type === 'givenY') {
+                if (clean.includes('y=') || (clean.includes('=') && !clean.startsWith('x='))) return false;
+                const targetX = `x=${expectedAns}`;
+                return (clean === targetX);
+            }
+
+            return false;
+        }
+
+        /* ---------------- GLOBAL KEYBOARD HANDLING (ENTER & SHORTCUTS) ---------------- */
+        window.addEventListener('keydown', (e) => {
+            if (e.repeat) return;
+
+            // Teacher Shortcut: Shift + F (Complete & advance current problem)
+            if (e.shiftKey && (e.key === 'F' || e.key === 'f')) {
+                e.preventDefault();
+                if (activeTab === 1) {
+                    f1Score++;
+                    document.getElementById('f1-score').innerText = `Framsteg: ${f1Score} / ${f1Target}`;
+                    if (f1Score >= f1Target && !f1MilestoneShown) {
+                        unlockPhase2();
+                        showFas1Milestone();
+                    } else {
+                        nextFas1Question();
+                    }
+                } else if (activeTab === 2) {
+                    g1Score++;
+                    document.getElementById('g1-score').innerText = `Framsteg: ${g1Score} / ${g1TotalTarget}`;
+                    if (g1Score >= g1TotalTarget && !g1MilestoneShown) {
+                        unlockPhase3();
+                        showFas2Milestone();
+                    } else {
+                        generateNextFas2Question();
+                    }
+                } else if (activeTab === 3) {
+                    pScore++;
+                    document.getElementById('p-score').innerText = `Klarade: ${pScore} / 6`;
+                    if (pScore >= 6 && !pMilestoneShown) {
+                        unlockPhase4();
+                        showFas3Milestone();
+                    } else {
+                        generateNextPractice();
+                    }
+                } else if (activeTab === 4) {
+                    f5Score++;
+                    document.getElementById('f5-score').innerText = `Klarade: ${f5Score} / 6`;
+                    if (f5Score >= 6 && !f5MilestoneShown) {
+                        showFas4Milestone();
+                    } else {
+                        nextF5Question();
+                    }
+                }
+                return;
+            }
+
+            // Teacher Shortcut: Shift + L (Unlock all phases)
+            if (e.shiftKey && (e.key === 'L' || e.key === 'l')) {
+                e.preventDefault();
+                unlockPhase2();
+                unlockPhase3();
+                unlockPhase4();
+                return;
+            }
+
+            // Fas 1 keyboard support: 'x' or 'y' to answer, 'Enter' for next problem
+            if (activeTab === 1) {
+                const milestoneVisible = !document.getElementById('f1-milestone-banner').classList.contains('hidden');
+                if (milestoneVisible) return;
+
+                if (!f1Answered && (e.key === 'x' || e.key === 'X')) {
+                    e.preventDefault();
+                    answerFas1('givenX');
+                } else if (!f1Answered && (e.key === 'y' || e.key === 'Y')) {
+                    e.preventDefault();
+                    answerFas1('givenY');
+                } else if (f1Answered && e.key === 'Enter') {
+                    e.preventDefault();
+                    nextFas1Question();
+                }
+                return;
+            }
+
+            // Fas 2 Enter-to-next when problem is solved
+            if (activeTab === 2 && g1Answered && e.key === 'Enter') {
+                const milestoneVisible = !document.getElementById('g1-milestone-banner').classList.contains('hidden');
+                if (!milestoneVisible) {
+                    e.preventDefault();
+                    generateNextFas2Question();
+                }
+                return;
+            }
+
+            // Fas 3 Enter-to-next when problem is solved
+            if (activeTab === 3 && pAnswered && e.key === 'Enter') {
+                const milestoneVisible = !document.getElementById('p-handoff-banner').classList.contains('hidden');
+                if (!milestoneVisible) {
+                    e.preventDefault();
+                    generateNextPractice();
+                }
+                return;
+            }
+
+            // Fas 4 Enter-to-next when problem is solved
+            if (activeTab === 4 && f5Answered && e.key === 'Enter') {
+                const milestoneVisible = !document.getElementById('f5-celebration-banner').classList.contains('hidden');
+                if (!milestoneVisible) {
+                    e.preventDefault();
+                    nextF5Question();
+                }
+                return;
+            }
+        });
+
+        function unlockPhase2() {
+            isPhase2Unlocked = true;
+            const btn2 = document.getElementById('tab-btn-2');
+            btn2.disabled = false;
+            btn2.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+            document.getElementById('tab-2-lock-icon').className = "fa-solid fa-lock-open text-emerald-400 text-xs";
+        }
+
+        function unlockPhase3() {
+            isPhase3Unlocked = true;
+            const btn3 = document.getElementById('tab-btn-3');
+            btn3.disabled = false;
+            btn3.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+            document.getElementById('tab-3-lock-icon').className = "fa-solid fa-lock-open text-emerald-400 text-xs";
+        }
+
+        function unlockPhase4() {
+            isPhase4Unlocked = true;
+            const btn4 = document.getElementById('tab-btn-4');
+            btn4.disabled = false;
+            btn4.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+            document.getElementById('tab-4-lock-icon').className = "fa-solid fa-lock-open text-amber-400 text-xs";
+        }
+
+        /* ---------------- DARK / LIGHT MODE ---------------- */
+        function toggleProjectionMode() {
+            isDarkMode = !isDarkMode;
+            const body = document.getElementById('app-body');
+            const btn = document.getElementById('proj-toggle-btn');
+            const lbl = document.getElementById('mode-btn-label');
+            
+            if (isDarkMode) {
+                body.classList.add('dark');
+                body.classList.remove('bg-slate-100');
+                body.classList.add('bg-slate-900');
+                btn.className = "px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300";
+                btn.querySelector('i').className = "fa-solid fa-sun text-xs";
+                lbl.innerText = "Ljust läge";
+            } else {
+                body.classList.remove('dark');
+                body.classList.remove('bg-slate-900');
+                body.classList.add('bg-slate-100');
+                btn.className = "px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-1.5 transition bg-slate-800 text-white border-slate-700 hover:bg-slate-700";
+                btn.querySelector('i').className = "fa-solid fa-moon text-xs";
+                lbl.innerText = "Mörkt läge";
+            }
+
+            if (activeTab === 0) { drawExplorer(); renderTable(); }
+            else if (activeTab === 2) drawGame1Canvas();
+            else if (activeTab === 3) drawPractice();
+            else if (activeTab === 4) drawF5Canvas();
+        }
+
+        function switchTab(tabIdx) {
+            if (tabIdx === 2 && !isPhase2Unlocked) return;
+            if (tabIdx === 3 && !isPhase3Unlocked) return;
+            if (tabIdx === 4 && !isPhase4Unlocked) return;
+
+            activeTab = tabIdx;
+            const lockedMap = { 2: !isPhase2Unlocked, 3: !isPhase3Unlocked, 4: !isPhase4Unlocked };
+
+            for (let num = 0; num <= 4; num++) {
+                const btn = document.getElementById(`tab-btn-${num}`);
+                if (!btn) continue;
+                if (num === tabIdx) {
+                    btn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow flex items-center gap-1 shrink-0";
+                } else if (lockedMap[num]) {
+                    btn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0";
+                } else {
+                    btn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+                }
+            }
+
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIdx) content.classList.remove('hidden');
+                else content.classList.add('hidden');
+            });
+
+            setTimeout(() => {
+                if (tabIdx === 0) { resizeCanvas('exp-canvas'); drawExplorer(); renderTable(); }
+                else if (tabIdx === 1 && !f1Current) { nextFas1Question(); }
+                else if (tabIdx === 2) { resizeCanvas('g1-canvas'); drawGame1Canvas(); }
+                else if (tabIdx === 3) { resizeCanvas('p-canvas'); drawPractice(); }
+                else if (tabIdx === 4) { resizeCanvas('f5-canvas'); if (!f5CurrentProblem) loadDynamicF5Question(); else drawF5Canvas(); }
+            }, 40);
+        }
+
+        function playPronunciation() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance("f av x");
+                u.lang = "sv-SE";
+                u.rate = 0.85;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        /* ---------------- TAB 0: BEGREPP & GRAF DEMO ---------------- */
+        function selectMachineFunc(key) {
+            currentMachineFunc = key;
+            ['f', 'g', 'h'].forEach(k => {
+                const btn = document.getElementById(`mfunc-${k}`);
+                if (k === key) btn.className = "mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow";
+                else btn.className = "mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700";
+            });
+
+            const fn = machineDefs[currentMachineFunc];
+            document.getElementById('table-calc-header').innerText = `Substituering: ${fn.expr}`;
+            document.getElementById('table-out-header').innerText = `${currentMachineFunc}(x) (Ut)`;
+
+            drawExplorer();
+            renderTable();
+        }
+
+        function setNotationMode(mode) {
+            notationMode = mode;
+            updateNotationDisplay();
+        }
+
+        function updateNotationDisplay() {
+            const x = Math.round(expX);
+            const fn = machineDefs[currentMachineFunc];
+            const y = fn.eval(x);
+            const tag = document.getElementById('m-coord-tag');
+
+            if (notationMode === 'coord') {
+                tag.innerText = `Punkt: (${fmtNum(x)}, ${fmtNum(y)})`;
+            } else {
+                tag.innerText = `Punkt: (${fmtNum(x)}, ${currentMachineFunc}(${fmtNum(x)}))`;
+            }
+            document.getElementById('live-calc-callout').innerText = fn.fullCalc(x);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            if (!tbody) return;
+
+            const fn = machineDefs[currentMachineFunc];
+            const activeX = Math.round(expX);
+            let html = '';
+
+            for (let x = -6; x <= 6; x++) {
+                const y = fn.eval(x);
+                const calcStr = fn.formatCalc(x);
+                const isActive = (x === activeX);
+
+                const rowClass = isActive 
+                    ? "bg-amber-400/30 dark:bg-amber-500/30 text-slate-900 dark:text-amber-200 font-bold border-l-4 border-amber-500 cursor-pointer transition" 
+                    : "hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 cursor-pointer transition";
+
+                html += `
+                    <tr onclick="setTablePoint(${x})" class="${rowClass}" id="t-row-${x}">
+                        <td class="p-2 text-center text-blue-600 dark:text-blue-400 font-bold">${fmtNum(x)}</td>
+                        <td class="p-2 text-center">${calcStr}</td>
+                        <td class="p-2 text-center text-rose-600 dark:text-rose-400 font-bold">${fmtNum(y)}</td>
+                    </tr>
+                `;
+            }
+
+            tbody.innerHTML = html;
+            updateNotationDisplay();
+
+            const activeRow = document.getElementById(`t-row-${activeX}`);
+            if (activeRow && activeRow.parentElement) {
+                const container = activeRow.parentElement.parentElement;
+                const rowTop = activeRow.offsetTop;
+                const rowBottom = rowTop + activeRow.offsetHeight;
+                if (rowTop < container.scrollTop || rowBottom > container.scrollTop + container.clientHeight) {
+                    container.scrollTop = rowTop - container.clientHeight / 2 + activeRow.offsetHeight / 2;
+                }
+            }
+        }
+
+        function setTablePoint(xVal) {
+            expX = xVal;
+            drawExplorer();
+            renderTable();
+        }
+
+        /* ---------------- CANVAS DRAWING UTILITIES ---------------- */
+        function resizeCanvas(id) {
+            const c = document.getElementById(id);
+            if (!c || !c.parentElement) return;
+            const side = Math.min(c.parentElement.clientWidth, c.parentElement.clientHeight || 310);
+            c.width = side;
+            c.height = side;
+        }
+
+        function m2c(x, y, w, h, scale = 8) {
+            return {
+                cx: w / 2 + x * (w / (scale * 2)),
+                cy: h / 2 - y * (h / (scale * 2))
+            };
+        }
+
+        function c2m(cx, cy, w, h, scale = 8) {
+            return {
+                x: (cx - w / 2) / (w / (scale * 2)),
+                y: (h / 2 - cy) / (h / (scale * 2))
+            };
+        }
+
+        function drawGrid(ctx, w, h, scale = 8) {
+            ctx.clearRect(0, 0, w, h);
+            const stepX = w / (scale * 2);
+            const stepY = h / (scale * 2);
+
+            ctx.strokeStyle = isDarkMode ? '#334155' : '#cbd5e1';
+            ctx.lineWidth = isDarkMode ? 1.25 : 1.5;
+
+            for (let i = -scale; i <= scale; i++) {
+                if (i === 0) continue;
+                ctx.beginPath(); ctx.moveTo(w / 2 + i * stepX, 0); ctx.lineTo(w / 2 + i * stepX, h); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, h / 2 - i * stepY); ctx.lineTo(w, h / 2 - i * stepY); ctx.stroke();
+            }
+
+            // Main Axes
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = isDarkMode ? '#60a5fa' : '#2563eb';
+            ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+
+            ctx.strokeStyle = isDarkMode ? '#fb7185' : '#e11d48';
+            ctx.beginPath(); ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h); ctx.stroke();
+
+            ctx.font = '700 11px "IBM Plex Sans", sans-serif';
+            ctx.fillStyle = isDarkMode ? '#cbd5e1' : '#334155';
+            for (let i = -scale; i <= scale; i += 2) {
+                if (i === 0) continue;
+                const lbl = fmtNum(i);
+                ctx.fillText(lbl, w / 2 + i * stepX - 7, h / 2 + 14);
+                ctx.fillText(lbl, w / 2 + 6, h / 2 - i * stepY + 4);
+            }
+        }
+
+        function drawExplorer() {
+            const c = document.getElementById('exp-canvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+
+            drawGrid(ctx, w, h, 8);
+
+            const fn = machineDefs[currentMachineFunc];
+            const curY = fn.eval(expX);
+
+            ctx.strokeStyle = isDarkMode ? '#818cf8' : '#4f46e5';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            let first = true;
+            for (let px = 0; px <= w; px += 2) {
+                const mX = c2m(px, 0, w, h, 8).x;
+                const mY = fn.eval(mX);
+                const pt = m2c(mX, mY, w, h, 8);
+                if (first) { ctx.moveTo(pt.cx, pt.cy); first = false; }
+                else ctx.lineTo(pt.cx, pt.cy);
+            }
+            ctx.stroke();
+
+            const mainPt = m2c(expX, curY, w, h, 8);
+            const xPt = m2c(expX, 0, w, h, 8);
+            const yPt = m2c(0, curY, w, h, 8);
+
+            ctx.strokeStyle = isDarkMode ? '#3b82f6' : '#1d4ed8';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath(); ctx.moveTo(mainPt.cx, mainPt.cy); ctx.lineTo(xPt.cx, xPt.cy); ctx.stroke();
+
+            ctx.strokeStyle = isDarkMode ? '#f43f5e' : '#be123c';
+            ctx.beginPath(); ctx.moveTo(mainPt.cx, mainPt.cy); ctx.lineTo(yPt.cx, yPt.cy); ctx.stroke();
+
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#9333ea';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.arc(mainPt.cx, mainPt.cy, 7.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        }
+
+        function setupExpEvents() {
+            const c = document.getElementById('exp-canvas');
+            if (!c) return;
+            function move(e) {
+                if (!isExpDragging) return;
+                const rect = c.getBoundingClientRect();
+                const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const mx = c2m(cx, 0, c.width, c.height, 8).x;
+                expX = Math.max(-6, Math.min(6, Math.round(mx)));
+                drawExplorer();
+                renderTable();
+            }
+            c.addEventListener('mousedown', (e) => { isExpDragging = true; move(e); });
+            window.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', () => { isExpDragging = false; });
+            c.addEventListener('touchstart', (e) => { isExpDragging = true; move(e); });
+            window.addEventListener('touchmove', move);
+            window.addEventListener('touchend', () => { isExpDragging = false; });
+        }
+
+        /* ---------------- TAB 1: FAS 1 — 1. x eller y? (RAPID-FIRE, 10 QUESTIONS) ---------------- */
+        function generateFas1Problem() {
+            const fnNames = ['f', 'g', 'h', 'k', 'v'];
+            const types = ['givenX', 'givenY'];
+            let sig, fnName, type, num, promptStr;
+            let attempts = 0;
+
+            do {
+                attempts++;
+                fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
+                type = types[Math.floor(Math.random() * types.length)];
+                num = Math.floor(Math.random() * 17) - 8; // -8 to 8
+                sig = `${fnName}:${type}:${num}`;
+            } while (sig === f1LastSignature && attempts < 30);
+
+            f1LastSignature = sig;
+
+            if (type === 'givenX') {
+                const verbs = ['Bestäm', 'Beräkna'];
+                const verb = verbs[Math.floor(Math.random() * verbs.length)];
+                promptStr = `${verb} ${fnName}(${fmtNum(num)})`;
+            } else {
+                promptStr = `Lös ekvationen ${fnName}(x) = ${fmtNum(num)}`;
+            }
+
+            return { type, promptStr };
+        }
+
+        function nextFas1Question() {
+            f1Current = generateFas1Problem();
+            f1Answered = false;
+
+            document.getElementById('f1-prompt-title').innerText = f1Current.promptStr;
+            document.getElementById('f1-feedback-box').classList.add('hidden');
+            document.getElementById('f1-next-btn').classList.add('hidden');
+            document.getElementById('f1-milestone-banner').classList.add('hidden');
+
+            const btnX = document.getElementById('f1-btn-x');
+            const btnY = document.getElementById('f1-btn-y');
+            const baseClass = "py-4 px-6 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-2xl font-bold transition shadow-sm";
+            btnX.className = baseClass;
+            btnY.className = baseClass;
+            btnX.disabled = false;
+            btnY.disabled = false;
+        }
+
+        function answerFas1(selectedType) {
+            if (!f1Current || f1Answered) return;
+
+            const fbBox = document.getElementById('f1-feedback-box');
+            const fbText = document.getElementById('f1-feedback-text');
+            const nextBtn = document.getElementById('f1-next-btn');
+            const btnX = document.getElementById('f1-btn-x');
+            const btnY = document.getElementById('f1-btn-y');
+
+            fbBox.classList.remove('hidden');
+
+            if (selectedType === f1Current.type) {
+                f1Answered = true;
+                f1Score++;
+                document.getElementById('f1-score').innerText = `Framsteg: ${f1Score} / ${f1Target}`;
+
+                const chosenBtn = selectedType === 'givenX' ? btnX : btnY;
+                chosenBtn.className = "py-4 px-6 rounded-xl border-2 border-emerald-500 bg-emerald-500 text-slate-950 text-2xl font-bold transition shadow-sm";
+                btnX.disabled = true;
+                btnY.disabled = true;
+
+                fbBox.className = "w-full rounded-xl p-3 text-sm font-bold flex items-center justify-between gap-2 dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 dark:text-emerald-200 text-emerald-900";
+                fbText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i> Rätt! (${selectedType === 'givenX' ? 'x' : 'y'})`;
+
+                if (f1Score >= f1Target && !f1MilestoneShown) {
+                    unlockPhase2();
+                    showFas1Milestone();
+                } else {
+                    nextBtn.classList.remove('hidden');
+                }
+            } else {
+                const wrongBtn = selectedType === 'givenX' ? btnX : btnY;
+                wrongBtn.className = "py-4 px-6 rounded-xl border-2 border-rose-500 bg-rose-500/20 text-rose-400 text-2xl font-bold transition shadow-sm";
+                fbBox.className = "w-full rounded-xl p-3 text-sm font-bold flex items-center justify-between gap-2 dark:bg-rose-950/90 bg-rose-100 border border-rose-500 dark:text-rose-200 text-rose-900";
+                fbText.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1.5"></i> Försök igen.`;
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function showFas1Milestone() {
+            f1MilestoneShown = true;
+            document.getElementById('f1-next-btn').classList.add('hidden');
+            document.getElementById('f1-milestone-banner').classList.remove('hidden');
+        }
+
+        function continueFas1Practice() {
+            document.getElementById('f1-milestone-banner').classList.add('hidden');
+            nextFas1Question();
+        }
+
+        /* ---------------- TAB 2: FAS 2 — 2. Guidad (4 STEPS) ---------------- */
+        function generateNextFas2Question() {
+            const type = (lastFas2Type === 'givenX') ? 'givenY' : 'givenX';
+            lastFas2Type = type;
+
+            const fnNames = ['f', 'g', 'h'];
+            const fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
+
+            const k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
+            const m = Math.floor(Math.random() * 5) - 2;
+
+            let val, targetAxis, numericAns, expr, fullAns;
+
+            if (type === 'givenX') {
+                val = Math.floor(Math.random() * 5) - 2;
+                numericAns = k * val + m;
+                targetAxis = 'x';
+                expr = `Bestäm ${fnName}(${fmtNum(val)})`;
+                fullAns = `${fnName}(${fmtNum(val)}) = ${fmtNum(numericAns)}`;
+            } else {
+                numericAns = Math.floor(Math.random() * 5) - 2;
+                val = k * numericAns + m;
+                targetAxis = 'y';
+                expr = `Lös ekvationen ${fnName}(x) = ${fmtNum(val)}`;
+                fullAns = `x = ${fmtNum(numericAns)}`;
+            }
+
+            g1Current = {
+                funcName: fnName,
+                type: type,
+                expr: expr,
+                k: k,
+                m: m,
+                val: val,
+                targetAxis: targetAxis,
+                numericAns: numericAns,
+                fullAns: fullAns
+            };
+
+            g1Step = 1;
+            g1Answered = false;
+            g1SentenceGiven = null;
+            g1SentenceFind = null;
+            g1UserLineX = null;
+            g1UserLineY = null;
+
+            document.getElementById('g1-prompt-title').innerText = g1Current.expr;
+            document.getElementById('g1-dyn-func-btn').innerText = `${g1Current.funcName}() =`;
+            document.getElementById('g1-final-input').value = '';
+            document.getElementById('g1-final-input').disabled = false;
+            document.getElementById('g1-feedback-banner').classList.add('hidden');
+            document.getElementById('g1-milestone-banner').classList.add('hidden');
+            document.getElementById('g1-next-row').classList.remove('hidden');
+            document.getElementById('g1-canvas-hint').innerText = "Slutför steg 1–3 för att låsa upp hjälplinjen.";
+
+            resetG1SentenceButtonsUI();
+
+            setG1StepState(1, 'active');
+            setG1StepState(2, 'disabled');
+            setG1StepState(3, 'disabled');
+            setG1StepState(4, 'disabled');
+
+            drawGame1Canvas();
+        }
+
+        function resetG1Helplines() {
+            g1UserLineX = null;
+            g1UserLineY = null;
+            drawGame1Canvas();
+        }
+
+        function setG1StepState(stepNum, state) {
+            const el = document.getElementById(`g1-step-${stepNum}-box`);
+            if (!el) return;
+            if (state === 'active') {
+                el.className = "dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2 space-y-1.5 opacity-100 pointer-events-auto shadow-sm";
+            } else if (state === 'completed') {
+                el.className = "dark:bg-emerald-950/40 bg-emerald-50 border border-emerald-500/60 rounded-2xl p-2 space-y-1.5 opacity-90 pointer-events-none";
+            } else {
+                el.className = "dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 opacity-40 pointer-events-none space-y-1.5";
+            }
+        }
+
+        // Step 1: Pure x or y
+        function answerG1Step1(selectedType) {
+            if (!g1Current || g1Step !== 1) return;
+            if (selectedType === g1Current.type) {
+                document.getElementById('g1-feedback-banner').classList.add('hidden');
+                setG1StepState(1, 'completed');
+                setG1StepState(2, 'active');
+                g1Step = 2;
+            } else {
+                showG1InlineError("Inte riktigt. Försök igen.");
+            }
+        }
+
+        // Step 2: Sentence Fill-in ("Uppgiften ger värdet [x/y], så jag behöver hitta värdet [x/y].")
+        function resetG1SentenceButtonsUI() {
+            const base = "px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition";
+            document.getElementById('g1-s2-given-x').className = base;
+            document.getElementById('g1-s2-given-y').className = base + " border-l dark:border-slate-700 border-slate-300";
+            document.getElementById('g1-s2-find-x').className = base;
+            document.getElementById('g1-s2-find-y').className = base + " border-l dark:border-slate-700 border-slate-300";
+        }
+
+        function selectG1SentenceSlot(slot, letter) {
+            if (!g1Current || g1Step !== 2) return;
+
+            if (slot === 'given') {
+                g1SentenceGiven = letter;
+            } else {
+                g1SentenceFind = letter;
+            }
+
+            // Update visual highlight of chosen pills
+            const activeCls = "px-2.5 py-0.5 text-xs font-bold bg-indigo-600 text-white transition";
+            const inactiveLeft = "px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition";
+            const inactiveRight = inactiveLeft + " border-l dark:border-slate-700 border-slate-300";
+
+            document.getElementById('g1-s2-given-x').className = (g1SentenceGiven === 'x') ? activeCls : inactiveLeft;
+            document.getElementById('g1-s2-given-y').className = (g1SentenceGiven === 'y') ? activeCls + " border-l dark:border-slate-700 border-slate-300" : inactiveRight;
+
+            document.getElementById('g1-s2-find-x').className = (g1SentenceFind === 'x') ? activeCls : inactiveLeft;
+            document.getElementById('g1-s2-find-y').className = (g1SentenceFind === 'y') ? activeCls + " border-l dark:border-slate-700 border-slate-300" : inactiveRight;
+
+            if (g1SentenceGiven && g1SentenceFind) {
+                const expectedGiven = (g1Current.type === 'givenX') ? 'x' : 'y';
+                const expectedFind = (g1Current.type === 'givenX') ? 'y' : 'x';
+
+                if (g1SentenceGiven === expectedGiven && g1SentenceFind === expectedFind) {
+                    document.getElementById('g1-feedback-banner').classList.add('hidden');
+                    setG1StepState(2, 'completed');
+                    setG1StepState(3, 'active');
+                    g1Step = 3;
+                } else {
+                    showG1InlineError("Kontrollera vilka värden som är givna och vilka som söks.");
+                }
+            }
+        }
+
+        // Step 3: Which axis to start on
+        function answerG1Step3(axis) {
+            if (!g1Current || g1Step !== 3) return;
+            if (axis === g1Current.targetAxis) {
+                document.getElementById('g1-feedback-banner').classList.add('hidden');
+                setG1StepState(3, 'completed');
+                setG1StepState(4, 'active');
+                g1Step = 4;
+
+                if (g1Current.type === 'givenX') {
+                    g1UserLineX = 0; g1UserLineY = null;
+                    document.getElementById('g1-canvas-hint').innerText = "Dra den BLÅ vertikala linjen till rätt x-värde.";
+                } else {
+                    g1UserLineY = 0; g1UserLineX = null;
+                    document.getElementById('g1-canvas-hint').innerText = "Dra den RÖDA horisontella linjen till rätt y-värde.";
+                }
+                drawGame1Canvas();
+                document.getElementById('g1-final-input').focus();
+            } else {
+                showG1InlineError(g1Current.targetAxis === 'x' ? 
+                    "När x är känt startar du på x-axeln." : 
+                    "När y är givet startar du på y-axeln.");
+            }
+        }
+
+        function showG1InlineError(message) {
+            const banner = document.getElementById('g1-feedback-banner');
+            const txt = document.getElementById('g1-feedback-text');
+            document.getElementById('g1-next-row').classList.add('hidden');
+            banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-2 text-xs space-y-1 dark:text-rose-200 text-rose-900";
+            txt.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> ${message}`;
+            banner.classList.remove('hidden');
+        }
+
+        function insertG1Symbol(sym) {
+            const input = document.getElementById('g1-final-input');
+            const start = input.selectionStart || 0;
+            const end = input.selectionEnd || 0;
+            const raw = input.value.substring(0, start) + sym + input.value.substring(end);
+            input.value = formatMathSmart(raw);
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+
+        function insertG1FuncNotation() {
+            const input = document.getElementById('g1-final-input');
+            input.value = `${g1Current.funcName}() = `;
+            input.focus();
+            input.setSelectionRange(2, 2);
+        }
+
+        function insertG1XNotation() {
+            const input = document.getElementById('g1-final-input');
+            input.value = `x = `;
+            input.focus();
+        }
+
+        function submitG1FinalAnswer() {
+            if (!g1Current || g1Step !== 4 || g1Answered) return;
+            const input = document.getElementById('g1-final-input');
+            const val = input.value.trim();
+            const banner = document.getElementById('g1-feedback-banner');
+            const txt = document.getElementById('g1-feedback-text');
+            const nextRow = document.getElementById('g1-next-row');
+
+            const isCorrect = validateMathNotation(val, g1Current.type, g1Current.funcName, g1Current.val, g1Current.numericAns);
+            banner.classList.remove('hidden');
+
+            if (isCorrect) {
+                g1Answered = true;
+                g1Score++;
+                input.disabled = true;
+                input.blur();
+                document.getElementById('g1-score').innerText = `Framsteg: ${g1Score} / ${g1TotalTarget}`;
+
+                if (g1Current.type === 'givenX' && g1UserLineY === null) g1UserLineY = 0;
+                else if (g1Current.type === 'givenY' && g1UserLineX === null) g1UserLineX = 0;
+                drawGame1Canvas();
+
+                setG1StepState(4, 'completed');
+                banner.className = "dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 rounded-2xl p-2 text-xs space-y-1.5 dark:text-emerald-200 text-emerald-900";
+                txt.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> <strong>Rätt!</strong> <span class="font-bold">${g1Current.fullAns}</span>`;
+
+                if (g1Score >= g1TotalTarget && !g1MilestoneShown) {
+                    unlockPhase3();
+                    showFas2Milestone();
+                } else {
+                    nextRow.classList.remove('hidden');
+                }
+            } else {
+                nextRow.classList.add('hidden');
+                banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-2 text-xs space-y-1.5 dark:text-rose-200 text-rose-900";
+                txt.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> <strong>Inte riktigt:</strong> Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${g1Current.fullAns}</span>`;
+            }
+        }
+
+        function showFas2Milestone() {
+            g1MilestoneShown = true;
+            document.getElementById('g1-next-row').classList.add('hidden');
+            document.getElementById('g1-milestone-banner').classList.remove('hidden');
+        }
+
+        function continueFas2Practice() {
+            document.getElementById('g1-milestone-banner').classList.add('hidden');
+            generateNextFas2Question();
+        }
+
+        function drawGame1Canvas() {
+            const c = document.getElementById('g1-canvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+
+            drawGrid(ctx, w, h, 8);
+            if (!g1Current) return;
+
+            ctx.strokeStyle = isDarkMode ? '#818cf8' : '#4f46e5';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            const p1 = m2c(-8, g1Current.k * (-8) + g1Current.m, w, h, 8);
+            const p2 = m2c(8, g1Current.k * 8 + g1Current.m, w, h, 8);
+            ctx.moveTo(p1.cx, p1.cy); ctx.lineTo(p2.cx, p2.cy); ctx.stroke();
+
+            ctx.setLineDash([5, 5]);
+            if (g1UserLineX !== null) {
+                const lineXPt = m2c(g1UserLineX, 0, w, h, 8);
+                const topPt = m2c(g1UserLineX, g1Current.k * g1UserLineX + g1Current.m, w, h, 8);
+                ctx.strokeStyle = isDarkMode ? '#3b82f6' : '#1d4ed8';
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(lineXPt.cx, lineXPt.cy); ctx.lineTo(topPt.cx, topPt.cy); ctx.stroke();
+                ctx.fillStyle = '#2563eb';
+                ctx.beginPath(); ctx.arc(topPt.cx, topPt.cy, 6.5, 0, Math.PI * 2); ctx.fill();
+            }
+
+            if (g1UserLineY !== null) {
+                const lineYPt = m2c(0, g1UserLineY, w, h, 8);
+                const endPt = m2c((g1UserLineY - g1Current.m) / g1Current.k, g1UserLineY, w, h, 8);
+                ctx.strokeStyle = isDarkMode ? '#f43f5e' : '#be123c';
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(lineYPt.cx, lineYPt.cy); ctx.lineTo(endPt.cx, endPt.cy); ctx.stroke();
+                ctx.fillStyle = '#e11d48';
+                ctx.beginPath(); ctx.arc(endPt.cx, endPt.cy, 6.5, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.setLineDash([]);
+        }
+
+        function setupG1CanvasEvents() {
+            const c = document.getElementById('g1-canvas');
+            if (!c) return;
+            function handleDrag(e) {
+                if (!activeDragLine || g1Step < 4) return;
+                const rect = c.getBoundingClientRect();
+                const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const cy = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                const mathPt = c2m(cx, cy, c.width, c.height, 8);
+
+                if (activeDragLine === 'x') {
+                    g1UserLineX = Math.max(-6, Math.min(6, Math.round(mathPt.x * 2) / 2));
+                    if (g1UserLineY === null) g1UserLineY = 0;
+                } else if (activeDragLine === 'y') {
+                    g1UserLineY = Math.max(-6, Math.min(6, Math.round(mathPt.y * 2) / 2));
+                    if (g1UserLineX === null) g1UserLineX = 0;
+                }
+                drawGame1Canvas();
+            }
+
+            function startDrag(e) {
+                if (g1Step < 4) return;
+                const rect = c.getBoundingClientRect();
+                const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const cy = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                const mathPt = c2m(cx, cy, c.width, c.height, 8);
+
+                if (g1Current.type === 'givenX') {
+                    if (g1UserLineY !== null && Math.abs(mathPt.y - g1UserLineY) < 1.5) activeDragLine = 'y';
+                    else activeDragLine = 'x';
+                } else {
+                    if (g1UserLineX !== null && Math.abs(mathPt.x - g1UserLineX) < 1.5) activeDragLine = 'x';
+                    else activeDragLine = 'y';
+                }
+                handleDrag(e);
+            }
+
+            c.addEventListener('mousedown', startDrag);
+            window.addEventListener('mousemove', handleDrag);
+            window.addEventListener('mouseup', () => { activeDragLine = null; });
+            c.addEventListener('touchstart', startDrag);
+            window.addEventListener('touchmove', handleDrag);
+            window.addEventListener('touchend', () => { activeDragLine = null; });
+        }
+
+        /* ---------------- TAB 3: FAS 3 — 3. Direkt ---------------- */
+        function generateNextPractice() {
+            const fnName = ['f', 'g', 'h', 'k'][Math.floor(Math.random() * 4)];
+            const isStage2 = (pScore >= 3);
+            
+            let k, m, xVal, yVal, type, ansNum, ansStr;
+
+            if (isStage2 && Math.random() < 0.45) {
+                if (Math.random() < 0.5) {
+                    type = 'givenX';
+                    k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
+                    m = Math.floor(Math.random() * 5) - 2;
+                    xVal = 0;
+                    ansNum = m;
+                    ansStr = `${fnName}(0) = ${fmtNum(ansNum)}`;
+                } else {
+                    type = 'givenY';
+                    k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
+                    ansNum = Math.floor(Math.random() * 5) - 2;
+                    m = -k * ansNum;
+                    yVal = 0;
+                    ansStr = `x = ${fmtNum(ansNum)}`;
+                }
+            } else {
+                type = Math.random() < 0.5 ? 'givenX' : 'givenY';
+                k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
+                m = Math.floor(Math.random() * 5) - 2;
+
+                if (type === 'givenX') {
+                    xVal = Math.floor(Math.random() * 5) - 2;
+                    ansNum = k * xVal + m;
+                    ansStr = `${fnName}(${fmtNum(xVal)}) = ${fmtNum(ansNum)}`;
+                } else {
+                    ansNum = Math.floor(Math.random() * 5) - 2;
+                    yVal = k * ansNum + m;
+                    ansStr = `x = ${fmtNum(ansNum)}`;
+                }
+            }
+
+            pCurrent = {
+                funcName: fnName,
+                type: type,
+                verb: type === 'givenX' ? 'Bestäm' : 'Lös ekvationen',
+                k: k,
+                m: m,
+                x: xVal,
+                y: yVal,
+                ansNum: ansNum,
+                ansStr: ansStr
+            };
+
+            pAnswered = false;
+
+            document.getElementById('p-next-banner').classList.add('hidden');
+            document.getElementById('p-handoff-banner').classList.add('hidden');
+            document.getElementById('p-revert-banner').classList.add('hidden');
+            document.getElementById('p-next-row').classList.remove('hidden');
+
+            const input = document.getElementById('p-answer-input');
+            input.value = '';
+            input.disabled = false;
+
+            const title = document.getElementById('p-question-title');
+            document.getElementById('p-dyn-func-btn').innerText = `${pCurrent.funcName}() =`;
+
+            if (pCurrent.type === 'givenX') {
+                title.innerText = `${pCurrent.verb} ${pCurrent.funcName}(${fmtNum(pCurrent.x)})`;
+            } else {
+                title.innerText = `${pCurrent.verb} ${pCurrent.funcName}(x) = ${fmtNum(pCurrent.y)}`;
+            }
+
+            drawPractice();
+            if (activeTab === 3) input.focus();
+        }
+
+        function insertPracticeSymbol(sym) {
+            const input = document.getElementById('p-answer-input');
+            const start = input.selectionStart || 0;
+            const end = input.selectionEnd || 0;
+            const raw = input.value.substring(0, start) + sym + input.value.substring(end);
+            input.value = formatMathSmart(raw);
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+
+        function insertPracticeFuncNotation() {
+            const input = document.getElementById('p-answer-input');
+            input.value = `${pCurrent.funcName}() = `;
+            input.focus();
+            input.setSelectionRange(2, 2);
+        }
+
+        function insertPracticeXNotation() {
+            const input = document.getElementById('p-answer-input');
+            input.value = `x = `;
+            input.focus();
+        }
+
+        function checkPracticeAnswer() {
+            if (!pCurrent || pAnswered) return;
+            const input = document.getElementById('p-answer-input');
+            const userVal = input.value.trim();
+            const banner = document.getElementById('p-next-banner');
+            const revertBanner = document.getElementById('p-revert-banner');
+            const msg = document.getElementById('p-feedback-msg');
+            const nextRow = document.getElementById('p-next-row');
+
+            const givenVal = (pCurrent.type === 'givenX') ? pCurrent.x : pCurrent.y;
+            const isCorrect = validateMathNotation(userVal, pCurrent.type, pCurrent.funcName, givenVal, pCurrent.ansNum);
+
+            if (isCorrect) {
+                pAnswered = true;
+                pScore++;
+                pConsecutiveErrors = 0;
+                input.disabled = true;
+                input.blur();
+                document.getElementById('p-score').innerText = `Klarade: ${pScore} / 6`;
+
+                banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-200 text-emerald-900 space-y-1.5";
+                msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt svar! (<span class="font-bold">${pCurrent.ansStr}</span>)`;
+                banner.classList.remove('hidden');
+                revertBanner.classList.add('hidden');
+
+                if (pScore >= 6 && !pMilestoneShown) {
+                    unlockPhase4();
+                    showFas3Milestone();
+                } else {
+                    nextRow.classList.remove('hidden');
+                }
+            } else {
+                pConsecutiveErrors++;
+                banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-2.5 text-xs dark:text-rose-200 text-rose-900 space-y-1.5";
+                msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt. Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${pCurrent.ansStr}</span>`;
+                banner.classList.remove('hidden');
+                nextRow.classList.add('hidden');
+
+                if (pConsecutiveErrors >= 2) {
+                    revertBanner.classList.remove('hidden');
+                }
+            }
+        }
+
+        function showFas3Milestone() {
+            pMilestoneShown = true;
+            document.getElementById('p-next-row').classList.add('hidden');
+            document.getElementById('p-handoff-banner').classList.remove('hidden');
+        }
+
+        function continueFas3Practice() {
+            document.getElementById('p-handoff-banner').classList.add('hidden');
+            generateNextPractice();
+        }
+
+        function drawPractice() {
+            const c = document.getElementById('p-canvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+
+            drawGrid(ctx, w, h, 8);
+            if (!pCurrent) return;
+
+            ctx.strokeStyle = isDarkMode ? '#818cf8' : '#4f46e5';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            const p1 = m2c(-8, pCurrent.k * (-8) + pCurrent.m, w, h, 8);
+            const p2 = m2c(8, pCurrent.k * 8 + pCurrent.m, w, h, 8);
+            ctx.moveTo(p1.cx, p1.cy); ctx.lineTo(p2.cx, p2.cy); ctx.stroke();
+        }
+
+        /* ---------------- TAB 4: FAS 4 — 4. Utmaning ---------------- */
+        function loadDynamicF5Question() {
+            f5QIndex++;
+            f5Step1Passed = false;
+            f5Answered = false;
+            f5UserLineVal = 0;
+
+            document.getElementById('f5-feedback-banner').classList.add('hidden');
+            document.getElementById('f5-step1-error-banner').classList.add('hidden');
+            document.getElementById('f5-celebration-banner').classList.add('hidden');
+            document.getElementById('f5-next-row').classList.remove('hidden');
+
+            const inputs = ['f5-input-x1', 'f5-input-x2', 'f5-input-cstep1', 'f5-input-cstep2'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.value = ''; el.disabled = false; }
+            });
+
+            const archetypes = ['parabola_dual', 'parabola_givenX', 'composite', 'equality'];
+            const chosenType = archetypes[f5QIndex % archetypes.length];
+
+            if (chosenType === 'parabola_dual') {
+                setupF5ParabolaProblem();
+            } else if (chosenType === 'parabola_givenX') {
+                setupF5ParabolaGivenXProblem();
+            } else if (chosenType === 'composite') {
+                setupF5CompositeProblem();
+            } else {
+                setupF5EqualityProblem();
+            }
+
+            drawF5Canvas();
+        }
+
+        function setupF5ParabolaProblem() {
+            const a = Math.random() < 0.5 ? 1 : -1;
+            const hShift = Math.floor(Math.random() * 5) - 2;
+            const rootDist = Math.floor(Math.random() * 2) + 2;
+            
+            const r1 = Math.max(-6, Math.min(6, hShift + rootDist));
+            const r2 = Math.max(-6, Math.min(6, hShift - rootDist));
+
+            const kShift = a > 0 ? (Math.floor(Math.random() * 3) - 5) : (Math.floor(Math.random() * 3) + 3);
+            const targetY = a * Math.pow(r1 - hShift, 2) + kShift;
+
+            const fnLabel = `h(x) = ${a < 0 ? MINUS : ''}(x ${hShift >= 0 ? MINUS + ' ' + hShift : '+ ' + Math.abs(hShift)})² ${kShift >= 0 ? '+ ' + kShift : MINUS + ' ' + Math.abs(kShift)}`;
+
+            f5CurrentProblem = {
+                type: 'parabola_dual',
+                startAxis: 'y',
+                exprHtml: `Lös ekvationen h(x) = ${fmtNum(targetY)}`,
+                desc: `Hitta alla x-värden där parabeln h(x) = ${fmtNum(targetY)}.`,
+                curves: [{ key: 'h', type: 'parabola', eval: (x) => a * Math.pow(x - hShift, 2) + kShift, color: '#818cf8', label: fnLabel }],
+                roots: [r1, r2],
+                ansStr: `x₁ = ${fmtNum(r1)} och x₂ = ${fmtNum(r2)}`
+            };
+
+            document.getElementById('f5-title').innerHTML = f5CurrentProblem.exprHtml;
+            document.getElementById('f5-prompt-desc').innerText = f5CurrentProblem.desc;
+
+            document.getElementById('f5-composite-workflow').classList.add('hidden');
+            document.getElementById('f5-standard-workflow').classList.remove('hidden');
+            document.getElementById('f5-submit-btn').classList.remove('hidden');
+
+            document.getElementById('f5-label-x1').innerText = "x₁ =";
+            document.getElementById('f5-box-x2').classList.add('hidden');
+            document.getElementById('f5-add-root-btn').classList.remove('hidden');
+            isF5SecondInputActive = false;
+
+            document.getElementById('f5-canvas-title').innerText = "Dra den RÖDA horisontella linjen från y-axeln:";
+            document.getElementById('f5-input-x1').focus();
+        }
+
+        function setupF5ParabolaGivenXProblem() {
+            let a, hShift, inputX, kShift, yAns;
+            let attempts = 0;
+
+            do {
+                a = Math.random() < 0.5 ? 1 : -1;
+                hShift = Math.floor(Math.random() * 5) - 2;
+                inputX = Math.floor(Math.random() * 5) - 2;
+                kShift = a > 0 ? (Math.floor(Math.random() * 3) - 4) : (Math.floor(Math.random() * 3) + 2);
+                yAns = a * Math.pow(inputX - hShift, 2) + kShift;
+                attempts++;
+            } while ((yAns === inputX || yAns < -6 || yAns > 6) && attempts < 50);
+
+            const fnLabel = `h(x) = ${a < 0 ? MINUS : ''}(x ${hShift >= 0 ? MINUS + ' ' + hShift : '+ ' + Math.abs(hShift)})² ${kShift >= 0 ? '+ ' + kShift : MINUS + ' ' + Math.abs(kShift)}`;
+
+            f5CurrentProblem = {
+                type: 'parabola_givenX',
+                startAxis: 'x',
+                exprHtml: `Bestäm h(${fmtNum(inputX)})`,
+                desc: `Läs av y-värdet för parabeln vid x = ${fmtNum(inputX)}.`,
+                inputX: inputX,
+                curves: [{ key: 'h', type: 'parabola', eval: (x) => a * Math.pow(x - hShift, 2) + kShift, color: '#818cf8', label: fnLabel }],
+                roots: [yAns],
+                ansStr: `h(${fmtNum(inputX)}) = ${fmtNum(yAns)}`
+            };
+
+            document.getElementById('f5-title').innerHTML = f5CurrentProblem.exprHtml;
+            document.getElementById('f5-prompt-desc').innerText = f5CurrentProblem.desc;
+
+            document.getElementById('f5-composite-workflow').classList.add('hidden');
+            document.getElementById('f5-standard-workflow').classList.remove('hidden');
+            document.getElementById('f5-submit-btn').classList.remove('hidden');
+
+            document.getElementById('f5-label-x1').innerText = `h(${fmtNum(inputX)}) =`;
+            document.getElementById('f5-box-x2').classList.add('hidden');
+            document.getElementById('f5-add-root-btn').classList.add('hidden');
+            isF5SecondInputActive = false;
+
+            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen från x-axeln:";
+            document.getElementById('f5-input-x1').focus();
+        }
+
+        function setupF5CompositeProblem() {
+            let inputX, f_k, f_m, innerVal, g_c, finalAns, wrongInnerVal;
+            let attempts = 0;
+
+            do {
+                inputX = Math.floor(Math.random() * 5) - 2;
+                f_k = Math.random() < 0.5 ? 1 : -1;
+                f_m = Math.floor(Math.random() * 5) - 2;
+
+                innerVal = f_k * inputX + f_m;
+                g_c = Math.floor(Math.random() * 4) - 4;
+                finalAns = innerVal * innerVal + g_c;
+                wrongInnerVal = innerVal * innerVal + g_c;
+
+                attempts++;
+            } while (
+                (innerVal === inputX ||
+                 finalAns === innerVal ||
+                 finalAns === inputX ||
+                 innerVal < -5 || innerVal > 5 ||
+                 finalAns < -6 || finalAns > 6)
+                && attempts < 100
+            );
+
+            f5CurrentProblem = {
+                type: 'composite',
+                startAxis: 'x',
+                exprHtml: `Bestäm g(f(${fmtNum(inputX)}))`,
+                desc: `Utvärdera den inre funktionen f(${fmtNum(inputX)}) på den blå linjen först.`,
+                inputX: inputX,
+                innerVal: innerVal,
+                wrongInnerVal: wrongInnerVal,
+                finalAns: finalAns,
+                curves: [
+                    { key: 'f', type: 'linear', k: f_k, m: f_m, color: '#3b82f6', label: `f(x) = ${f_k === -1 ? MINUS : ''}x ${f_m >= 0 ? '+ ' + f_m : MINUS + ' ' + Math.abs(f_m)}` },
+                    { key: 'g', type: 'parabola', eval: (x) => x*x + g_c, color: '#f59e0b', label: `g(x) = x² ${g_c >= 0 ? '+ ' + g_c : MINUS + ' ' + Math.abs(g_c)}` }
+                ],
+                ansStr: `g(f(${fmtNum(inputX)})) = ${fmtNum(finalAns)}`
+            };
+
+            document.getElementById('f5-title').innerHTML = f5CurrentProblem.exprHtml;
+            document.getElementById('f5-prompt-desc').innerText = f5CurrentProblem.desc;
+
+            document.getElementById('f5-standard-workflow').classList.add('hidden');
+            document.getElementById('f5-submit-btn').classList.add('hidden');
+            document.getElementById('f5-composite-workflow').classList.remove('hidden');
+
+            document.getElementById('f5-cstep1-label').innerText = `Steg 1: Bestäm inre värdet f(${fmtNum(inputX)})`;
+            document.getElementById('f5-cstep1-prefix').innerText = `f(${fmtNum(inputX)}) =`;
+
+            const step1Box = document.getElementById('f5-comp-step1');
+            step1Box.className = "dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2.5 space-y-1.5";
+
+            const step2Box = document.getElementById('f5-comp-step2');
+            step2Box.className = "dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2.5 space-y-1.5 opacity-40 pointer-events-none transition";
+            document.getElementById('f5-cstep2-prefix').innerText = `g(f(${fmtNum(inputX)})) =`;
+
+            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen från x-axeln:";
+            document.getElementById('f5-input-cstep1').focus();
+        }
+
+        function submitF5Step1() {
+            const val = parseInt(toAsciiMinus(document.getElementById('f5-input-cstep1').value.trim()));
+            const p = f5CurrentProblem;
+            const errBanner = document.getElementById('f5-step1-error-banner');
+            const errText = document.getElementById('f5-step1-error-text');
+
+            if (val === p.innerVal) {
+                f5Step1Passed = true;
+                errBanner.classList.add('hidden');
+                
+                const step1Box = document.getElementById('f5-comp-step1');
+                step1Box.className = "dark:bg-emerald-950/40 bg-emerald-50 border border-emerald-500/60 rounded-2xl p-2.5 space-y-1.5 opacity-90";
+
+                const step2Box = document.getElementById('f5-comp-step2');
+                step2Box.className = "dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2.5 space-y-1.5 opacity-100 pointer-events-auto shadow-sm";
+                document.getElementById('f5-cstep2-label').innerText = `Bra! f(${fmtNum(p.inputX)}) = ${fmtNum(p.innerVal)}. Steg 2: Bestäm g(${fmtNum(p.innerVal)})`;
+                document.getElementById('f5-input-cstep2').focus();
+
+                drawF5Canvas();
+            } else {
+                errBanner.classList.remove('hidden');
+                if (val === p.wrongInnerVal) {
+                    errText.innerHTML = `Du läste av värdet på <strong>g(x)</strong> (gula kurvan)! Läs först av värdet på <strong>f(x)</strong> (blå kurvan).`;
+                } else {
+                    errText.innerHTML = `Läs av x = ${fmtNum(p.inputX)} på den blå linjen f(x) för att hitta det inre värdet.`;
+                }
+            }
+        }
+
+        function submitF5FinalAnswer() {
+            if (f5Answered) return;
+            const userVal = parseInt(toAsciiMinus(document.getElementById('f5-input-cstep2').value.trim()));
+            const isCorrect = (!isNaN(userVal) && userVal === f5CurrentProblem.finalAns);
+            processF5Result(isCorrect);
+        }
+
+        function setupF5EqualityProblem() {
+            const targetX = Math.floor(Math.random() * 5) - 2;
+            const m1 = Math.floor(Math.random() * 3) + 1;
+            const m2 = 2 * targetX + m1;
+
+            f5CurrentProblem = {
+                type: 'equality',
+                startAxis: 'x',
+                exprHtml: `För vilket x gäller:<br><span class="text-amber-400 font-bold">f(x) = g(x)?</span>`,
+                desc: `Läs av x-koordinaten där graferna f(x) och g(x) skär varandra.`,
+                roots: [targetX],
+                curves: [
+                    { key: 'f', type: 'linear', k: 1, m: m1, color: '#3b82f6', label: `f(x)` },
+                    { key: 'g', type: 'linear', k: -1, m: m2, color: '#f43f5e', label: `g(x)` }
+                ],
+                ansStr: `x = ${fmtNum(targetX)}`
+            };
+
+            document.getElementById('f5-title').innerHTML = f5CurrentProblem.exprHtml;
+            document.getElementById('f5-prompt-desc').innerText = f5CurrentProblem.desc;
+
+            document.getElementById('f5-composite-workflow').classList.add('hidden');
+            document.getElementById('f5-standard-workflow').classList.remove('hidden');
+            document.getElementById('f5-submit-btn').classList.remove('hidden');
+
+            document.getElementById('f5-label-x1').innerText = "Svar x =";
+            document.getElementById('f5-box-x2').classList.add('hidden');
+            document.getElementById('f5-add-root-btn').classList.add('hidden');
+
+            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen från x-axeln:";
+            document.getElementById('f5-input-x1').focus();
+        }
+
+        function toggleF5SecondInput() {
+            isF5SecondInputActive = !isF5SecondInputActive;
+            const box = document.getElementById('f5-box-x2');
+            if (isF5SecondInputActive) {
+                box.classList.remove('hidden');
+                document.getElementById('f5-input-x2').focus();
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function resetF5Helplines() {
+            f5UserLineVal = 0;
+            drawF5Canvas();
+        }
+
+        function checkF5Answer() {
+            if (f5Answered) return;
+            const q = f5CurrentProblem;
+            let isCorrect = false;
+
+            if (q.type === 'parabola_dual') {
+                const x1Val = parseFloat(toAsciiMinus(document.getElementById('f5-input-x1').value.trim()));
+                const x2Val = parseFloat(toAsciiMinus(document.getElementById('f5-input-x2').value.trim()));
+
+                if (!isNaN(x1Val) && !isNaN(x2Val)) {
+                    if ((x1Val === q.roots[0] && x2Val === q.roots[1]) ||
+                        (x1Val === q.roots[1] && x2Val === q.roots[0])) {
+                        isCorrect = true;
+                    }
+                }
+            } else if (q.type === 'equality') {
+                const userVal = toAsciiMinus(document.getElementById('f5-input-x1').value.trim());
+                const clean = userVal.replace(/\s+/g, '').toLowerCase();
+                isCorrect = (clean === q.roots[0].toString() || clean === `x=${q.roots[0]}`);
+            } else if (q.type === 'parabola_givenX') {
+                const userVal = toAsciiMinus(document.getElementById('f5-input-x1').value.trim());
+                const numericInput = parseFloat(userVal);
+                
+                const isBareNumberCorrect = !isNaN(numericInput) && numericInput === q.roots[0];
+                const isFullNotationCorrect = validateMathNotation(userVal, 'givenX', 'h', q.inputX, q.roots[0]);
+                
+                isCorrect = isBareNumberCorrect || isFullNotationCorrect;
+            }
+
+            processF5Result(isCorrect);
+        }
+
+        function processF5Result(isCorrect) {
+            const q = f5CurrentProblem;
+            const banner = document.getElementById('f5-feedback-banner');
+            const msg = document.getElementById('f5-feedback-msg');
+            const nextBtn = document.getElementById('f5-next-btn');
+            const nextRow = document.getElementById('f5-next-row');
+
+            banner.classList.remove('hidden');
+
+            if (isCorrect) {
+                f5Answered = true;
+                f5Score++;
+                ['f5-input-x1', 'f5-input-x2', 'f5-input-cstep1', 'f5-input-cstep2'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.disabled = true; el.blur(); }
+                });
+
+                document.getElementById('f5-score').innerText = `Klarade: ${f5Score} / 6`;
+                banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-200 text-emerald-900 space-y-1.5";
+                msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> <strong>Rätt!</strong> <span class="font-bold">${q.ansStr}</span>`;
+
+                if (f5Score >= 6 && !f5MilestoneShown) {
+                    showFas4Milestone();
+                } else {
+                    nextRow.classList.remove('hidden');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1 cursor-pointer opacity-100";
+                }
+            } else {
+                banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-2.5 text-xs space-y-1.5 dark:text-rose-200 text-rose-900";
+                
+                if (q.type === 'parabola_dual' && !isF5SecondInputActive) {
+                    msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> <strong>Glöm inte den andra roten:</strong> Klicka på '+ Lägg till lösning'.`;
+                } else {
+                    msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> <strong>Inte riktigt:</strong> Kontrollera avläsningen. Rätt format: <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${q.ansStr}</span>`;
+                }
+
+                nextBtn.disabled = true;
+                nextBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1 opacity-50 cursor-not-allowed";
+            }
+        }
+
+        function showFas4Milestone() {
+            f5MilestoneShown = true;
+            document.getElementById('f5-next-row').classList.add('hidden');
+            document.getElementById('f5-celebration-banner').classList.remove('hidden');
+        }
+
+        function continueF5Challenge() {
+            document.getElementById('f5-celebration-banner').classList.add('hidden');
+            loadDynamicF5Question();
+        }
+
+        function finishF5Challenge() {
+            switchTab(0);
+        }
+
+        function nextF5Question() {
+            loadDynamicF5Question();
+        }
+
+        function drawF5Canvas() {
+            const c = document.getElementById('f5-canvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+
+            drawGrid(ctx, w, h, 8);
+            const q = f5CurrentProblem;
+            if (!q) return;
+
+            q.curves.forEach(curve => {
+                ctx.strokeStyle = curve.color;
+                ctx.lineWidth = 3.5;
+                ctx.beginPath();
+                let first = true;
+
+                for (let px = 0; px <= w; px += 2) {
+                    const mX = c2m(px, 0, w, h, 8).x;
+                    let mY = (curve.type === 'linear') ? (curve.k * mX + curve.m) : curve.eval(mX);
+                    const pt = m2c(mX, mY, w, h, 8);
+                    if (first) { ctx.moveTo(pt.cx, pt.cy); first = false; }
+                    else ctx.lineTo(pt.cx, pt.cy);
+                }
+                ctx.stroke();
+            });
+
+            ctx.setLineDash([5, 5]);
+            if (q.startAxis === 'y') {
+                const lineYPt = m2c(0, f5UserLineVal, w, h, 8);
+                ctx.strokeStyle = isDarkMode ? '#f43f5e' : '#be123c';
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(0, lineYPt.cy); ctx.lineTo(w, lineYPt.cy); ctx.stroke();
+            } else {
+                const lineXPt = m2c(f5UserLineVal, 0, w, h, 8);
+                ctx.strokeStyle = isDarkMode ? '#3b82f6' : '#1d4ed8';
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(lineXPt.cx, 0); ctx.lineTo(lineXPt.cx, h); ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            q.curves.forEach(curve => {
+                ctx.font = '700 11px "IBM Plex Sans", sans-serif';
+                const labelX = 2.5;
+                const labelY = (curve.type === 'linear') ? (curve.k * labelX + curve.m) : curve.eval(labelX);
+                const lblPt = m2c(labelX, labelY, w, h, 8);
+                
+                ctx.fillStyle = isDarkMode ? '#0f172a' : '#ffffff';
+                ctx.fillRect(lblPt.cx + 2, lblPt.cy - 14, ctx.measureText(curve.label).width + 8, 16);
+                ctx.strokeStyle = curve.color;
+                ctx.lineWidth = 1;
+                ctx.strokeRect(lblPt.cx + 2, lblPt.cy - 14, ctx.measureText(curve.label).width + 8, 16);
+
+                ctx.fillStyle = curve.color;
+                ctx.fillText(curve.label, lblPt.cx + 6, lblPt.cy - 2);
+            });
+        }
+
+        function setupF5Events() {
+            const c = document.getElementById('f5-canvas');
+            if (!c) return;
+
+            function move(e) {
+                if (!f5ActiveDrag || !f5CurrentProblem) return;
+                const rect = c.getBoundingClientRect();
+                const q = f5CurrentProblem;
+
+                if (q.startAxis === 'y') {
+                    const cy = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                    const mathY = c2m(0, cy, c.width, c.height, 8).y;
+                    f5UserLineVal = Math.max(-6, Math.min(6, Math.round(mathY * 2) / 2));
+                } else {
+                    const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                    const mathX = c2m(cx, 0, c.width, c.height, 8).x;
+                    f5UserLineVal = Math.max(-6, Math.min(6, Math.round(mathX * 2) / 2));
+                }
+                drawF5Canvas();
+            }
+
+            c.addEventListener('mousedown', (e) => { f5ActiveDrag = true; move(e); });
+            window.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', () => { f5ActiveDrag = false; });
+            c.addEventListener('touchstart', (e) => { f5ActiveDrag = true; move(e); });
+            window.addEventListener('touchmove', move);
+            window.addEventListener('touchend', () => { f5ActiveDrag = false; });
+        }
+
+        /* ---------------- INPUT KEYDOWN & SMART SPACING INIT ---------------- */
+        function setupInputListeners() {
+            const spacedIds = ['g1-final-input', 'p-answer-input', 'f5-input-x1', 'f5-input-x2', 'f5-input-cstep1', 'f5-input-cstep2'];
+            spacedIds.forEach(attachSmartMathInput);
+
+            document.getElementById('g1-final-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitG1FinalAnswer();
+                }
+            });
+
+            document.getElementById('p-answer-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    checkPracticeAnswer();
+                }
+            });
+
+            document.getElementById('f5-input-x1').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    checkF5Answer();
+                }
+            });
+
+            document.getElementById('f5-input-x2').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    checkF5Answer();
+                }
+            });
+
+            document.getElementById('f5-input-cstep1').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitF5Step1();
+                }
+            });
+
+            document.getElementById('f5-input-cstep2').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitF5FinalAnswer();
+                }
+            });
+        }
+
+        /* ---------------- INIT ON WINDOW LOAD ---------------- */
+        window.onload = function() {
+            window.addEventListener('resize', () => {
+                if (activeTab === 0) { resizeCanvas('exp-canvas'); drawExplorer(); renderTable(); }
+                else if (activeTab === 2) { resizeCanvas('g1-canvas'); drawGame1Canvas(); }
+                else if (activeTab === 3) { resizeCanvas('p-canvas'); drawPractice(); }
+                else if (activeTab === 4) { resizeCanvas('f5-canvas'); drawF5Canvas(); }
+            });
+
+            setupExpEvents();
+            setupG1CanvasEvents();
+            setupF5Events();
+            setupInputListeners();
+
+            nextFas1Question();
+            generateNextFas2Question();
+            generateNextPractice();
+
+            resizeCanvas('exp-canvas');
+            selectMachineFunc('f');
+        };
+    </script>
+</body>
+</html>
