@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        html {
+            /* Global root scale: 1rem = 18px (up from browser default 16px) */
+            font-size: 18px;
+        }
         * {
             font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
@@ -38,54 +42,54 @@
 
     <!-- TOP APP HEADER & NAV TAB BAR -->
     <header class="bg-slate-950 border-b border-slate-800 px-3 py-1.5 shrink-0 relative z-30">
-        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-1.5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-1.5">
             
-            <div class="flex items-center space-x-2.5">
+            <div class="flex items-center space-x-2 shrink-0">
                 <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-sm border border-indigo-400">
                     f(x)
                 </div>
                 <div>
-                    <h1 class="text-base font-bold tracking-tight text-white leading-none">Grunderna i Funktionsnotering</h1>
-                    <p class="text-[11px] text-indigo-400 font-bold mt-0.5">Matematik 1a • Grafisk Lösning</p>
+                    <h1 class="text-base font-bold tracking-tight text-white leading-none">Funktionsnotering</h1>
+                    <p class="text-xs text-indigo-400 font-bold mt-0.5">Matematik 1a • Grafisk Lösning</p>
                 </div>
             </div>
 
             <!-- DROPDOWN GUIDE, MODE TOGGLE & TAB NAVIGATION -->
-            <div class="flex items-center gap-2 flex-wrap justify-center">
+            <div class="flex items-center gap-1.5 flex-wrap justify-center">
                 
                 <!-- COLLAPSIBLE PARENTHESES GUIDE DROPDOWN -->
                 <div class="relative" id="parenthesis-guide-wrapper">
-                    <button onclick="toggleGuideDropdown(event)" id="guide-dropdown-btn" class="px-3 py-1 rounded-lg text-xs font-bold border border-indigo-500/60 bg-indigo-950/80 text-indigo-200 hover:bg-indigo-900 transition flex items-center gap-1.5">
+                    <button onclick="toggleGuideDropdown(event)" id="guide-dropdown-btn" class="px-2.5 py-1.5 rounded-lg text-xs lg:text-sm font-bold border border-indigo-500/60 bg-indigo-950/80 text-indigo-200 hover:bg-indigo-900 transition flex items-center gap-1.5">
                         <i class="fa-solid fa-circle-question text-indigo-400"></i>
                         <span>x eller y i parentesen?</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="guide-chevron"></i>
+                        <i class="fa-solid fa-chevron-down text-xs transition-transform" id="guide-chevron"></i>
                     </button>
 
-                    <!-- DROPDOWN POPOVER PANEL -->
-                    <div id="guide-dropdown-panel" class="hidden absolute left-0 sm:left-auto sm:right-0 mt-1.5 w-80 sm:w-96 dark:bg-slate-900 bg-white border-2 border-indigo-500 rounded-2xl p-3.5 shadow-2xl z-50 text-left space-y-2.5">
-                        <div class="flex justify-between items-center border-b dark:border-slate-800 border-slate-200 pb-1.5">
-                            <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">Så tolkar du parentesen</span>
-                            <button onclick="closeGuideDropdown()" class="text-slate-400 hover:text-slate-200 text-xs px-1">
+                    <!-- UNCONSTRAINED LARGE-TEXT PULL-DOWN PANEL -->
+                    <div id="guide-dropdown-panel" class="hidden absolute left-0 sm:left-auto sm:right-0 mt-2 w-[36rem] max-w-[94vw] dark:bg-slate-900 bg-white border-2 border-indigo-500 rounded-2xl p-6 shadow-2xl z-50 text-left space-y-4">
+                        <div class="flex justify-between items-center border-b dark:border-slate-800 border-slate-200 pb-3">
+                            <span class="text-lg font-bold uppercase tracking-wider text-indigo-400">Så tolkar du parentesen</span>
+                            <button onclick="closeGuideDropdown()" class="text-slate-400 hover:text-slate-200 text-lg px-2 py-0.5">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
 
-                        <div class="dark:bg-slate-950 bg-blue-50 border border-blue-500/40 rounded-xl p-2.5 space-y-1">
-                            <div class="text-xs font-bold text-blue-500 flex items-center justify-between">
+                        <div class="dark:bg-slate-950 bg-blue-50 border-2 border-blue-500/50 rounded-2xl p-4 space-y-2">
+                            <div class="text-xl font-bold text-blue-400 flex items-center justify-between gap-2">
                                 <span>1. Ett TAL i parentesen</span>
-                                <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">Ex: f(3)</span>
+                                <span class="px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-lg font-bold shrink-0">Ex: f(3)</span>
                             </div>
-                            <p class="text-xs dark:text-slate-200 text-slate-800 leading-relaxed">
+                            <p class="text-lg dark:text-slate-100 text-slate-900 leading-relaxed">
                                 När det står ett tal inuti parentesen är <strong>x-värdet givet</strong> (x = 3). Du söker <strong>y-värdet</strong>.
                             </p>
                         </div>
 
-                        <div class="dark:bg-slate-950 bg-rose-50 border border-rose-500/40 rounded-xl p-2.5 space-y-1">
-                            <div class="text-xs font-bold text-rose-500 flex items-center justify-between">
+                        <div class="dark:bg-slate-950 bg-rose-50 border-2 border-rose-500/50 rounded-2xl p-4 space-y-2">
+                            <div class="text-xl font-bold text-rose-400 flex items-center justify-between gap-2">
                                 <span>2. Bokstaven x i parentesen</span>
-                                <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">Ex: f(x) = 7</span>
+                                <span class="px-3 py-1 rounded-lg bg-rose-500/20 text-rose-300 text-lg font-bold shrink-0">Ex: f(x) = 7</span>
                             </div>
-                            <p class="text-xs dark:text-slate-200 text-slate-800 leading-relaxed">
+                            <p class="text-lg dark:text-slate-100 text-slate-900 leading-relaxed">
                                 När det står <strong>x</strong> inuti parentesen är <strong>y-värdet givet</strong> (y = 7). Du söker <strong>x-värdet</strong>.
                             </p>
                         </div>
@@ -93,28 +97,28 @@
                 </div>
 
                 <!-- DARK / LIGHT MODE TOGGLE -->
-                <button onclick="toggleProjectionMode()" id="proj-toggle-btn" class="px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300">
+                <button onclick="toggleProjectionMode()" id="proj-toggle-btn" class="px-2.5 py-1.5 rounded-lg text-xs lg:text-sm font-bold border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300">
                     <i class="fa-solid fa-sun text-xs"></i>
                     <span id="mode-btn-label">Ljust läge</span>
                 </button>
 
                 <!-- PHASE TABS -->
                 <nav class="flex dark:bg-slate-900 bg-slate-100 p-1 rounded-xl border dark:border-slate-800 border-slate-300 overflow-x-auto">
-                    <button id="tab-btn-0" onclick="switchTab(0)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow shrink-0">
+                    <button id="tab-btn-0" onclick="switchTab(0)" class="tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition bg-indigo-600 text-white shadow shrink-0">
                         Begrepp &amp; Graf
                     </button>
-                    <button id="tab-btn-1" onclick="switchTab(1)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0">
+                    <button id="tab-btn-1" onclick="switchTab(1)" class="tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0">
                         <span>1. x eller y?</span>
                     </button>
-                    <button id="tab-btn-2" onclick="switchTab(2)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
+                    <button id="tab-btn-2" onclick="switchTab(2)" class="tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
                         <i class="fa-solid fa-lock text-xs" id="tab-2-lock-icon"></i>
                         <span>2. Guidad</span>
                     </button>
-                    <button id="tab-btn-3" onclick="switchTab(3)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
+                    <button id="tab-btn-3" onclick="switchTab(3)" class="tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
                         <i class="fa-solid fa-lock text-xs" id="tab-3-lock-icon"></i>
                         <span>3. Direkt</span>
                     </button>
-                    <button id="tab-btn-4" onclick="switchTab(4)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
+                    <button id="tab-btn-4" onclick="switchTab(4)" class="tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0" disabled>
                         <i class="fa-solid fa-lock text-xs" id="tab-4-lock-icon"></i>
                         <span>4. Utmaning</span>
                     </button>
@@ -132,21 +136,21 @@
         <section id="tab-content-0" class="tab-content h-full flex flex-col justify-between space-y-2">
             
             <!-- PRONUNCIATION AUDIO BANNER -->
-            <div class="dark:bg-amber-950/80 bg-amber-100 dark:border-amber-500/80 border-amber-400 border-2 rounded-xl p-2 shadow-md flex items-center justify-between shrink-0">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-base shrink-0">
+            <div class="dark:bg-amber-950/80 bg-amber-100 dark:border-amber-500/80 border-amber-400 border-2 rounded-xl px-3.5 py-1.5 shadow-md flex items-center justify-between shrink-0 gap-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-lg shrink-0">
                         <i class="fa-solid fa-volume-high"></i>
                     </div>
                     <div>
-                        <div class="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-400 tracking-wider">Viktigt Uttal i Matematik 1a</div>
-                        <h2 class="text-sm sm:text-base font-bold dark:text-amber-100 text-slate-900">
+                        <div class="text-xs font-bold uppercase text-amber-700 dark:text-amber-400 tracking-wider">Viktigt Uttal i Matematik 1a</div>
+                        <h2 class="text-base sm:text-lg font-bold dark:text-amber-100 text-slate-900 leading-snug">
                             <span class="text-indigo-600 dark:text-indigo-400">f(x)</span> uttalas alltid: <span class="underline decoration-indigo-500 underline-offset-2 font-bold">"f av x"</span>
-                            <span class="text-xs text-amber-800 dark:text-amber-300 font-semibold ml-1.5">(ALDRIG "f gånger x"!)</span>
+                            <span class="text-sm sm:text-base text-amber-800 dark:text-amber-300 font-semibold ml-1.5">(ALDRIG "f gånger x"!)</span>
                         </h2>
                     </div>
                 </div>
 
-                <button onclick="playPronunciation()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-xl text-xs transition flex items-center gap-1.5 shrink-0 shadow">
+                <button onclick="playPronunciation()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-sm sm:text-base transition flex items-center gap-1.5 shrink-0 shadow">
                     <i class="fa-solid fa-play"></i> Lyssna
                 </button>
             </div>
@@ -157,27 +161,27 @@
                 <!-- TOP CONTROLS & FUNCTION SELECTOR -->
                 <div class="flex items-center justify-between border-b dark:border-slate-800 border-slate-200 pb-1.5 shrink-0 flex-wrap gap-2">
                     <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold dark:text-slate-300 text-slate-700">Välj Funktion:</span>
+                        <span class="text-sm sm:text-base font-bold dark:text-slate-300 text-slate-700">Välj Funktion:</span>
                         <div class="flex gap-1.5">
-                            <button onclick="selectMachineFunc('f')" id="mfunc-f" class="mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow">
+                            <button onclick="selectMachineFunc('f')" id="mfunc-f" class="mfunc-btn px-3 py-1 rounded-xl text-sm sm:text-base font-bold bg-indigo-600 text-white shadow">
                                 f(x) = 2x + 1
                             </button>
-                            <button onclick="selectMachineFunc('g')" id="mfunc-g" class="mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700">
+                            <button onclick="selectMachineFunc('g')" id="mfunc-g" class="mfunc-btn px-3 py-1 rounded-xl text-sm sm:text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700">
                                 g(x) = −x + 4
                             </button>
-                            <button onclick="selectMachineFunc('h')" id="mfunc-h" class="mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700">
+                            <button onclick="selectMachineFunc('h')" id="mfunc-h" class="mfunc-btn px-3 py-1 rounded-xl text-sm sm:text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700">
                                 h(x) = x² − 4
                             </button>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-3 text-xs">
+                    <div class="flex items-center gap-3 text-sm sm:text-base">
                         <label class="flex items-center gap-1.5 cursor-pointer">
-                            <input type="radio" name="ntoggle" value="coord" checked onchange="setNotationMode('coord')" class="accent-indigo-600 w-3.5 h-3.5">
+                            <input type="radio" name="ntoggle" value="coord" checked onchange="setNotationMode('coord')" class="accent-indigo-600 w-4 h-4">
                             <span class="dark:text-slate-200 text-slate-800 font-bold">(x, y)</span>
                         </label>
                         <label class="flex items-center gap-1.5 cursor-pointer">
-                            <input type="radio" name="ntoggle" value="func" onchange="setNotationMode('func')" class="accent-indigo-600 w-3.5 h-3.5">
+                            <input type="radio" name="ntoggle" value="func" onchange="setNotationMode('func')" class="accent-indigo-600 w-4 h-4">
                             <span class="dark:text-indigo-300 text-indigo-700 font-bold">(x, f(x))</span>
                         </label>
                     </div>
@@ -187,31 +191,31 @@
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-3 flex-grow items-center overflow-hidden">
                     
                     <!-- LEFT COLUMN: CANVAS GRAPH -->
-                    <div class="md:col-span-6 flex flex-col items-center justify-center h-full">
+                    <div class="md:col-span-5 flex flex-col items-center justify-center h-full">
                         <div class="w-full flex justify-between items-center mb-1">
-                            <span class="text-xs font-bold dark:text-slate-300 text-slate-700">Dra punkten på kurvan:</span>
-                            <span class="text-xs font-bold text-indigo-500" id="m-coord-tag">Punkt: (3, 7)</span>
+                            <span class="text-sm sm:text-base font-bold dark:text-slate-300 text-slate-700">Dra punkten:</span>
+                            <span class="text-sm sm:text-base font-bold text-indigo-400" id="m-coord-tag">Punkt: (3, 7)</span>
                         </div>
-                        <div class="relative w-full aspect-square max-h-[310px] max-w-[310px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                        <div class="relative w-full aspect-square max-h-[285px] max-w-[285px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
                             <canvas id="exp-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
                         </div>
                     </div>
 
                     <!-- RIGHT COLUMN: 3-COLUMN VÄRDETABELL -->
-                    <div class="md:col-span-6 flex flex-col justify-between h-full space-y-2">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs font-bold dark:text-amber-300 text-amber-800 uppercase tracking-wider">Värdetabell</span>
-                                <span class="text-[11px] text-slate-400">Klicka på en rad för att flytta punkten</span>
+                    <div class="md:col-span-7 flex flex-col justify-between h-full space-y-2 overflow-hidden">
+                        <div class="flex flex-col flex-grow overflow-hidden">
+                            <div class="flex justify-between items-center mb-1 shrink-0">
+                                <span class="text-sm sm:text-base font-bold dark:text-amber-300 text-amber-800 uppercase tracking-wider">Värdetabell</span>
+                                <span class="text-xs sm:text-sm text-slate-400">Klicka på en rad för att flytta punkten</span>
                             </div>
 
-                            <div class="overflow-y-auto max-h-[260px] rounded-xl border border-slate-300 dark:border-slate-800 shadow-inner">
-                                <table class="w-full text-xs text-left border-collapse">
-                                    <thead class="sticky top-0 bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold uppercase text-[10px] tracking-wider border-b border-slate-300 dark:border-slate-800">
+                            <div class="overflow-y-auto flex-grow max-h-[235px] rounded-xl border border-slate-300 dark:border-slate-800 shadow-inner">
+                                <table class="w-full text-sm sm:text-base text-left border-collapse">
+                                    <thead class="sticky top-0 bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold uppercase text-xs sm:text-sm tracking-wider border-b border-slate-300 dark:border-slate-800">
                                         <tr>
-                                            <th class="p-2 text-center w-16 text-blue-600 dark:text-blue-400">x (In)</th>
+                                            <th class="p-2 text-center w-20 text-blue-600 dark:text-blue-400">x (In)</th>
                                             <th class="p-2 text-center" id="table-calc-header">Substituering: f(x) = 2x + 1</th>
-                                            <th class="p-2 text-center w-24 text-rose-600 dark:text-rose-400" id="table-out-header">f(x) (Ut)</th>
+                                            <th class="p-2 text-center w-28 text-rose-600 dark:text-rose-400" id="table-out-header">f(x) (Ut)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-body" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-center">
@@ -222,9 +226,9 @@
                         </div>
 
                         <!-- LIVE CALCULATION CALLOUT BANNER -->
-                        <div class="dark:bg-indigo-950/50 bg-indigo-50 border border-indigo-300 dark:border-indigo-800/70 rounded-xl p-2 text-xs flex items-center justify-between shrink-0">
+                        <div class="dark:bg-indigo-950/50 bg-indigo-50 border border-indigo-300 dark:border-indigo-800/70 rounded-xl px-3.5 py-2 text-sm sm:text-base flex items-center justify-between shrink-0">
                             <span class="font-bold text-slate-700 dark:text-slate-300">Aktiv beräkning:</span>
-                            <span class="font-bold text-amber-600 dark:text-amber-300 text-sm" id="live-calc-callout">f(3) = 2 · (3) + 1 = 7</span>
+                            <span class="font-bold text-amber-600 dark:text-amber-300 text-base sm:text-lg" id="live-calc-callout">f(3) = 2 · (3) + 1 = 7</span>
                         </div>
                     </div>
 
@@ -235,66 +239,66 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- FLIK 1: FAS 1 — 1. x eller y? (RAPID-FIRE TOLKNING, 10 FRÅGOR)    -->
+        <!-- FLIK 1: FAS 1 — 1. x eller y? (BALANCED 50-50, MAX 2 IN A ROW)     -->
         <!-- ================================================================= -->
         <section id="tab-content-1" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
             
-            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-4 py-2 flex justify-between items-center shrink-0 shadow-sm">
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Fas 1 • Tolka funktionsnotering</span>
-                    <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900">Vilket värde är givet?</h2>
+                    <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-indigo-400">Fas 1 • Tolka funktionsnotering</span>
+                    <h2 class="text-lg font-bold dark:text-white text-slate-900">Vilket värde är givet?</h2>
                 </div>
-                <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3 py-0.5 rounded-xl text-xs font-bold dark:text-amber-300 text-amber-800" id="f1-score">
+                <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3.5 py-1 rounded-xl text-sm sm:text-base font-bold dark:text-amber-300 text-amber-800" id="f1-score">
                     Framsteg: 0 / 10
                 </div>
             </div>
 
             <!-- CENTERED RAPID-FIRE CARD -->
             <div class="flex-grow flex items-center justify-center">
-                <div class="w-full max-w-lg dark:bg-slate-950 bg-white rounded-2xl p-6 border dark:border-slate-800 border-slate-300 shadow-lg flex flex-col items-center text-center space-y-6">
+                <div class="w-full max-w-2xl dark:bg-slate-950 bg-white rounded-2xl p-6 border dark:border-slate-800 border-slate-300 shadow-lg flex flex-col items-center text-center space-y-5">
                     
                     <div class="w-full border-b dark:border-slate-800 border-slate-200 pb-4">
-                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Uppgift</div>
-                        <div id="f1-prompt-title" class="text-2xl sm:text-3xl font-bold dark:text-amber-300 text-slate-900">
+                        <div class="text-sm sm:text-base font-bold uppercase tracking-wider text-slate-400 mb-1">Uppgift</div>
+                        <div id="f1-prompt-title" class="text-3xl sm:text-4xl font-bold dark:text-amber-300 text-slate-900">
                             Bestäm f(4)
                         </div>
                     </div>
 
                     <div class="w-full space-y-3">
-                        <div class="text-sm font-bold dark:text-slate-200 text-slate-800">Vilket värde är givet?</div>
-                        <div class="grid grid-cols-2 gap-4 max-w-xs mx-auto">
-                            <button id="f1-btn-x" onclick="answerFas1('givenX')" class="py-4 px-6 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-2xl font-bold transition shadow-sm">
+                        <div class="text-lg sm:text-xl font-bold dark:text-slate-200 text-slate-800">Vilket värde är givet?</div>
+                        <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                            <button id="f1-btn-x" onclick="answerFas1('givenX')" class="py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm">
                                 x
                             </button>
-                            <button id="f1-btn-y" onclick="answerFas1('givenY')" class="py-4 px-6 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-2xl font-bold transition shadow-sm">
+                            <button id="f1-btn-y" onclick="answerFas1('givenY')" class="py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm">
                                 y
                             </button>
                         </div>
                     </div>
 
                     <!-- RAPID FEEDBACK & ENTER-TO-NEXT -->
-                    <div id="f1-feedback-box" class="hidden w-full rounded-xl p-3 text-sm font-bold flex items-center justify-between gap-2">
+                    <div id="f1-feedback-box" class="hidden w-full rounded-xl p-3.5 text-base sm:text-lg font-bold flex items-center justify-between gap-2">
                         <span id="f1-feedback-text"></span>
-                        <button id="f1-next-btn" onclick="nextFas1Question()" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs transition shadow flex items-center gap-1.5 shrink-0">
+                        <button id="f1-next-btn" onclick="nextFas1Question()" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-sm sm:text-base transition shadow flex items-center gap-1.5 shrink-0">
                             <span>Nästa</span> <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
 
                     <!-- MILESTONE CHOICE BANNER (10 / 10) -->
                     <div id="f1-milestone-banner" class="hidden w-full dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-4 text-left space-y-3">
-                        <div class="font-bold text-emerald-500 text-base flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-lg"></i>
+                        <div class="font-bold text-emerald-400 text-lg sm:text-xl flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-xl"></i>
                             <span>Fas 1 avklarad! (10 / 10)</span>
                         </div>
-                        <p class="text-xs dark:text-emerald-100 text-emerald-950 font-semibold">
+                        <p class="text-base dark:text-emerald-100 text-emerald-950 font-semibold">
                             Fas 2 (Guidad) är nu upplåst. Vill du gå vidare till Fas 2 eller fortsätta träna här?
                         </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <button onclick="switchTab(2)" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2 px-3 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <button onclick="switchTab(2)" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 px-3 rounded-xl text-base transition shadow flex items-center justify-center gap-1.5">
                                 <span>Gå till Fas 2: Guidad</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
-                            <button onclick="continueFas1Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                            <button onclick="continueFas1Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-3 rounded-xl text-base transition shadow flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-rotate-right"></i>
                                 <span>Fortsätt träna här</span>
                             </button>
@@ -311,13 +315,13 @@
         <!-- ================================================================= -->
         <section id="tab-content-2" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
             
-            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-4 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Fas 2 • Guidad Steg-för-Steg Metod</span>
-                    <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900">Analysera och Lös Uppgiften</h2>
+                    <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-indigo-400">Fas 2 • Guidad Steg-för-Steg Metod</span>
+                    <h2 class="text-base sm:text-lg font-bold dark:text-white text-slate-900">Analysera och Lös Uppgiften</h2>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3 py-0.5 rounded-xl text-xs font-bold dark:text-amber-300 text-amber-800" id="g1-score">
+                    <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3.5 py-1 rounded-xl text-sm sm:text-base font-bold dark:text-amber-300 text-amber-800" id="g1-score">
                         Framsteg: 0 / 5
                     </div>
                 </div>
@@ -326,109 +330,111 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-grow items-center overflow-hidden">
                 
                 <!-- LEFT COLUMN: GRAPH CANVAS -->
-                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
+                <div class="md:col-span-5 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
                     <div class="w-full flex justify-between items-center mb-0.5">
-                        <span class="text-xs font-bold dark:text-slate-300 text-slate-700">Dra hjälplinjen från axeln:</span>
-                        <button onclick="resetG1Helplines()" class="text-[11px] text-indigo-500 hover:underline font-bold">
+                        <span class="text-sm sm:text-base font-bold dark:text-slate-300 text-slate-700">Hjälplinje:</span>
+                        <button onclick="resetG1Helplines()" class="text-sm text-indigo-400 hover:underline font-bold">
                             Nollställ linjer
                         </button>
                     </div>
 
-                    <div class="relative w-full aspect-square max-h-[340px] max-w-[340px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                    <div class="relative w-full aspect-square max-h-[300px] max-w-[300px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
                         <canvas id="g1-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
                     </div>
 
-                    <div class="text-xs text-center dark:text-slate-300 text-slate-600 mt-0.5 font-semibold" id="g1-canvas-hint">
+                    <div class="text-sm sm:text-base text-center dark:text-slate-300 text-slate-600 mt-0.5 font-semibold leading-snug" id="g1-canvas-hint">
                         Slutför steg 1–3 för att låsa upp hjälplinjen.
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN: 4-STEP WORKFLOW -->
-                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-3 pb-12 border dark:border-slate-800 border-slate-300 flex flex-col justify-between h-full shadow-sm space-y-2 overflow-y-auto">
+                <!-- RIGHT COLUMN: 4-STEP WORKFLOW (COMPACT HORIZONTAL ROWS FOR LARGE TEXT) -->
+                <div class="md:col-span-7 dark:bg-slate-950 bg-white rounded-2xl p-3 border dark:border-slate-800 border-slate-300 flex flex-col justify-between h-full shadow-sm space-y-1.5 overflow-y-auto">
                     
-                    <div class="space-y-2">
+                    <div class="space-y-1.5">
                         <div class="border-b dark:border-slate-800 border-slate-200 pb-1">
-                            <h2 class="text-xl sm:text-2xl font-bold dark:text-amber-300 text-slate-900" id="g1-prompt-title">
+                            <h2 class="text-2xl font-bold dark:text-amber-300 text-slate-900" id="g1-prompt-title">
                                 Bestäm f(3)
                             </h2>
                         </div>
 
-                        <!-- STEP 1: PURE X OR Y -->
-                        <div id="g1-step-1-box" class="dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2 space-y-1.5">
-                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
-                                <span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">1</span>
+                        <!-- STEP 1: PURE X OR Y (HORIZONTAL ROW SAVES HEIGHT) -->
+                        <div id="g1-step-1-box" class="dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl px-3 py-1.5 flex items-center justify-between gap-2">
+                            <div class="text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold shrink-0">1</span>
                                 <span>Vilket värde är givet?</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-2 max-w-[220px]">
-                                <button onclick="answerG1Step1('givenX')" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-base font-bold transition">
+                            <div class="grid grid-cols-2 gap-2 w-36 shrink-0">
+                                <button onclick="answerG1Step1('givenX')" class="py-1 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-lg font-bold transition">
                                     x
                                 </button>
-                                <button onclick="answerG1Step1('givenY')" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-base font-bold transition">
+                                <button onclick="answerG1Step1('givenY')" class="py-1 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-lg font-bold transition">
                                     y
                                 </button>
                             </div>
                         </div>
 
                         <!-- STEP 2: SENTENCE FILL-IN (PURE LETTERS x / y) -->
-                        <div id="g1-step-2-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 space-y-1.5 opacity-40 pointer-events-none transition">
-                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
-                                <span class="w-4 h-4 rounded-full bg-slate-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">2</span>
+                        <div id="g1-step-2-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl px-3 py-2 space-y-1 opacity-40 pointer-events-none transition">
+                            <div class="text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-bold shrink-0">2</span>
                                 <span>Fyll i meningen:</span>
                             </div>
-                            <div class="text-xs sm:text-sm font-semibold dark:text-slate-200 text-slate-800 leading-relaxed flex flex-wrap items-center gap-1.5">
+                            <div class="text-base font-semibold dark:text-slate-200 text-slate-800 leading-relaxed flex flex-wrap items-center gap-1.5">
                                 <span>Uppgiften ger värdet</span>
                                 <span class="inline-flex rounded-lg overflow-hidden border dark:border-slate-700 border-slate-300">
-                                    <button type="button" id="g1-s2-given-x" onclick="selectG1SentenceSlot('given', 'x')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition">x</button>
-                                    <button type="button" id="g1-s2-given-y" onclick="selectG1SentenceSlot('given', 'y')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
+                                    <button type="button" id="g1-s2-given-x" onclick="selectG1SentenceSlot('given', 'x')" class="px-3.5 py-0.5 text-base font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition">x</button>
+                                    <button type="button" id="g1-s2-given-y" onclick="selectG1SentenceSlot('given', 'y')" class="px-3.5 py-0.5 text-base font-bold dark:bg-slate-950 bg-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
                                 </span>
                                 <span>, så jag behöver hitta värdet</span>
                                 <span class="inline-flex rounded-lg overflow-hidden border dark:border-slate-700 border-slate-300">
-                                    <button type="button" id="g1-s2-find-x" onclick="selectG1SentenceSlot('find', 'x')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition">x</button>
-                                    <button type="button" id="g1-s2-find-y" onclick="selectG1SentenceSlot('find', 'y')" class="px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
+                                    <button type="button" id="g1-s2-find-x" onclick="selectG1SentenceSlot('find', 'x')" class="px-3.5 py-0.5 text-base font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition">x</button>
+                                    <button type="button" id="g1-s2-find-y" onclick="selectG1SentenceSlot('find', 'y')" class="px-3.5 py-0.5 text-base font-bold dark:bg-slate-950 bg-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
                                 </span>
                                 <span>.</span>
                             </div>
                         </div>
 
-                        <!-- STEP 3: WHICH AXIS TO START ON -->
-                        <div id="g1-step-3-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 space-y-1 opacity-40 pointer-events-none transition">
-                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
-                                <span class="w-4 h-4 rounded-full bg-slate-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">3</span>
+                        <!-- STEP 3: WHICH AXIS TO START ON (HORIZONTAL ROW SAVES HEIGHT) -->
+                        <div id="g1-step-3-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 opacity-40 pointer-events-none transition">
+                            <div class="text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-bold shrink-0">3</span>
                                 <span>Vilken axel börjar du på?</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-1.5">
-                                <button onclick="answerG1Step3('x')" id="g1-s3-x-btn" class="p-1.5 dark:bg-slate-950 bg-white border border-blue-500 rounded-xl text-left transition">
-                                    <span class="block text-xs font-bold text-blue-600 dark:text-blue-400">x-axeln</span>
+                            <div class="grid grid-cols-2 gap-2 w-56 shrink-0">
+                                <button onclick="answerG1Step3('x')" id="g1-s3-x-btn" class="py-1 px-2.5 dark:bg-slate-950 bg-white border border-blue-500 rounded-xl text-center transition">
+                                    <span class="block text-base font-bold text-blue-600 dark:text-blue-400">x-axeln</span>
                                 </button>
-                                <button onclick="answerG1Step3('y')" id="g1-s3-y-btn" class="p-1.5 dark:bg-slate-950 bg-white border border-rose-500 rounded-xl text-left transition">
-                                    <span class="block text-xs font-bold text-rose-600 dark:text-rose-400">y-axeln</span>
+                                <button onclick="answerG1Step3('y')" id="g1-s3-y-btn" class="py-1 px-2.5 dark:bg-slate-950 bg-white border border-rose-500 rounded-xl text-center transition">
+                                    <span class="block text-base font-bold text-rose-600 dark:text-rose-400">y-axeln</span>
                                 </button>
                             </div>
                         </div>
 
                         <!-- STEP 4: FINAL ANSWER -->
-                        <div id="g1-step-4-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 space-y-1.5 opacity-40 pointer-events-none transition">
-                            <div class="text-xs sm:text-sm font-bold dark:text-white text-slate-900 flex items-center gap-1.5">
-                                <span class="w-4 h-4 rounded-full bg-slate-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">4</span>
-                                <span>Ange ditt svar:</span>
-                            </div>
+                        <div id="g1-step-4-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl px-3 py-2 space-y-1.5 opacity-40 pointer-events-none transition">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div class="text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-bold shrink-0">4</span>
+                                    <span>Ange ditt svar:</span>
+                                </div>
 
-                            <div class="flex gap-1.5 items-center text-[11px] flex-wrap">
-                                <button type="button" onclick="insertG1Symbol('−')" class="px-2.5 py-0.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md font-bold transition shadow-sm">
-                                    −
-                                </button>
-                                <button type="button" onclick="insertG1FuncNotation()" id="g1-dyn-func-btn" class="px-2.5 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-bold transition shadow-sm">
-                                    f() =
-                                </button>
-                                <button type="button" onclick="insertG1XNotation()" class="px-2.5 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-bold transition shadow-sm">
-                                    x =
-                                </button>
+                                <div class="flex gap-1.5 items-center text-base">
+                                    <button type="button" onclick="insertG1Symbol('−')" class="px-3 py-0.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md font-bold transition shadow-sm">
+                                        −
+                                    </button>
+                                    <button type="button" onclick="insertG1FuncNotation()" id="g1-dyn-func-btn" class="px-3 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-bold transition shadow-sm">
+                                        f() =
+                                    </button>
+                                    <button type="button" onclick="insertG1XNotation()" class="px-3 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-bold transition shadow-sm">
+                                        x =
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="flex items-center gap-2">
                                 <input type="text" id="g1-final-input" autocomplete="off"
-                                       class="flex-grow dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-sm rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500">
-                                <button onclick="submitG1FinalAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow">
+                                       class="flex-grow dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500">
+                                <button onclick="submitG1FinalAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base px-4 py-1.5 rounded-xl transition shadow">
                                     Svara
                                 </button>
                             </div>
@@ -436,31 +442,31 @@
                     </div>
 
                     <!-- FEEDBACK BANNER -->
-                    <div id="g1-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-2 text-xs space-y-1.5">
-                        <div id="g1-feedback-text" class="font-normal text-xs sm:text-sm"></div>
+                    <div id="g1-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-2.5 text-base space-y-1.5">
+                        <div id="g1-feedback-text" class="font-normal text-base"></div>
                         <div id="g1-next-row" class="pt-1 border-t dark:border-slate-800 border-slate-300 flex justify-between items-center">
-                            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">Tryck Enter eller klicka för nästa:</span>
-                            <button onclick="generateNextFas2Question()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1.5">
+                            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-sm sm:text-base">Tryck Enter eller klicka för nästa:</span>
+                            <button onclick="generateNextFas2Question()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1 rounded-xl text-base transition shadow flex items-center gap-1.5">
                                 <span>Nästa</span> <i class="fa-solid fa-arrow-right"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- MILESTONE CHOICE BANNER (5 / 5) -->
-                    <div id="g1-milestone-banner" class="hidden dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-100 text-emerald-900 space-y-2 shadow-lg">
-                        <div class="font-bold text-emerald-500 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                    <div id="g1-milestone-banner" class="hidden dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-3 text-base dark:text-emerald-100 text-emerald-900 space-y-2 shadow-lg">
+                        <div class="font-bold text-emerald-400 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400 text-lg"></i>
                             <span>Fas 2 avklarad! (5 / 5)</span>
                         </div>
-                        <p class="text-xs leading-relaxed font-semibold">
+                        <p class="text-base leading-relaxed font-semibold">
                             Fas 3 (Direkt) är nu upplåst. Vill du gå vidare till Fas 3 eller fortsätta träna här?
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <button onclick="switchTab(3)" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                            <button onclick="switchTab(3)" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-base transition shadow flex items-center justify-center gap-1.5">
                                 <span>Gå till Fas 3: Direkt</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
-                            <button onclick="continueFas2Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                            <button onclick="continueFas2Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-base transition shadow flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-rotate-right"></i>
                                 <span>Fortsätt träna här</span>
                             </button>
@@ -478,59 +484,59 @@
         <!-- ================================================================= -->
         <section id="tab-content-3" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
             
-            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-4 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
                 <div class="flex items-center gap-2.5">
-                    <span id="p-type-badge" class="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-900/80 text-blue-800 dark:text-blue-300 font-bold text-[11px] rounded-full border border-blue-300 dark:border-blue-700">
+                    <span id="p-type-badge" class="px-3 py-0.5 bg-blue-100 dark:bg-blue-900/80 text-blue-800 dark:text-blue-300 font-bold text-sm sm:text-base rounded-full border border-blue-300 dark:border-blue-700">
                         Fas 3 • Direkt Träning
                     </span>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <span class="text-xs dark:text-slate-300 text-slate-700 font-bold" id="p-score">Klarade: 0 / 6</span>
+                    <span class="text-base dark:text-slate-300 text-slate-700 font-bold" id="p-score">Klarade: 0 / 6</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-grow items-center overflow-hidden">
                 
                 <!-- LEFT COLUMN: GRAPH CANVAS -->
-                <div class="md:col-span-7 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
-                    <div class="relative w-full aspect-square max-h-[350px] max-w-[350px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
+                    <div class="relative w-full aspect-square max-h-[320px] max-w-[320px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
                         <canvas id="p-canvas" class="w-full h-full cursor-pointer"></canvas>
                     </div>
-                    <span class="text-[11px] dark:text-slate-400 text-slate-600 mt-0.5 font-medium">
+                    <span class="text-sm sm:text-base dark:text-slate-400 text-slate-600 mt-0.5 font-medium text-center">
                         Läs av värdet på grafen och skriv ditt svar till höger.
                     </span>
                 </div>
 
                 <!-- RIGHT COLUMN: QUESTION PROMPT & INPUT PANEL -->
-                <div class="md:col-span-5 dark:bg-slate-950 bg-white rounded-2xl p-3 pb-12 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between shadow-sm space-y-2.5 overflow-y-auto">
+                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-4 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between shadow-sm space-y-2.5 overflow-y-auto">
                     
-                    <div class="space-y-2.5">
-                        <div class="border-b dark:border-slate-800 border-slate-200 pb-1.5">
-                            <h2 class="text-xl sm:text-2xl font-bold dark:text-amber-300 text-slate-900" id="p-question-title">
+                    <div class="space-y-3">
+                        <div class="border-b dark:border-slate-800 border-slate-200 pb-2">
+                            <h2 class="text-2xl sm:text-3xl font-bold dark:text-amber-300 text-slate-900" id="p-question-title">
                                 Bestäm f(2)
                             </h2>
                         </div>
 
                         <div class="space-y-1">
                             <div class="flex gap-2">
-                                <button type="button" onclick="insertPracticeSymbol('−')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold text-xs transition shadow-sm">
+                                <button type="button" onclick="insertPracticeSymbol('−')" class="px-4 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold text-base transition shadow-sm">
                                     −
                                 </button>
-                                <button type="button" onclick="insertPracticeFuncNotation()" id="p-dyn-func-btn" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs transition shadow-sm">
+                                <button type="button" onclick="insertPracticeFuncNotation()" id="p-dyn-func-btn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-base transition shadow-sm">
                                     f() =
                                 </button>
-                                <button type="button" onclick="insertPracticeXNotation()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs transition shadow-sm">
+                                <button type="button" onclick="insertPracticeXNotation()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-base transition shadow-sm">
                                     x =
                                 </button>
                             </div>
                         </div>
 
-                        <div class="space-y-2 pt-0.5">
+                        <div class="space-y-2.5 pt-0.5">
                             <input type="text" id="p-answer-input" autocomplete="off"
-                                   class="w-full dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-base rounded-xl px-3 py-2 outline-none focus:border-indigo-500 shadow-inner">
+                                   class="w-full dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-4 py-2 outline-none focus:border-indigo-500 shadow-inner">
                             
-                            <button onclick="checkPracticeAnswer()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2 rounded-xl transition shadow flex items-center justify-center gap-1.5">
+                            <button onclick="checkPracticeAnswer()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base sm:text-lg py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-paper-plane"></i>
                                 <span>Skicka Svar</span>
                             </button>
@@ -538,33 +544,33 @@
                     </div>
 
                     <!-- FEEDBACK BANNER -->
-                    <div id="p-next-banner" class="hidden dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-200 text-emerald-900 space-y-1.5">
-                        <div class="font-normal dark:text-emerald-300 text-emerald-900 flex items-center gap-1.5 text-xs sm:text-sm" id="p-feedback-msg">
-                            <i class="fa-solid fa-circle-check text-sm"></i> Rätt svar!
+                    <div id="p-next-banner" class="hidden dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-3 text-base dark:text-emerald-200 text-emerald-900 space-y-2">
+                        <div class="font-normal dark:text-emerald-300 text-emerald-900 flex items-center gap-2 text-base" id="p-feedback-msg">
+                            <i class="fa-solid fa-circle-check text-lg"></i> Rätt svar!
                         </div>
-                        <div id="p-next-row" class="flex justify-between items-center pt-1 border-t dark:border-emerald-900 border-emerald-300">
-                            <span class="text-[11px]">Tryck Enter eller klicka:</span>
-                            <button onclick="generateNextPractice()" id="p-next-btn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1">
+                        <div id="p-next-row" class="flex justify-between items-center pt-1.5 border-t dark:border-emerald-900 border-emerald-300">
+                            <span class="text-sm sm:text-base">Tryck Enter eller klicka:</span>
+                            <button onclick="generateNextPractice()" id="p-next-btn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-xl text-base transition shadow flex items-center gap-1.5">
                                 <span>Nästa uppgift</span> <i class="fa-solid fa-arrow-right"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- MILESTONE CHOICE BANNER (6 / 6) -->
-                    <div id="p-handoff-banner" class="hidden dark:bg-amber-950/90 bg-amber-100 border-2 border-amber-500 rounded-2xl p-2.5 text-xs dark:text-amber-100 text-amber-950 space-y-2 shadow-lg">
-                        <div class="font-bold text-amber-500 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                    <div id="p-handoff-banner" class="hidden dark:bg-amber-950/90 bg-amber-100 border-2 border-amber-500 rounded-2xl p-3.5 text-base dark:text-amber-100 text-amber-950 space-y-2.5 shadow-lg">
+                        <div class="font-bold text-amber-400 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400 text-lg"></i>
                             <span>Fas 3 avklarad! (6 / 6)</span>
                         </div>
-                        <p class="text-xs leading-relaxed font-semibold">
+                        <p class="text-base leading-relaxed font-semibold">
                             Fas 4 (Utmaning) är nu upplåst. Vill du gå vidare till Utmaningen eller fortsätta träna här?
                         </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                            <button onclick="switchTab(4)" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
+                            <button onclick="switchTab(4)" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-base transition shadow flex items-center justify-center gap-1.5">
                                 <span>Gå till Fas 4: Utmaning</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
-                            <button onclick="continueFas3Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                            <button onclick="continueFas3Practice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-base transition shadow flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-rotate-right"></i>
                                 <span>Fortsätt träna här</span>
                             </button>
@@ -572,12 +578,12 @@
                     </div>
 
                     <!-- REVERT TO FAS 2 CALLOUT -->
-                    <div id="p-revert-banner" class="hidden bg-rose-900/90 border border-rose-500 rounded-2xl p-2.5 text-xs text-rose-100 space-y-1.5">
-                        <div class="font-bold text-rose-200 flex items-center gap-1.5">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
+                    <div id="p-revert-banner" class="hidden bg-rose-900/90 border border-rose-500 rounded-2xl p-3 text-base text-rose-100 space-y-2">
+                        <div class="font-bold text-rose-200 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-400 text-lg"></i>
                             <span>Behöver du repetera steg-för-steg metoden?</span>
                         </div>
-                        <button onclick="switchTab(2)" class="w-full bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold px-3 py-1 rounded-xl text-xs transition shadow">
+                        <button onclick="switchTab(2)" class="w-full bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-base transition shadow">
                             Gå till Fas 2: Guidad
                         </button>
                     </div>
@@ -593,47 +599,47 @@
         <!-- ================================================================= -->
         <section id="tab-content-4" class="tab-content h-full flex flex-col justify-between space-y-2 hidden">
             
-            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-3 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
+            <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-4 py-1.5 flex justify-between items-center shrink-0 shadow-sm">
                 <div class="flex items-center gap-2.5">
-                    <span id="f5-level-badge" class="px-2.5 py-0.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-[11px] rounded-full border border-amber-500/40">
+                    <span id="f5-level-badge" class="px-3 py-0.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-sm sm:text-base rounded-full border border-amber-500/40">
                         Fas 4 • Utmaning
                     </span>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <span class="text-xs dark:text-slate-300 text-slate-700 font-bold" id="f5-score">Klarade: 0 / 6</span>
+                    <span class="text-base dark:text-slate-300 text-slate-700 font-bold" id="f5-score">Klarade: 0 / 6</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-grow items-center overflow-hidden">
                 
                 <!-- LEFT COLUMN: GRAPH CANVAS -->
-                <div class="md:col-span-7 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
+                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-2.5 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
                     <div class="w-full flex justify-between items-center mb-0.5">
-                        <span class="text-xs font-bold dark:text-slate-300 text-slate-700" id="f5-canvas-title">Dra hjälplinjen på axeln:</span>
-                        <button onclick="resetF5Helplines()" class="text-[11px] text-indigo-500 hover:underline font-bold">
+                        <span class="text-sm sm:text-base font-bold dark:text-slate-300 text-slate-700" id="f5-canvas-title">Dra hjälplinjen:</span>
+                        <button onclick="resetF5Helplines()" class="text-sm text-indigo-400 hover:underline font-bold">
                             Nollställ linjer
                         </button>
                     </div>
 
-                    <div class="relative w-full aspect-square max-h-[350px] max-w-[350px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
+                    <div class="relative w-full aspect-square max-h-[310px] max-w-[310px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
                         <canvas id="f5-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
                     </div>
 
-                    <span class="text-[11px] dark:text-slate-400 text-slate-600 mt-0.5 font-medium text-center">
-                        Använd hjälplinjen för att läsa av graferna i koordinatsystemet.
+                    <span class="text-sm sm:text-base dark:text-slate-400 text-slate-600 mt-0.5 font-medium text-center leading-snug">
+                        Använd hjälplinjen för att läsa av graferna.
                     </span>
                 </div>
 
                 <!-- RIGHT COLUMN: QUESTION & INPUTS -->
-                <div class="md:col-span-5 dark:bg-slate-950 bg-white rounded-2xl p-3 pb-12 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between shadow-sm space-y-2 overflow-y-auto">
+                <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-4 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between shadow-sm space-y-2.5 overflow-y-auto">
                     
-                    <div class="space-y-2">
-                        <div class="border-b dark:border-slate-800 border-slate-200 pb-1.5">
-                            <h2 class="text-base sm:text-lg font-bold dark:text-amber-300 text-slate-900 leading-snug break-words" id="f5-title">
+                    <div class="space-y-2.5">
+                        <div class="border-b dark:border-slate-800 border-slate-200 pb-2">
+                            <h2 class="text-xl sm:text-2xl font-bold dark:text-amber-300 text-slate-900 leading-snug break-words" id="f5-title">
                                 För vilket x gäller:<br><span class="text-amber-400">f(x) = g(x)?</span>
                             </h2>
-                            <p class="text-xs text-slate-400 font-medium leading-snug mt-1" id="f5-prompt-desc">
+                            <p class="text-base text-slate-400 font-medium leading-snug mt-1" id="f5-prompt-desc">
                                 Ange lösningarna till ekvationen:
                             </p>
                         </div>
@@ -643,20 +649,20 @@
                             
                             <!-- STEP 1 INNER -->
                             <div id="f5-comp-step1" class="dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2.5 space-y-1.5">
-                                <span class="text-xs font-bold text-indigo-400 block" id="f5-cstep1-label">Steg 1: Bestäm inre värdet f(−1)</span>
+                                <span class="text-base font-bold text-indigo-400 block" id="f5-cstep1-label">Steg 1: Bestäm inre värdet f(−1)</span>
                                 
                                 <div class="flex items-center gap-2">
-                                    <span class="text-base font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep1-prefix">f(−1) =</span>
+                                    <span class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep1-prefix">f(−1) =</span>
                                     <input type="text" id="f5-input-cstep1" autocomplete="off"
-                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-2.5 py-1 outline-none focus:border-indigo-500 text-center">
-                                    <button onclick="submitF5Step1()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow">
+                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-2.5 py-1 outline-none focus:border-indigo-500 text-center">
+                                    <button onclick="submitF5Step1()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base px-4 py-1.5 rounded-xl transition shadow">
                                         Lås in
                                     </button>
                                 </div>
                             </div>
 
                             <!-- SPECIALIZED ERROR DISPLAY BETWEEN STEP 1 & STEP 2 -->
-                            <div id="f5-step1-error-banner" class="hidden dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-xl p-2 text-xs text-rose-900 dark:text-rose-100 space-y-1">
+                            <div id="f5-step1-error-banner" class="hidden dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-xl p-2.5 text-base text-rose-900 dark:text-rose-100 space-y-1">
                                 <div class="font-bold flex items-center gap-1.5">
                                     <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
                                     <span>Kontrollera funktionsval:</span>
@@ -666,12 +672,15 @@
 
                             <!-- STEP 2 OUTER -->
                             <div id="f5-comp-step2" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2.5 space-y-1.5 opacity-40 pointer-events-none transition">
-                                <span class="text-xs font-bold dark:text-slate-300 text-slate-700 block" id="f5-cstep2-label">Steg 2: Bestäm nu y-värdet för yttre funktionen</span>
+                                <span class="text-base font-bold dark:text-slate-300 text-slate-700 block" id="f5-cstep2-label">Steg 2: Bestäm nu y-värdet för yttre funktionen</span>
                                 
                                 <div class="flex items-center gap-2">
-                                    <span class="text-base font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep2-prefix">g(f(−1)) =</span>
+                                    <span class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep2-prefix">g(f(−1)) =</span>
                                     <input type="text" id="f5-input-cstep2" autocomplete="off"
-                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-2.5 py-1 outline-none focus:border-indigo-500 text-center">
+                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-2.5 py-1 outline-none focus:border-indigo-500 text-center">
+                                    <button onclick="submitF5FinalAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base px-4 py-1.5 rounded-xl transition shadow">
+                                        Svara
+                                    </button>
                                 </div>
                             </div>
 
@@ -681,55 +690,55 @@
                         <div id="f5-standard-workflow" class="space-y-2 pt-0.5">
                             <div class="flex flex-col gap-2" id="f5-root-grid">
                                 <div class="flex items-center gap-2">
-                                    <label class="text-lg font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[65px]" id="f5-label-x1">x₁ =</label>
+                                    <label class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[85px]" id="f5-label-x1">x₁ =</label>
                                     <input type="text" id="f5-input-x1" autocomplete="off"
-                                           class="w-28 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-3 py-1 outline-none focus:border-indigo-500">
+                                           class="w-36 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3 py-1 outline-none focus:border-indigo-500">
                                 </div>
                                 <div id="f5-box-x2" class="hidden flex items-center gap-2">
-                                    <label class="text-lg font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[65px]">x₂ =</label>
+                                    <label class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[85px]">x₂ =</label>
                                     <input type="text" id="f5-input-x2" autocomplete="off"
-                                           class="w-28 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-lg rounded-xl px-3 py-1 outline-none focus:border-indigo-500">
+                                           class="w-36 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3 py-1 outline-none focus:border-indigo-500">
                                 </div>
                             </div>
 
-                            <button onclick="toggleF5SecondInput()" id="f5-add-root-btn" class="w-full py-1.5 px-3 bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/70 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm">
-                                <i class="fa-solid fa-plus-circle text-sm text-indigo-400"></i>
+                            <button onclick="toggleF5SecondInput()" id="f5-add-root-btn" class="w-full py-2 px-3 bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/70 rounded-xl font-bold text-base transition flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-plus-circle text-lg text-indigo-400"></i>
                                 <span>+ Lägg till lösning (om två rötter finns)</span>
                             </button>
                         </div>
 
-                        <button onclick="checkF5Answer()" id="f5-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2 rounded-xl transition shadow flex items-center justify-center gap-1.5 mt-1.5">
+                        <button onclick="checkF5Answer()" id="f5-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base sm:text-lg py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2 mt-1.5">
                             <i class="fa-solid fa-paper-plane"></i>
                             <span>Skicka Svar</span>
                         </button>
                     </div>
 
                     <!-- FEEDBACK BANNER -->
-                    <div id="f5-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-2.5 text-xs space-y-1.5">
-                        <div class="font-normal text-xs sm:text-sm" id="f5-feedback-msg"></div>
+                    <div id="f5-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-3 text-base space-y-2">
+                        <div class="font-normal text-base" id="f5-feedback-msg"></div>
 
-                        <div id="f5-next-row" class="flex justify-between items-center pt-1 border-t dark:border-slate-800 border-slate-300">
-                            <span class="text-[11px] dark:text-slate-400 text-slate-600">Tryck Enter eller klicka:</span>
-                            <button onclick="nextF5Question()" id="f5-next-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1 opacity-50 cursor-not-allowed" disabled>
+                        <div id="f5-next-row" class="flex justify-between items-center pt-1.5 border-t dark:border-slate-800 border-slate-300">
+                            <span class="text-sm sm:text-base dark:text-slate-400 text-slate-600">Tryck Enter eller klicka:</span>
+                            <button onclick="nextF5Question()" id="f5-next-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded-xl text-base transition shadow flex items-center gap-1.5 opacity-50 cursor-not-allowed" disabled>
                                 <span>Nästa uppgift</span> <i class="fa-solid fa-arrow-right"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- CELEBRATION BANNER (6 POINTS) -->
-                    <div id="f5-celebration-banner" class="hidden dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-100 text-emerald-900 space-y-2 shadow-xl">
-                        <div class="font-bold text-emerald-400 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                    <div id="f5-celebration-banner" class="hidden dark:bg-emerald-950/90 bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-3.5 text-base dark:text-emerald-100 text-emerald-900 space-y-2.5 shadow-xl">
+                        <div class="font-bold text-emerald-400 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400 text-lg"></i>
                             <span>Grattis! Du har uppnått målet på 6 rätt!</span>
                         </div>
-                        <p class="text-xs leading-relaxed font-semibold">
+                        <p class="text-base leading-relaxed font-semibold">
                             Vill du fortsätta utmana dig själv med fler uppgifter eller är du klar för idag?
                         </p>
                         <div class="grid grid-cols-2 gap-2 pt-0.5">
-                            <button onclick="continueF5Challenge()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 px-2 rounded-xl text-xs transition shadow">
+                            <button onclick="continueF5Challenge()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-2 rounded-xl text-base transition shadow">
                                 Fortsätt utmana
                             </button>
-                            <button onclick="finishF5Challenge()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 px-2 rounded-xl text-xs transition shadow">
+                            <button onclick="finishF5Challenge()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded-xl text-base transition shadow">
                                 Klar för idag!
                             </button>
                         </div>
@@ -866,13 +875,15 @@
         let expX = 3.0;
         let isExpDragging = false;
 
-        // Tab 1: Fas 1 (1. x eller y? — 10 rapid-fire questions)
+        // Tab 1: Fas 1 (1. x eller y? — Balanced 50/50, max 2 consecutive of same type)
         let f1Current = null;
         let f1Score = 0;
         let f1Target = 10;
         let f1Answered = false;
         let f1MilestoneShown = false;
         let f1LastSignature = "";
+        let f1TypeQueue = [];
+        let f1RecentTypes = [];
 
         // Tab 2: Fas 2 (2. Guidad — 5 questions)
         let g1Current = null;
@@ -1067,7 +1078,7 @@
             isPhase2Unlocked = true;
             const btn2 = document.getElementById('tab-btn-2');
             btn2.disabled = false;
-            btn2.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+            btn2.className = "tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
             document.getElementById('tab-2-lock-icon').className = "fa-solid fa-lock-open text-emerald-400 text-xs";
         }
 
@@ -1075,7 +1086,7 @@
             isPhase3Unlocked = true;
             const btn3 = document.getElementById('tab-btn-3');
             btn3.disabled = false;
-            btn3.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+            btn3.className = "tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
             document.getElementById('tab-3-lock-icon').className = "fa-solid fa-lock-open text-emerald-400 text-xs";
         }
 
@@ -1083,7 +1094,7 @@
             isPhase4Unlocked = true;
             const btn4 = document.getElementById('tab-btn-4');
             btn4.disabled = false;
-            btn4.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+            btn4.className = "tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
             document.getElementById('tab-4-lock-icon').className = "fa-solid fa-lock-open text-amber-400 text-xs";
         }
 
@@ -1098,14 +1109,14 @@
                 body.classList.add('dark');
                 body.classList.remove('bg-slate-100');
                 body.classList.add('bg-slate-900');
-                btn.className = "px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300";
+                btn.className = "px-2.5 py-1.5 rounded-lg text-xs lg:text-sm font-bold border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300";
                 btn.querySelector('i').className = "fa-solid fa-sun text-xs";
                 lbl.innerText = "Ljust läge";
             } else {
                 body.classList.remove('dark');
                 body.classList.remove('bg-slate-900');
                 body.classList.add('bg-slate-100');
-                btn.className = "px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-1.5 transition bg-slate-800 text-white border-slate-700 hover:bg-slate-700";
+                btn.className = "px-2.5 py-1.5 rounded-lg text-xs lg:text-sm font-bold border flex items-center gap-1.5 transition bg-slate-800 text-white border-slate-700 hover:bg-slate-700";
                 btn.querySelector('i').className = "fa-solid fa-moon text-xs";
                 lbl.innerText = "Mörkt läge";
             }
@@ -1128,11 +1139,11 @@
                 const btn = document.getElementById(`tab-btn-${num}`);
                 if (!btn) continue;
                 if (num === tabIdx) {
-                    btn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow flex items-center gap-1 shrink-0";
+                    btn.className = "tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition bg-indigo-600 text-white shadow flex items-center gap-1 shrink-0";
                 } else if (lockedMap[num]) {
-                    btn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0";
+                    btn.className = "tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-500 cursor-not-allowed opacity-60 flex items-center gap-1 shrink-0";
                 } else {
-                    btn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
+                    btn.className = "tab-btn px-2 py-1 rounded-lg text-xs lg:text-sm font-bold transition text-slate-400 hover:text-white flex items-center gap-1 shrink-0 cursor-pointer";
                 }
             }
 
@@ -1165,8 +1176,8 @@
             currentMachineFunc = key;
             ['f', 'g', 'h'].forEach(k => {
                 const btn = document.getElementById(`mfunc-${k}`);
-                if (k === key) btn.className = "mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow";
-                else btn.className = "mfunc-btn px-3 py-0.5 rounded-xl text-xs font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700";
+                if (k === key) btn.className = "mfunc-btn px-3 py-1 rounded-xl text-sm sm:text-base font-bold bg-indigo-600 text-white shadow";
+                else btn.className = "mfunc-btn px-3 py-1 rounded-xl text-sm sm:text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-700";
             });
 
             const fn = machineDefs[currentMachineFunc];
@@ -1215,9 +1226,9 @@
 
                 html += `
                     <tr onclick="setTablePoint(${x})" class="${rowClass}" id="t-row-${x}">
-                        <td class="p-2 text-center text-blue-600 dark:text-blue-400 font-bold">${fmtNum(x)}</td>
-                        <td class="p-2 text-center">${calcStr}</td>
-                        <td class="p-2 text-center text-rose-600 dark:text-rose-400 font-bold">${fmtNum(y)}</td>
+                        <td class="p-1.5 text-center text-blue-600 dark:text-blue-400 font-bold">${fmtNum(x)}</td>
+                        <td class="p-1.5 text-center">${calcStr}</td>
+                        <td class="p-1.5 text-center text-rose-600 dark:text-rose-400 font-bold">${fmtNum(y)}</td>
                     </tr>
                 `;
             }
@@ -1246,7 +1257,7 @@
         function resizeCanvas(id) {
             const c = document.getElementById(id);
             if (!c || !c.parentElement) return;
-            const side = Math.min(c.parentElement.clientWidth, c.parentElement.clientHeight || 310);
+            const side = Math.min(c.parentElement.clientWidth, c.parentElement.clientHeight || 285);
             c.width = side;
             c.height = side;
         }
@@ -1287,13 +1298,13 @@
             ctx.strokeStyle = isDarkMode ? '#fb7185' : '#e11d48';
             ctx.beginPath(); ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h); ctx.stroke();
 
-            ctx.font = '700 11px "IBM Plex Sans", sans-serif';
-            ctx.fillStyle = isDarkMode ? '#cbd5e1' : '#334155';
+            ctx.font = '700 15px "IBM Plex Sans", sans-serif';
+            ctx.fillStyle = isDarkMode ? '#f1f5f9' : '#0f172a';
             for (let i = -scale; i <= scale; i += 2) {
                 if (i === 0) continue;
                 const lbl = fmtNum(i);
-                ctx.fillText(lbl, w / 2 + i * stepX - 7, h / 2 + 14);
-                ctx.fillText(lbl, w / 2 + 6, h / 2 - i * stepY + 4);
+                ctx.fillText(lbl, w / 2 + i * stepX - 9, h / 2 + 18);
+                ctx.fillText(lbl, w / 2 + 8, h / 2 - i * stepY + 6);
             }
         }
 
@@ -1338,7 +1349,7 @@
             ctx.fillStyle = '#9333ea';
             ctx.strokeStyle = '#ffffff';
             ctx.lineWidth = 2.5;
-            ctx.beginPath(); ctx.arc(mainPt.cx, mainPt.cy, 7.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            ctx.beginPath(); ctx.arc(mainPt.cx, mainPt.cy, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         }
 
         function setupExpEvents() {
@@ -1361,17 +1372,61 @@
             window.addEventListener('touchend', () => { isExpDragging = false; });
         }
 
-        /* ---------------- TAB 1: FAS 1 — 1. x eller y? (RAPID-FIRE, 10 QUESTIONS) ---------------- */
+        /* ---------------- TAB 1: FAS 1 — BALANCED 50-50 & MAX 2 IN A ROW ---------------- */
+        function generateBalancedFas1Sequence(prevHistory = []) {
+            const validSequences = [];
+            const initLast = prevHistory.length > 0 ? prevHistory[prevHistory.length - 1] : null;
+            const initRun = (prevHistory.length >= 2 && prevHistory[prevHistory.length - 1] === prevHistory[prevHistory.length - 2])
+                ? 2
+                : (initLast ? 1 : 0);
+
+            function backtrack(seq, remX, remY, lastType, runLen) {
+                if (remX === 0 && remY === 0) {
+                    validSequences.push(seq);
+                    return;
+                }
+                if (remX > 0 && !(lastType === 'givenX' && runLen >= 2)) {
+                    backtrack(
+                        [...seq, 'givenX'],
+                        remX - 1,
+                        remY,
+                        'givenX',
+                        lastType === 'givenX' ? runLen + 1 : 1
+                    );
+                }
+                if (remY > 0 && !(lastType === 'givenY' && runLen >= 2)) {
+                    backtrack(
+                        [...seq, 'givenY'],
+                        remX,
+                        remY - 1,
+                        'givenY',
+                        lastType === 'givenY' ? runLen + 1 : 1
+                    );
+                }
+            }
+
+            backtrack([], 5, 5, initLast, initRun);
+            return validSequences[Math.floor(Math.random() * validSequences.length)];
+        }
+
         function generateFas1Problem() {
+            if (f1TypeQueue.length === 0) {
+                f1TypeQueue = generateBalancedFas1Sequence(f1RecentTypes);
+            }
+
+            const type = f1TypeQueue.shift();
+            f1RecentTypes.push(type);
+            if (f1RecentTypes.length > 2) {
+                f1RecentTypes.shift();
+            }
+
             const fnNames = ['f', 'g', 'h', 'k', 'v'];
-            const types = ['givenX', 'givenY'];
-            let sig, fnName, type, num, promptStr;
+            let sig, fnName, num, promptStr;
             let attempts = 0;
 
             do {
                 attempts++;
                 fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
-                type = types[Math.floor(Math.random() * types.length)];
                 num = Math.floor(Math.random() * 17) - 8; // -8 to 8
                 sig = `${fnName}:${type}:${num}`;
             } while (sig === f1LastSignature && attempts < 30);
@@ -1400,7 +1455,7 @@
 
             const btnX = document.getElementById('f1-btn-x');
             const btnY = document.getElementById('f1-btn-y');
-            const baseClass = "py-4 px-6 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-2xl font-bold transition shadow-sm";
+            const baseClass = "py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm";
             btnX.className = baseClass;
             btnY.className = baseClass;
             btnX.disabled = false;
@@ -1424,11 +1479,11 @@
                 document.getElementById('f1-score').innerText = `Framsteg: ${f1Score} / ${f1Target}`;
 
                 const chosenBtn = selectedType === 'givenX' ? btnX : btnY;
-                chosenBtn.className = "py-4 px-6 rounded-xl border-2 border-emerald-500 bg-emerald-500 text-slate-950 text-2xl font-bold transition shadow-sm";
+                chosenBtn.className = "py-4 px-8 rounded-xl border-2 border-emerald-500 bg-emerald-500 text-slate-950 text-3xl sm:text-4xl font-bold transition shadow-sm";
                 btnX.disabled = true;
                 btnY.disabled = true;
 
-                fbBox.className = "w-full rounded-xl p-3 text-sm font-bold flex items-center justify-between gap-2 dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 dark:text-emerald-200 text-emerald-900";
+                fbBox.className = "w-full rounded-xl p-3.5 text-base sm:text-lg font-bold flex items-center justify-between gap-2 dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 dark:text-emerald-200 text-emerald-900";
                 fbText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i> Rätt! (${selectedType === 'givenX' ? 'x' : 'y'})`;
 
                 if (f1Score >= f1Target && !f1MilestoneShown) {
@@ -1439,8 +1494,8 @@
                 }
             } else {
                 const wrongBtn = selectedType === 'givenX' ? btnX : btnY;
-                wrongBtn.className = "py-4 px-6 rounded-xl border-2 border-rose-500 bg-rose-500/20 text-rose-400 text-2xl font-bold transition shadow-sm";
-                fbBox.className = "w-full rounded-xl p-3 text-sm font-bold flex items-center justify-between gap-2 dark:bg-rose-950/90 bg-rose-100 border border-rose-500 dark:text-rose-200 text-rose-900";
+                wrongBtn.className = "py-4 px-8 rounded-xl border-2 border-rose-500 bg-rose-500/20 text-rose-400 text-3xl sm:text-4xl font-bold transition shadow-sm";
+                fbBox.className = "w-full rounded-xl p-3.5 text-base sm:text-lg font-bold flex items-center justify-between gap-2 dark:bg-rose-950/90 bg-rose-100 border border-rose-500 dark:text-rose-200 text-rose-900";
                 fbText.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1.5"></i> Försök igen.`;
                 nextBtn.classList.add('hidden');
             }
@@ -1531,12 +1586,21 @@
         function setG1StepState(stepNum, state) {
             const el = document.getElementById(`g1-step-${stepNum}-box`);
             if (!el) return;
+
+            const layoutMap = {
+                1: "rounded-2xl px-3 py-1.5 flex items-center justify-between gap-2",
+                2: "rounded-2xl px-3 py-2 space-y-1",
+                3: "rounded-2xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-2",
+                4: "rounded-2xl px-3 py-2 space-y-1.5"
+            };
+            const base = layoutMap[stepNum];
+
             if (state === 'active') {
-                el.className = "dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 rounded-2xl p-2 space-y-1.5 opacity-100 pointer-events-auto shadow-sm";
+                el.className = `dark:bg-slate-900 bg-slate-100 border-2 border-indigo-500 ${base} opacity-100 pointer-events-auto shadow-sm`;
             } else if (state === 'completed') {
-                el.className = "dark:bg-emerald-950/40 bg-emerald-50 border border-emerald-500/60 rounded-2xl p-2 space-y-1.5 opacity-90 pointer-events-none";
+                el.className = `dark:bg-emerald-950/40 bg-emerald-50 border border-emerald-500/60 ${base} opacity-90 pointer-events-none`;
             } else {
-                el.className = "dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2 opacity-40 pointer-events-none space-y-1.5";
+                el.className = `dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 ${base} opacity-40 pointer-events-none`;
             }
         }
 
@@ -1553,9 +1617,9 @@
             }
         }
 
-        // Step 2: Sentence Fill-in ("Uppgiften ger värdet [x/y], så jag behöver hitta värdet [x/y].")
+        // Step 2: Sentence Fill-in
         function resetG1SentenceButtonsUI() {
-            const base = "px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition";
+            const base = "px-3.5 py-0.5 text-base font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition";
             document.getElementById('g1-s2-given-x').className = base;
             document.getElementById('g1-s2-given-y').className = base + " border-l dark:border-slate-700 border-slate-300";
             document.getElementById('g1-s2-find-x').className = base;
@@ -1571,9 +1635,8 @@
                 g1SentenceFind = letter;
             }
 
-            // Update visual highlight of chosen pills
-            const activeCls = "px-2.5 py-0.5 text-xs font-bold bg-indigo-600 text-white transition";
-            const inactiveLeft = "px-2.5 py-0.5 text-xs font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition";
+            const activeCls = "px-3.5 py-0.5 text-base font-bold bg-indigo-600 text-white transition";
+            const inactiveLeft = "px-3.5 py-0.5 text-base font-bold dark:bg-slate-950 bg-white hover:bg-indigo-600 hover:text-white transition";
             const inactiveRight = inactiveLeft + " border-l dark:border-slate-700 border-slate-300";
 
             document.getElementById('g1-s2-given-x').className = (g1SentenceGiven === 'x') ? activeCls : inactiveLeft;
@@ -1626,7 +1689,7 @@
             const banner = document.getElementById('g1-feedback-banner');
             const txt = document.getElementById('g1-feedback-text');
             document.getElementById('g1-next-row').classList.add('hidden');
-            banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-2 text-xs space-y-1 dark:text-rose-200 text-rose-900";
+            banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-2.5 text-base space-y-1 dark:text-rose-200 text-rose-900";
             txt.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> ${message}`;
             banner.classList.remove('hidden');
         }
@@ -1677,7 +1740,7 @@
                 drawGame1Canvas();
 
                 setG1StepState(4, 'completed');
-                banner.className = "dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 rounded-2xl p-2 text-xs space-y-1.5 dark:text-emerald-200 text-emerald-900";
+                banner.className = "dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-base space-y-1.5 dark:text-emerald-200 text-emerald-900";
                 txt.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> <strong>Rätt!</strong> <span class="font-bold">${g1Current.fullAns}</span>`;
 
                 if (g1Score >= g1TotalTarget && !g1MilestoneShown) {
@@ -1688,7 +1751,7 @@
                 }
             } else {
                 nextRow.classList.add('hidden');
-                banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-2 text-xs space-y-1.5 dark:text-rose-200 text-rose-900";
+                banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-2.5 text-base space-y-1.5 dark:text-rose-200 text-rose-900";
                 txt.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> <strong>Inte riktigt:</strong> Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${g1Current.fullAns}</span>`;
             }
         }
@@ -1728,7 +1791,7 @@
                 ctx.lineWidth = 3;
                 ctx.beginPath(); ctx.moveTo(lineXPt.cx, lineXPt.cy); ctx.lineTo(topPt.cx, topPt.cy); ctx.stroke();
                 ctx.fillStyle = '#2563eb';
-                ctx.beginPath(); ctx.arc(topPt.cx, topPt.cy, 6.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(topPt.cx, topPt.cy, 7, 0, Math.PI * 2); ctx.fill();
             }
 
             if (g1UserLineY !== null) {
@@ -1738,7 +1801,7 @@
                 ctx.lineWidth = 3;
                 ctx.beginPath(); ctx.moveTo(lineYPt.cx, lineYPt.cy); ctx.lineTo(endPt.cx, endPt.cy); ctx.stroke();
                 ctx.fillStyle = '#e11d48';
-                ctx.beginPath(); ctx.arc(endPt.cx, endPt.cy, 6.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(endPt.cx, endPt.cy, 7, 0, Math.PI * 2); ctx.fill();
             }
             ctx.setLineDash([]);
         }
@@ -1906,7 +1969,7 @@
                 input.blur();
                 document.getElementById('p-score').innerText = `Klarade: ${pScore} / 6`;
 
-                banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-200 text-emerald-900 space-y-1.5";
+                banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-3 text-base dark:text-emerald-200 text-emerald-900 space-y-2";
                 msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt svar! (<span class="font-bold">${pCurrent.ansStr}</span>)`;
                 banner.classList.remove('hidden');
                 revertBanner.classList.add('hidden');
@@ -1919,7 +1982,7 @@
                 }
             } else {
                 pConsecutiveErrors++;
-                banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-2.5 text-xs dark:text-rose-200 text-rose-900 space-y-1.5";
+                banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-3 text-base dark:text-rose-200 text-rose-900 space-y-2";
                 msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt. Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${pCurrent.ansStr}</span>`;
                 banner.classList.remove('hidden');
                 nextRow.classList.add('hidden');
@@ -2027,7 +2090,7 @@
             document.getElementById('f5-add-root-btn').classList.remove('hidden');
             isF5SecondInputActive = false;
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den RÖDA horisontella linjen från y-axeln:";
+            document.getElementById('f5-canvas-title').innerText = "Dra den RÖDA horisontella linjen:";
             document.getElementById('f5-input-x1').focus();
         }
 
@@ -2069,7 +2132,7 @@
             document.getElementById('f5-add-root-btn').classList.add('hidden');
             isF5SecondInputActive = false;
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen från x-axeln:";
+            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen:";
             document.getElementById('f5-input-x1').focus();
         }
 
@@ -2085,7 +2148,7 @@
                 innerVal = f_k * inputX + f_m;
                 g_c = Math.floor(Math.random() * 4) - 4;
                 finalAns = innerVal * innerVal + g_c;
-                wrongInnerVal = innerVal * innerVal + g_c;
+                wrongInnerVal = inputX * inputX + g_c;
 
                 attempts++;
             } while (
@@ -2130,7 +2193,7 @@
             step2Box.className = "dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-2.5 space-y-1.5 opacity-40 pointer-events-none transition";
             document.getElementById('f5-cstep2-prefix').innerText = `g(f(${fmtNum(inputX)})) =`;
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen från x-axeln:";
+            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen:";
             document.getElementById('f5-input-cstep1').focus();
         }
 
@@ -2199,7 +2262,7 @@
             document.getElementById('f5-box-x2').classList.add('hidden');
             document.getElementById('f5-add-root-btn').classList.add('hidden');
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen från x-axeln:";
+            document.getElementById('f5-canvas-title').innerText = "Dra den BLÅ vertikala linjen:";
             document.getElementById('f5-input-x1').focus();
         }
 
@@ -2269,7 +2332,7 @@
                 });
 
                 document.getElementById('f5-score').innerText = `Klarade: ${f5Score} / 6`;
-                banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-2.5 text-xs dark:text-emerald-200 text-emerald-900 space-y-1.5";
+                banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-3 text-base dark:text-emerald-200 text-emerald-900 space-y-2";
                 msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> <strong>Rätt!</strong> <span class="font-bold">${q.ansStr}</span>`;
 
                 if (f5Score >= 6 && !f5MilestoneShown) {
@@ -2277,10 +2340,10 @@
                 } else {
                     nextRow.classList.remove('hidden');
                     nextBtn.disabled = false;
-                    nextBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1 cursor-pointer opacity-100";
+                    nextBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded-xl text-base transition shadow flex items-center gap-1.5 cursor-pointer opacity-100";
                 }
             } else {
-                banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-2.5 text-xs space-y-1.5 dark:text-rose-200 text-rose-900";
+                banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-3 text-base space-y-2 dark:text-rose-200 text-rose-900";
                 
                 if (q.type === 'parabola_dual' && !isF5SecondInputActive) {
                     msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> <strong>Glöm inte den andra roten:</strong> Klicka på '+ Lägg till lösning'.`;
@@ -2289,7 +2352,7 @@
                 }
 
                 nextBtn.disabled = true;
-                nextBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1 rounded-xl text-xs transition shadow flex items-center gap-1 opacity-50 cursor-not-allowed";
+                nextBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded-xl text-base transition shadow flex items-center gap-1.5 opacity-50 cursor-not-allowed";
             }
         }
 
@@ -2353,19 +2416,20 @@
             ctx.setLineDash([]);
 
             q.curves.forEach(curve => {
-                ctx.font = '700 11px "IBM Plex Sans", sans-serif';
-                const labelX = 2.5;
+                ctx.font = '700 15px "IBM Plex Sans", sans-serif';
+                const labelX = 2.0;
                 const labelY = (curve.type === 'linear') ? (curve.k * labelX + curve.m) : curve.eval(labelX);
                 const lblPt = m2c(labelX, labelY, w, h, 8);
+                const textW = ctx.measureText(curve.label).width;
                 
                 ctx.fillStyle = isDarkMode ? '#0f172a' : '#ffffff';
-                ctx.fillRect(lblPt.cx + 2, lblPt.cy - 14, ctx.measureText(curve.label).width + 8, 16);
+                ctx.fillRect(lblPt.cx + 2, lblPt.cy - 20, textW + 12, 23);
                 ctx.strokeStyle = curve.color;
-                ctx.lineWidth = 1;
-                ctx.strokeRect(lblPt.cx + 2, lblPt.cy - 14, ctx.measureText(curve.label).width + 8, 16);
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(lblPt.cx + 2, lblPt.cy - 20, textW + 12, 23);
 
                 ctx.fillStyle = curve.color;
-                ctx.fillText(curve.label, lblPt.cx + 6, lblPt.cy - 2);
+                ctx.fillText(curve.label, lblPt.cx + 8, lblPt.cy - 4);
             });
         }
 
