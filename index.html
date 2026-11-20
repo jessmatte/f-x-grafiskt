@@ -2508,19 +2508,25 @@
             selectMachineFunc('f');
         };
     </script>
-<!-- Sign-in button and status text -->
-<div style="padding: 12px; font-family: sans-serif;">
+
+<!-- Sign-in bar and progress status -->
+<div style="padding: 12px; font-family: sans-serif; display: flex; gap: 12px; align-items: center;">
   <button id="login-btn" onclick="signInWithGoogle()">Sign in with Google</button>
   <span id="user-status"></span>
+  <button id="complete-test-btn" style="display: none;" onclick="saveProgress(100, 'completed')">
+    Mark App Complete
+  </button>
 </div>
 
-<!-- Supabase connection -->
+<!-- Supabase connection & progress tracker -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabaseClient = window.supabase.createClient(
-    'https://xtwoxcomhaactamgcimd.supabase.co',
-    'sb_publishable_mtFa0PKo3y3IBMickcaNlA_th5O0DFj'
-  );
+  // Change ONLY these 3 values when copying this block into future apps:
+  const SUPABASE_URL = 'https://xtwoxcomhaactamgcimd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_mtFa0PKo3y3IBMickcaNlA_th5O0DFj';
+  const APP_ID = 'app-3.3';
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function signInWithGoogle() {
     await supabaseClient.auth.signInWithOAuth({
@@ -2531,11 +2537,52 @@
     });
   }
 
+  // Call saveProgress(percent, checkpoint) from anywhere in your app
+  async function saveProgress(percent, checkpoint = '') {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
+    const isDone = percent >= 100;
+    const { error } = await supabaseClient
+      .from('user_progress')
+      .upsert({
+        user_id: user.id,
+        app_id: APP_ID,
+        status: isDone ? 'completed' : 'in_progress',
+        percent_complete: percent,
+        last_checkpoint: checkpoint,
+        updated_at: new Date().toISOString()
+      });
+
+    if (!error && isDone) {
+      document.getElementById('user-status').textContent =
+        'Signed in as: ' + user.email + ' (Completed!)';
+    }
+  }
+
   window.addEventListener('DOMContentLoaded', async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
-    if (user) {
+    if (!user) return;
+
+    document.getElementById('login-btn').style.display = 'none';
+    document.getElementById('complete-test-btn').style.display = 'inline-block';
+
+    // Check if student already has progress saved for this app
+    const { data: existing } = await supabaseClient
+      .from('user_progress')
+      .select('status')
+      .eq('user_id', user.id)
+      .eq('app_id', APP_ID)
+      .maybeSingle();
+
+    if (existing && existing.status === 'completed') {
+      document.getElementById('user-status').textContent =
+        'Signed in as: ' + user.email + ' (Completed!)';
+    } else {
       document.getElementById('user-status').textContent = 'Signed in as: ' + user.email;
-      document.getElementById('login-btn').style.display = 'none';
+      if (!existing) {
+        await saveProgress(10, 'opened');
+      }
     }
   });
 </script>
