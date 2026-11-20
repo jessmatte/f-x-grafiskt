@@ -2508,5 +2508,36 @@
             selectMachineFunc('f');
         };
     </script>
+<!-- Sign-in button and status text -->
+<div style="padding: 12px; font-family: sans-serif;">
+  <button id="login-btn" onclick="signInWithGoogle()">Sign in with Google</button>
+  <span id="user-status"></span>
+</div>
+
+<!-- Supabase connection -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseClient = window.supabase.createClient(
+    'https://xtwoxcomhaactamgcimd.supabase.co',
+    'sb_publishable_mtFa0PKo3y3IBMickcaNlA_th5O0DFj'
+  );
+
+  async function signInWithGoogle() {
+    await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + window.location.pathname
+      }
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      document.getElementById('user-status').textContent = 'Signed in as: ' + user.email;
+      document.getElementById('login-btn').style.display = 'none';
+    }
+  });
+</script>
 </body>
 </html>
