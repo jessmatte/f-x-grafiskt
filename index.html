@@ -11,41 +11,51 @@
             darkMode: 'class',
         }
     </script>
-    <!-- Google Font: IBM Plex Sans -->
+    <!-- Google Font: IBM Plex Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         html {
-            /* Standard 16px root keeps padding and borders slim while explicit text classes scale typography */
             font-size: 16px;
         }
         * {
             font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
         body {
             user-select: none;
             font-variant-numeric: tabular-nums;
         }
-        canvas {
+        svg {
             touch-action: none;
         }
         input[type="text"] {
             font-variant-numeric: tabular-nums;
         }
+        .guide-handle {
+            cursor: grab;
+            touch-action: none;
+        }
+        .guide-handle:active {
+            cursor: grabbing;
+        }
     </style>
 </head>
-<body id="app-body" class="dark bg-slate-900 text-slate-900 dark:text-slate-100 h-full flex flex-col justify-between overflow-hidden transition-colors duration-200">
+<body id="app-body" class="bg-slate-100 text-slate-900 dark:text-slate-100 h-full flex flex-col justify-between overflow-hidden transition-colors duration-200">
 
     <!-- TOP APP HEADER & NAV TAB BAR -->
     <header class="bg-slate-950 border-b border-slate-800 px-4 py-2 shrink-0 relative z-30">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
             
             <div class="flex items-center space-x-2.5 shrink-0">
-                <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm border border-indigo-400">
+                <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm border border-indigo-400 mono">
                     f(x)
                 </div>
                 <div>
@@ -61,7 +71,7 @@
                 <div class="relative" id="parenthesis-guide-wrapper">
                     <button onclick="toggleGuideDropdown(event)" id="guide-dropdown-btn" class="px-3 py-1.5 rounded-lg text-sm font-medium border border-indigo-500/60 bg-indigo-950/80 text-indigo-200 hover:bg-indigo-900 transition flex items-center gap-1.5">
                         <i class="fa-solid fa-circle-question text-indigo-400"></i>
-                        <span>x eller y i parentesen?</span>
+                        <span>Vad finns i parentesen?</span>
                         <i class="fa-solid fa-chevron-down text-xs transition-transform" id="guide-chevron"></i>
                     </button>
 
@@ -77,7 +87,7 @@
                         <div class="dark:bg-slate-950 bg-blue-50 border border-blue-500/50 rounded-xl p-4 space-y-1.5">
                             <div class="text-lg font-semibold dark:text-blue-400 text-blue-700 flex items-center justify-between gap-2">
                                 <span>1. Ett tal i parentesen</span>
-                                <span class="px-3 py-0.5 rounded-lg dark:bg-blue-500/20 bg-blue-100 dark:text-blue-300 text-blue-800 text-lg font-bold shrink-0">Ex: f(3)</span>
+                                <span class="px-3 py-0.5 rounded-lg dark:bg-blue-500/20 bg-blue-100 dark:text-blue-300 text-blue-800 text-lg font-bold shrink-0 mono">Ex: f(3)</span>
                             </div>
                             <p class="text-lg font-normal dark:text-slate-200 text-slate-800 leading-relaxed">
                                 När det står ett tal inuti parentesen är <strong class="font-semibold">x-värdet givet</strong> (x = 3). Du söker <strong class="font-semibold">y-värdet</strong>.
@@ -87,7 +97,7 @@
                         <div class="dark:bg-slate-950 bg-rose-50 border border-rose-500/50 rounded-xl p-4 space-y-1.5">
                             <div class="text-lg font-semibold dark:text-rose-400 text-rose-700 flex items-center justify-between gap-2">
                                 <span>2. Bokstaven x i parentesen</span>
-                                <span class="px-3 py-0.5 rounded-lg dark:bg-rose-500/20 bg-rose-100 dark:text-rose-300 text-rose-800 text-lg font-bold shrink-0">Ex: f(x) = 7</span>
+                                <span class="px-3 py-0.5 rounded-lg dark:bg-rose-500/20 bg-rose-100 dark:text-rose-300 text-rose-800 text-lg font-bold shrink-0 mono">Ex: f(x) = 7</span>
                             </div>
                             <p class="text-lg font-normal dark:text-slate-200 text-slate-800 leading-relaxed">
                                 När det står <strong class="font-semibold">x</strong> inuti parentesen är <strong class="font-semibold">y-värdet givet</strong> (y = 7). Du söker <strong class="font-semibold">x-värdet</strong>.
@@ -96,10 +106,10 @@
                     </div>
                 </div>
 
-                <!-- DARK / LIGHT MODE TOGGLE -->
-                <button onclick="toggleProjectionMode()" id="proj-toggle-btn" class="px-3 py-1.5 rounded-lg text-sm font-medium border flex items-center gap-1.5 transition bg-amber-400 text-slate-950 border-amber-500 hover:bg-amber-300">
-                    <i class="fa-solid fa-sun text-xs"></i>
-                    <span id="mode-btn-label">Ljust läge</span>
+                <!-- DARK / LIGHT MODE TOGGLE (DEFAULT: LIGHT MODE) -->
+                <button onclick="toggleProjectionMode()" id="proj-toggle-btn" class="px-3 py-1.5 rounded-lg text-sm font-medium border flex items-center gap-1.5 transition bg-slate-800 text-white border-slate-700 hover:bg-slate-700">
+                    <i class="fa-solid fa-moon text-xs"></i>
+                    <span id="mode-btn-label">Mörkt läge</span>
                 </button>
 
                 <!-- PHASE TABS -->
@@ -143,13 +153,13 @@
                     <div class="flex items-center gap-2.5 flex-wrap">
                         <span class="text-base font-medium dark:text-slate-300 text-slate-700">Välj funktion:</span>
                         <div class="flex gap-2">
-                            <button onclick="selectMachineFunc('f')" id="mfunc-f" class="mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold bg-indigo-600 text-white shadow">
+                            <button onclick="selectMachineFunc('f')" id="mfunc-f" class="mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold bg-indigo-600 text-white shadow mono">
                                 f(x) = 2x + 1
                             </button>
-                            <button onclick="selectMachineFunc('g')" id="mfunc-g" class="mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700">
+                            <button onclick="selectMachineFunc('g')" id="mfunc-g" class="mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700 mono">
                                 g(x) = −x + 4
                             </button>
-                            <button onclick="selectMachineFunc('h')" id="mfunc-h" class="mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700">
+                            <button onclick="selectMachineFunc('h')" id="mfunc-h" class="mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700 mono">
                                 h(x) = x² − 4
                             </button>
                         </div>
@@ -158,26 +168,25 @@
                     <div class="flex items-center gap-4 text-base">
                         <label class="flex items-center gap-1.5 cursor-pointer">
                             <input type="radio" name="ntoggle" value="coord" checked onchange="setNotationMode('coord')" class="accent-indigo-600 w-4 h-4">
-                            <span class="dark:text-slate-200 text-slate-800 font-medium">(x, y)</span>
+                            <span class="dark:text-slate-200 text-slate-800 font-medium mono">(x, y)</span>
                         </label>
                         <label class="flex items-center gap-1.5 cursor-pointer">
                             <input type="radio" name="ntoggle" value="func" onchange="setNotationMode('func')" class="accent-indigo-600 w-4 h-4">
-                            <span class="dark:text-indigo-300 text-indigo-700 font-medium">(x, f(x))</span>
+                            <span class="dark:text-indigo-300 text-indigo-700 font-medium mono">(x, f(x))</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- DUAL COLUMNS: GRAPH CANVAS & INTERACTIVE VÄRDETABELL -->
+                <!-- DUAL COLUMNS: CRISP SVG GRAPH & INTERACTIVE VÄRDETABELL -->
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 flex-grow items-center overflow-hidden">
                     
-                    <!-- LEFT COLUMN: CANVAS GRAPH -->
+                    <!-- LEFT COLUMN: CRISP VECTOR SVG GRAPH -->
                     <div class="md:col-span-5 flex flex-col items-center justify-center h-full">
                         <div class="w-full max-w-[340px] flex justify-between items-center mb-1.5">
                             <span class="text-base font-normal dark:text-slate-300 text-slate-700">Dra punkten:</span>
-                            <span class="text-base font-bold dark:text-indigo-400 text-indigo-700" id="m-coord-tag">Punkt: (3, 7)</span>
+                            <span class="text-base font-bold dark:text-indigo-400 text-indigo-700 mono" id="m-coord-tag">Punkt: (3, 7)</span>
                         </div>
-                        <div class="relative w-full aspect-square max-h-[340px] max-w-[340px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
-                            <canvas id="exp-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                        <div id="exp-svg-container" class="w-full aspect-square max-h-[340px] max-w-[340px] mx-auto dark:bg-slate-900 bg-white rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300 shadow-inner flex items-center justify-center">
                         </div>
                     </div>
 
@@ -193,13 +202,12 @@
                                 <table class="w-full text-base text-left border-collapse">
                                     <thead class="sticky top-0 bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-semibold text-sm tracking-wide border-b border-slate-300 dark:border-slate-800">
                                         <tr>
-                                            <th class="p-2 text-center w-24 text-blue-600 dark:text-blue-400">x (In)</th>
+                                            <th class="p-2 text-center w-24 text-sky-700 dark:text-sky-400">x (In)</th>
                                             <th class="p-2 text-center" id="table-calc-header">Substituering: f(x) = 2x + 1</th>
-                                            <th class="p-2 text-center w-28 text-rose-600 dark:text-rose-400" id="table-out-header">f(x) (Ut)</th>
+                                            <th class="p-2 text-center w-28 text-rose-700 dark:text-rose-400" id="table-out-header">f(x) (Ut)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-body" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-center font-normal">
-                                        <!-- Dynamically generated rows x = -6 to 6 -->
                                     </tbody>
                                 </table>
                             </div>
@@ -208,7 +216,7 @@
                         <!-- LIVE CALCULATION CALLOUT BANNER -->
                         <div class="dark:bg-indigo-950/50 bg-indigo-50 border border-indigo-300 dark:border-indigo-800/70 rounded-xl px-4 py-2.5 text-base flex items-center justify-between shrink-0">
                             <span class="font-normal text-slate-700 dark:text-slate-300">Aktiv beräkning:</span>
-                            <span class="font-bold text-amber-600 dark:text-amber-300 text-lg" id="live-calc-callout">f(3) = 2 · (3) + 1 = 7</span>
+                            <span class="font-bold text-amber-700 dark:text-amber-300 text-lg mono" id="live-calc-callout">f(3) = 2 · (3) + 1 = 7</span>
                         </div>
                     </div>
 
@@ -247,10 +255,10 @@
                     <div class="w-full space-y-3">
                         <div class="text-xl font-medium dark:text-slate-200 text-slate-800">Vilket värde är givet?</div>
                         <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                            <button id="f1-btn-x" onclick="answerFas1('givenX')" class="py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 text-slate-900 dark:text-white hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm">
+                            <button id="f1-btn-x" onclick="answerFas1('givenX')" class="py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 text-slate-900 dark:text-white hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm mono">
                                 x
                             </button>
-                            <button id="f1-btn-y" onclick="answerFas1('givenY')" class="py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 text-slate-900 dark:text-white hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm">
+                            <button id="f1-btn-y" onclick="answerFas1('givenY')" class="py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 text-slate-900 dark:text-white hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm mono">
                                 y
                             </button>
                         </div>
@@ -291,14 +299,19 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- FLIK 2: FAS 2 — 2. Guidad                                         -->
+        <!-- FLIK 2: FAS 2 — 2. Guidad (LINEAR -> NON-LINEAR + PILL GUIDES)    -->
         <!-- ================================================================= -->
         <section id="tab-content-2" class="tab-content h-full flex flex-col justify-between space-y-2.5 hidden">
             
             <div class="dark:bg-slate-950 bg-white border dark:border-slate-800 border-slate-300 rounded-xl px-4 py-2 flex justify-between items-center shrink-0 shadow-sm">
-                <div>
-                    <span class="text-sm font-medium uppercase tracking-wider dark:text-indigo-400 text-indigo-600">Fas 2 • Guidad Steg-för-Steg Metod</span>
-                    <h2 class="text-lg font-bold dark:text-white text-slate-900">Analysera och Lös Uppgiften</h2>
+                <div class="flex items-center gap-2.5">
+                    <div>
+                        <span class="text-sm font-medium uppercase tracking-wider dark:text-indigo-400 text-indigo-600">Fas 2 • Guidad Steg-för-Steg Metod</span>
+                        <h2 class="text-lg font-bold dark:text-white text-slate-900">Analysera och Lös Uppgiften</h2>
+                    </div>
+                    <span id="g1-curve-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-700">
+                        Rät linje
+                    </span>
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-300 px-3.5 py-1 rounded-xl text-base font-medium dark:text-amber-300 text-amber-800" id="g1-score">
@@ -309,25 +322,24 @@
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 flex-grow items-center overflow-hidden">
                 
-                <!-- LEFT COLUMN: GRAPH CANVAS -->
+                <!-- LEFT COLUMN: CRISP SVG GRAPH WITH BLUE PILL HELPER LINES -->
                 <div class="md:col-span-5 dark:bg-slate-950 bg-white rounded-2xl p-3 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
                     <div class="w-full flex justify-between items-center mb-1">
-                        <span class="text-base font-medium dark:text-slate-300 text-slate-700">Hjälplinje:</span>
-                        <button onclick="resetG1Helplines()" class="text-sm dark:text-indigo-400 text-indigo-600 hover:underline font-medium">
+                        <span class="text-base font-medium dark:text-slate-300 text-slate-700">Hjälplinjer:</span>
+                        <button onclick="resetG1Helplines()" class="text-sm dark:text-sky-400 text-sky-700 hover:underline font-medium">
                             Nollställ linjer
                         </button>
                     </div>
 
-                    <div class="relative w-full aspect-square max-h-[320px] max-w-[320px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
-                        <canvas id="g1-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                    <div id="g1-svg-container" class="w-full aspect-square max-h-[325px] max-w-[325px] mx-auto dark:bg-slate-900 bg-white rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300 shadow-inner flex items-center justify-center">
                     </div>
 
-                    <div class="text-base text-center dark:text-slate-300 text-slate-600 mt-1 font-normal leading-snug" id="g1-canvas-hint">
-                        Slutför steg 1–3 för att låsa upp hjälplinjen.
+                    <div class="text-sm sm:text-base text-center dark:text-slate-300 text-slate-600 mt-1 font-normal leading-snug" id="g1-canvas-hint">
+                        Slutför steg 1–3 för att låsa upp hjälplinjerna.
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN: 4-STEP WORKFLOW -->
+                <!-- RIGHT COLUMN: 4-STEP WORKFLOW (ORIGINAL WORDING PRESERVED) -->
                 <div class="md:col-span-7 dark:bg-slate-950 bg-white rounded-2xl p-3.5 border dark:border-slate-800 border-slate-300 flex flex-col justify-between h-full shadow-sm space-y-2 overflow-y-auto">
                     
                     <div class="space-y-2">
@@ -344,16 +356,16 @@
                                 <span>Vilket värde är givet?</span>
                             </div>
                             <div class="grid grid-cols-2 gap-2 w-40 shrink-0">
-                                <button onclick="answerG1Step1('givenX')" class="py-1.5 px-3 dark:bg-slate-950 bg-white text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-xl font-bold transition">
+                                <button id="g1-s1-x-btn" onclick="answerG1Step1('givenX')" class="py-1.5 px-3 dark:bg-slate-950 bg-white text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-xl font-bold transition mono">
                                     x
                                 </button>
-                                <button onclick="answerG1Step1('givenY')" class="py-1.5 px-3 dark:bg-slate-950 bg-white text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-xl font-bold transition">
+                                <button id="g1-s1-y-btn" onclick="answerG1Step1('givenY')" class="py-1.5 px-3 dark:bg-slate-950 bg-white text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-xl font-bold transition mono">
                                     y
                                 </button>
                             </div>
                         </div>
 
-                        <!-- STEP 2: SENTENCE FILL-IN -->
+                        <!-- STEP 2: SENTENCE FILL-IN (ORIGINAL WORDING KEPT) -->
                         <div id="g1-step-2-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl px-3.5 py-2.5 space-y-1.5 opacity-40 pointer-events-none transition">
                             <div class="text-base sm:text-lg font-medium dark:text-white text-slate-900 flex items-center gap-2.5">
                                 <span class="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-semibold shrink-0">2</span>
@@ -362,13 +374,13 @@
                             <div class="text-base sm:text-lg font-normal dark:text-slate-200 text-slate-800 leading-relaxed flex flex-wrap items-center gap-1.5">
                                 <span>Uppgiften ger värdet</span>
                                 <span class="inline-flex rounded-lg overflow-hidden border dark:border-slate-700 border-slate-300">
-                                    <button type="button" id="g1-s2-given-x" onclick="selectG1SentenceSlot('given', 'x')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition">x</button>
-                                    <button type="button" id="g1-s2-given-y" onclick="selectG1SentenceSlot('given', 'y')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
+                                    <button type="button" id="g1-s2-given-x" onclick="selectG1SentenceSlot('given', 'x')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition mono">x</button>
+                                    <button type="button" id="g1-s2-given-y" onclick="selectG1SentenceSlot('given', 'y')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition mono">y</button>
                                 </span>
                                 <span>, så jag behöver hitta värdet</span>
                                 <span class="inline-flex rounded-lg overflow-hidden border dark:border-slate-700 border-slate-300">
-                                    <button type="button" id="g1-s2-find-x" onclick="selectG1SentenceSlot('find', 'x')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition">x</button>
-                                    <button type="button" id="g1-s2-find-y" onclick="selectG1SentenceSlot('find', 'y')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition">y</button>
+                                    <button type="button" id="g1-s2-find-x" onclick="selectG1SentenceSlot('find', 'x')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition mono">x</button>
+                                    <button type="button" id="g1-s2-find-y" onclick="selectG1SentenceSlot('find', 'y')" class="px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white border-l dark:border-slate-700 border-slate-300 hover:bg-indigo-600 hover:text-white transition mono">y</button>
                                 </span>
                                 <span>.</span>
                             </div>
@@ -381,41 +393,39 @@
                                 <span>Vilken axel börjar du på?</span>
                             </div>
                             <div class="grid grid-cols-2 gap-2 w-60 shrink-0">
-                                <button onclick="answerG1Step3('x')" id="g1-s3-x-btn" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-blue-500 rounded-xl text-center transition">
-                                    <span class="block text-base sm:text-lg font-semibold text-blue-600 dark:text-blue-400">x-axeln</span>
+                                <button onclick="answerG1Step3('x')" id="g1-s3-x-btn" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-sky-500 rounded-xl text-center transition">
+                                    <span class="block text-base sm:text-lg font-semibold text-sky-700 dark:text-sky-400">x-axeln</span>
                                 </button>
                                 <button onclick="answerG1Step3('y')" id="g1-s3-y-btn" class="py-1.5 px-3 dark:bg-slate-950 bg-white border border-rose-500 rounded-xl text-center transition">
-                                    <span class="block text-base sm:text-lg font-semibold text-rose-600 dark:text-rose-400">y-axeln</span>
+                                    <span class="block text-base sm:text-lg font-semibold text-rose-700 dark:text-rose-400">y-axeln</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- STEP 4: FINAL ANSWER -->
+                        <!-- STEP 4: FINAL ANSWER (SHORTER INPUT + SNABBKNAPPAR DIRECTLY BELOW ON LEFT) -->
                         <div id="g1-step-4-box" class="dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl px-3.5 py-2.5 space-y-2 opacity-40 pointer-events-none transition">
-                            <div class="flex flex-wrap items-center justify-between gap-2">
-                                <div class="text-base sm:text-lg font-medium dark:text-white text-slate-900 flex items-center gap-2.5">
-                                    <span class="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-semibold shrink-0">4</span>
-                                    <span>Ange ditt svar:</span>
-                                </div>
-
-                                <div class="flex gap-1.5 items-center text-base">
-                                    <button type="button" onclick="insertG1Symbol('−')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-bold transition shadow-sm">
-                                        −
-                                    </button>
-                                    <button type="button" onclick="insertG1FuncNotation()" id="g1-dyn-func-btn" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-sm">
-                                        f() =
-                                    </button>
-                                    <button type="button" onclick="insertG1XNotation()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-sm">
-                                        x =
-                                    </button>
-                                </div>
+                            <div class="text-base sm:text-lg font-medium dark:text-white text-slate-900 flex items-center gap-2.5">
+                                <span class="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-semibold shrink-0">4</span>
+                                <span>Ange ditt svar:</span>
                             </div>
 
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2.5">
                                 <input type="text" id="g1-final-input" autocomplete="off"
-                                       class="flex-grow dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3.5 py-1.5 outline-none focus:border-indigo-500">
+                                       class="w-48 sm:w-56 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3.5 py-1.5 outline-none focus:border-indigo-500 mono">
                                 <button onclick="submitG1FinalAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base px-5 py-2 rounded-xl transition shadow">
                                     Svara
+                                </button>
+                            </div>
+
+                            <div class="flex gap-1.5 items-center text-base justify-start">
+                                <button type="button" onclick="insertG1Symbol('−')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-sm mono">
+                                    −
+                                </button>
+                                <button type="button" onclick="insertG1FuncNotation()" id="g1-dyn-func-btn" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-sm mono">
+                                    f() =
+                                </button>
+                                <button type="button" onclick="insertG1XNotation()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-sm mono">
+                                    x =
                                 </button>
                             </div>
                         </div>
@@ -425,7 +435,7 @@
                     <div id="g1-feedback-banner" class="hidden dark:bg-slate-900 bg-slate-100 border rounded-2xl p-3 text-base space-y-2">
                         <div id="g1-feedback-text" class="font-normal text-base"></div>
                         <div id="g1-next-row" class="pt-1.5 border-t dark:border-slate-800 border-slate-300 flex justify-between items-center">
-                            <span class="text-emerald-600 dark:text-emerald-400 font-normal text-base">Tryck Enter eller klicka för nästa:</span>
+                            <span class="text-emerald-700 dark:text-emerald-400 font-normal text-base">Tryck Enter eller klicka för nästa:</span>
                             <button onclick="generateNextFas2Question()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-1.5 rounded-xl text-base transition shadow flex items-center gap-1.5">
                                 <span>Nästa</span> <i class="fa-solid fa-arrow-right"></i>
                             </button>
@@ -460,7 +470,7 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- FLIK 3: FAS 3 — 3. Direkt                                         -->
+        <!-- FLIK 3: FAS 3 — 3. Direkt (LINEAR -> NON-LINEAR, NO HELPER LINES) -->
         <!-- ================================================================= -->
         <section id="tab-content-3" class="tab-content h-full flex flex-col justify-between space-y-2.5 hidden">
             
@@ -468,6 +478,9 @@
                 <div class="flex items-center gap-2.5">
                     <span id="p-type-badge" class="px-3 py-0.5 bg-blue-100 dark:bg-blue-900/80 text-blue-800 dark:text-blue-300 font-medium text-base rounded-full border border-blue-300 dark:border-blue-700">
                         Fas 3 • Direkt Träning
+                    </span>
+                    <span id="p-curve-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-700">
+                        Rät linje
                     </span>
                 </div>
 
@@ -478,13 +491,12 @@
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 flex-grow items-center overflow-hidden">
                 
-                <!-- LEFT COLUMN: GRAPH CANVAS -->
+                <!-- LEFT COLUMN: CRISP SVG GRAPH (NO HELPER LINES) -->
                 <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-3 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
-                    <div class="relative w-full aspect-square max-h-[340px] max-w-[340px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
-                        <canvas id="p-canvas" class="w-full h-full cursor-pointer"></canvas>
+                    <div id="p-svg-container" class="w-full aspect-square max-h-[340px] max-w-[340px] mx-auto dark:bg-slate-900 bg-white rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300 shadow-inner flex items-center justify-center my-auto">
                     </div>
                     <span class="text-base dark:text-slate-400 text-slate-600 mt-1 font-normal text-center">
-                        Läs av värdet på grafen och skriv ditt svar till höger.
+                        Läs av värdet direkt på grafen och skriv ditt svar till höger.
                     </span>
                 </div>
 
@@ -498,28 +510,27 @@
                             </h2>
                         </div>
 
-                        <div class="space-y-1">
-                            <div class="flex gap-2">
-                                <button type="button" onclick="insertPracticeSymbol('−')" class="px-4 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold text-lg transition shadow-sm">
+                        <div class="space-y-2.5 pt-0.5">
+                            <div class="flex items-center gap-2.5">
+                                <input type="text" id="p-answer-input" autocomplete="off"
+                                       class="w-52 sm:w-64 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-2xl rounded-xl px-4 py-2 outline-none focus:border-indigo-500 shadow-inner mono">
+                                <button onclick="checkPracticeAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-lg px-5 py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                    <span>Skicka Svar</span>
+                                </button>
+                            </div>
+
+                            <div class="flex gap-2 justify-start">
+                                <button type="button" onclick="insertPracticeSymbol('−')" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition shadow-sm mono">
                                     −
                                 </button>
-                                <button type="button" onclick="insertPracticeFuncNotation()" id="p-dyn-func-btn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition shadow-sm">
+                                <button type="button" onclick="insertPracticeFuncNotation()" id="p-dyn-func-btn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition shadow-sm mono">
                                     f() =
                                 </button>
-                                <button type="button" onclick="insertPracticeXNotation()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition shadow-sm">
+                                <button type="button" onclick="insertPracticeXNotation()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition shadow-sm mono">
                                     x =
                                 </button>
                             </div>
-                        </div>
-
-                        <div class="space-y-3 pt-0.5">
-                            <input type="text" id="p-answer-input" autocomplete="off"
-                                   class="w-full dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-2xl rounded-xl px-4 py-2.5 outline-none focus:border-indigo-500 shadow-inner">
-                            
-                            <button onclick="checkPracticeAnswer()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-lg py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-paper-plane"></i>
-                                <span>Skicka Svar</span>
-                            </button>
                         </div>
                     </div>
 
@@ -575,7 +586,7 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- FLIK 4: FAS 4 — 4. Utmaning                                       -->
+        <!-- FLIK 4: FAS 4 — 4. Utmaning (CRISP SVG + PILL HELPER LINES)       -->
         <!-- ================================================================= -->
         <section id="tab-content-4" class="tab-content h-full flex flex-col justify-between space-y-2.5 hidden">
             
@@ -593,21 +604,20 @@
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 flex-grow items-center overflow-hidden">
                 
-                <!-- LEFT COLUMN: GRAPH CANVAS -->
+                <!-- LEFT COLUMN: CRISP SVG GRAPH WITH BLUE PILL HELPER LINES -->
                 <div class="md:col-span-6 dark:bg-slate-950 bg-white rounded-2xl p-3 border dark:border-slate-800 border-slate-300 h-full flex flex-col justify-between items-center shadow-sm">
                     <div class="w-full flex justify-between items-center mb-1">
-                        <span class="text-base font-medium dark:text-slate-300 text-slate-700" id="f5-canvas-title">Dra hjälplinjen:</span>
-                        <button onclick="resetF5Helplines()" class="text-sm dark:text-indigo-400 text-indigo-600 hover:underline font-medium">
+                        <span class="text-base font-medium dark:text-slate-300 text-slate-700" id="f5-canvas-title">Hjälplinjer:</span>
+                        <button onclick="resetF5Helplines()" class="text-sm dark:text-sky-400 text-sky-700 hover:underline font-medium">
                             Nollställ linjer
                         </button>
                     </div>
 
-                    <div class="relative w-full aspect-square max-h-[330px] max-w-[330px] mx-auto dark:bg-slate-900 bg-slate-50 rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300">
-                        <canvas id="f5-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                    <div id="f5-svg-container" class="w-full aspect-square max-h-[330px] max-w-[330px] mx-auto dark:bg-slate-900 bg-white rounded-2xl overflow-hidden border dark:border-slate-800 border-slate-300 shadow-inner flex items-center justify-center">
                     </div>
 
-                    <span class="text-base dark:text-slate-400 text-slate-600 mt-1 font-normal text-center leading-snug">
-                        Använd hjälplinjen för att läsa av graferna.
+                    <span class="text-sm sm:text-base dark:text-slate-400 text-slate-600 mt-1 font-normal text-center leading-snug">
+                        Dra i de blå markörerna för att läsa av graferna.
                     </span>
                 </div>
 
@@ -632,9 +642,9 @@
                                 <span class="text-base font-medium dark:text-indigo-400 text-indigo-700 block" id="f5-cstep1-label">Steg 1: Bestäm inre värdet f(−1)</span>
                                 
                                 <div class="flex items-center gap-2.5">
-                                    <span class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep1-prefix">f(−1) =</span>
+                                    <span class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 mono" id="f5-cstep1-prefix">f(−1) =</span>
                                     <input type="text" id="f5-input-cstep1" autocomplete="off"
-                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-2.5 py-1.5 outline-none focus:border-indigo-500 text-center">
+                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-2.5 py-1.5 outline-none focus:border-indigo-500 text-center mono">
                                     <button onclick="submitF5Step1()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base px-4 py-1.5 rounded-xl transition shadow">
                                         Lås in
                                     </button>
@@ -655,9 +665,9 @@
                                 <span class="text-base font-medium dark:text-slate-300 text-slate-700 block" id="f5-cstep2-label">Steg 2: Bestäm nu y-värdet för yttre funktionen</span>
                                 
                                 <div class="flex items-center gap-2.5">
-                                    <span class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0" id="f5-cstep2-prefix">g(f(−1)) =</span>
+                                    <span class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 mono" id="f5-cstep2-prefix">g(f(−1)) =</span>
                                     <input type="text" id="f5-input-cstep2" autocomplete="off"
-                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-2.5 py-1.5 outline-none focus:border-indigo-500 text-center">
+                                           class="w-24 dark:bg-slate-950 bg-white border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-2.5 py-1.5 outline-none focus:border-indigo-500 text-center mono">
                                     <button onclick="submitF5FinalAnswer()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base px-4 py-1.5 rounded-xl transition shadow">
                                         Svara
                                     </button>
@@ -670,14 +680,14 @@
                         <div id="f5-standard-workflow" class="space-y-2.5 pt-0.5">
                             <div class="flex flex-col gap-2" id="f5-root-grid">
                                 <div class="flex items-center gap-2.5">
-                                    <label class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[88px]" id="f5-label-x1">x₁ =</label>
+                                    <label class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[88px] mono" id="f5-label-x1">x₁ =</label>
                                     <input type="text" id="f5-input-x1" autocomplete="off"
-                                           class="w-36 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500">
+                                           class="w-36 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500 mono">
                                 </div>
                                 <div id="f5-box-x2" class="hidden flex items-center gap-2.5">
-                                    <label class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[88px]">x₂ =</label>
+                                    <label class="text-xl font-bold dark:text-amber-300 text-slate-900 shrink-0 min-w-[88px] mono">x₂ =</label>
                                     <input type="text" id="f5-input-x2" autocomplete="off"
-                                           class="w-36 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500">
+                                           class="w-36 dark:bg-slate-950 bg-slate-50 border dark:border-slate-700 border-slate-300 dark:text-white text-slate-900 font-bold text-xl rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500 mono">
                                 </div>
                             </div>
 
@@ -819,9 +829,9 @@
         }
 
         /* ---------------- GLOBAL STATE ---------------- */
-        let activeTab = 0; // 0 = Begrepp & Graf (unnumbered), 1 = Fas 1, 2 = Fas 2, 3 = Fas 3, 4 = Fas 4
+        let activeTab = 0; // 0 = Begrepp & Graf, 1 = Fas 1, 2 = Fas 2 (Guidad), 3 = Fas 3 (Direkt), 4 = Fas 4 (Utmaning)
         let notationMode = 'coord';
-        let isDarkMode = true;
+        let isDarkMode = false; // Default: Ljust läge
         let isPhase2Unlocked = false;
         let isPhase3Unlocked = false;
         let isPhase4Unlocked = false;
@@ -853,7 +863,6 @@
         };
 
         let expX = 3.0;
-        let isExpDragging = false;
 
         // Tab 1: Fas 1 (1. x eller y? — Balanced 50/50, max 2 consecutive of same type)
         let f1Current = null;
@@ -865,7 +874,7 @@
         let f1TypeQueue = [];
         let f1RecentTypes = [];
 
-        // Tab 2: Fas 2 (2. Guidad — 5 questions)
+        // Tab 2: Fas 2 (2. Guidad — 5 questions: first linear, then non-linear)
         let g1Current = null;
         let g1Score = 0;
         let g1TotalTarget = 5;
@@ -874,28 +883,239 @@
         let g1MilestoneShown = false;
         let g1SentenceGiven = null;
         let g1SentenceFind = null;
-        let g1UserLineX = null;
-        let g1UserLineY = null;
-        let activeDragLine = null;
+        let g1GuideX = 0;
+        let g1GuideY = 0;
+        let g1GuideXVisible = false;
+        let g1GuideYVisible = false;
         let lastFas2Type = 'givenY';
+        let lastFas2Signature = '';
 
-        // Tab 3: Fas 3 (3. Direkt — 6 questions)
+        // Tab 3: Fas 3 (3. Direkt — 6 questions: first linear, then non-linear, NO helper lines)
         let pCurrent = null;
         let pScore = 0;
         let pConsecutiveErrors = 0;
         let pAnswered = false;
         let pMilestoneShown = false;
+        let lastFas3Type = 'givenY';
+        let lastFas3Signature = '';
 
-        // Tab 4: Fas 4 (4. Utmaning — 6 questions)
+        // Tab 4: Fas 4 (4. Utmaning — 6 questions with pill helper lines)
         let f5QIndex = 0;
         let f5Score = 0;
-        let f5UserLineVal = 0;
-        let f5ActiveDrag = false;
+        let f5GuideX = 0;
+        let f5GuideY = 0;
         let isF5SecondInputActive = false;
         let f5CurrentProblem = null;
         let f5Step1Passed = false;
         let f5Answered = false;
         let f5MilestoneShown = false;
+
+        /* ---------------- CRISP SVG GRAPH ENGINE (FROM INDEX 18) ---------------- */
+        function getSvgPalette() {
+            if (isDarkMode) {
+                return {
+                    gridBg: '#0f172a',
+                    gridMajor: '#334155',
+                    gridAxis: '#94a3b8',
+                    gridText: '#cbd5e1',
+                    curvePrimary: '#38bdf8',
+                    curveSecondary: '#fbbf24',
+                    guideLine: '#38bdf8',
+                    guidePill: '#0284c7'
+                };
+            } else {
+                return {
+                    gridBg: '#ffffff',
+                    gridMajor: '#cbd5e1',
+                    gridAxis: '#334155',
+                    gridText: '#1e293b',
+                    curvePrimary: '#0284c7',
+                    curveSecondary: '#d97706',
+                    guideLine: '#0284c7',
+                    guidePill: '#0284c7'
+                };
+            }
+        }
+
+        function buildVectorGraphSvg(options) {
+            const {
+                svgId,
+                curves = [],
+                minVal = -7,
+                maxVal = 7,
+                tickStep = 2,
+                guideX = 0,
+                guideY = 0,
+                guideXVisible = false,
+                guideYVisible = false,
+                onPointerDownFn = '',
+                activePoint = null,
+                onPointDownFn = ''
+            } = options;
+
+            const pal = getSvgPalette();
+            const size = 340;
+            const pad = 28;
+            const span = maxVal - minVal;
+            const plotSize = size - 2 * pad;
+            const step = plotSize / span;
+
+            const toPxX = (x) => pad + (x - minVal) * step;
+            const toPxY = (y) => pad + (maxVal - y) * step;
+
+            let gridLines = '';
+            let axisLabels = '';
+
+            for (let v = minVal; v <= maxVal; v++) {
+                const px = toPxX(v);
+                const py = toPxY(v);
+                const isAxis = v === 0;
+                gridLines += `<line x1="${px.toFixed(1)}" y1="${pad}" x2="${px.toFixed(1)}" y2="${size - pad}" stroke="${isAxis ? pal.gridAxis : pal.gridMajor}" stroke-width="${isAxis ? 1.8 : 1}" />`;
+                gridLines += `<line x1="${pad}" y1="${py.toFixed(1)}" x2="${size - pad}" y2="${py.toFixed(1)}" stroke="${isAxis ? pal.gridAxis : pal.gridMajor}" stroke-width="${isAxis ? 1.8 : 1}" />`;
+
+                if (v !== 0 && Math.abs(v) <= maxVal - 1 && (v % tickStep === 0)) {
+                    axisLabels += `<text x="${px.toFixed(1)}" y="${(toPxY(0) + 14).toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${pal.gridText}" class="mono">${fmtNum(v)}</text>`;
+                    axisLabels += `<text x="${(toPxX(0) - 7).toFixed(1)}" y="${(py + 3.5).toFixed(1)}" text-anchor="end" font-size="10.5" font-weight="600" fill="${pal.gridText}" class="mono">${fmtNum(v)}</text>`;
+                }
+            }
+
+            const ox = toPxX(0);
+            const oy = toPxY(0);
+            const axisExtras = `
+                <polygon points="${size - pad + 5},${oy} ${size - pad - 2},${oy - 3.5} ${size - pad - 2},${oy + 3.5}" fill="${pal.gridAxis}" />
+                <polygon points="${ox},${pad - 5} ${ox - 3.5},${pad + 2} ${ox + 3.5},${pad + 2}" fill="${pal.gridAxis}" />
+                <text x="${size - pad + 8}" y="${oy + 4}" font-size="12" font-weight="700" fill="${pal.gridText}" class="mono">x</text>
+                <text x="${ox + 7}" y="${pad - 4}" font-size="12" font-weight="700" fill="${pal.gridText}" class="mono">y</text>
+            `;
+
+            function buildPolylineSegments(fn) {
+                const pts = [];
+                const samples = 260;
+                for (let i = 0; i <= samples; i++) {
+                    const x = minVal + (span * i) / samples;
+                    const y = fn(x);
+                    if (Number.isFinite(y) && y >= minVal && y <= maxVal) {
+                        pts.push(`${toPxX(x).toFixed(1)},${toPxY(y).toFixed(1)}`);
+                    } else if (pts.length > 0) {
+                        pts.push('BREAK');
+                    }
+                }
+                const segments = [];
+                let cur = [];
+                for (const p of pts) {
+                    if (p === 'BREAK') {
+                        if (cur.length > 1) segments.push(cur.join(' '));
+                        cur = [];
+                    } else {
+                        cur.push(p);
+                    }
+                }
+                if (cur.length > 1) segments.push(cur.join(' '));
+                return segments;
+            }
+
+            let curvesSvg = '';
+            curves.forEach((curve, idx) => {
+                const strokeCol = curve.color || (idx === 0 ? pal.curvePrimary : pal.curveSecondary);
+                buildPolylineSegments(curve.eval).forEach(seg => {
+                    curvesSvg += `<polyline points="${seg}" fill="none" stroke="${strokeCol}" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round" />`;
+                });
+            });
+
+            // Optional curve labels (for multi-curve Utmaning tasks)
+            let labelsSvg = '';
+            curves.forEach(curve => {
+                if (!curve.label) return;
+                const lx = curve.labelX !== undefined ? curve.labelX : 2.2;
+                const ly = curve.eval(lx);
+                if (!Number.isFinite(ly) || ly < minVal + 0.8 || ly > maxVal - 0.8) return;
+                const px = Math.min(size - pad - 82, Math.max(pad + 4, toPxX(lx) + 4));
+                const py = Math.min(size - pad - 6, Math.max(pad + 18, toPxY(ly) - 6));
+                const boxW = Math.max(48, curve.label.length * 7.2 + 12);
+                labelsSvg += `
+                    <rect x="${px}" y="${py - 14}" width="${boxW}" height="18" rx="5" fill="${pal.gridBg}" stroke="${curve.color || pal.curvePrimary}" stroke-width="1.2" opacity="0.95" />
+                    <text x="${px + 6}" y="${py - 1.5}" font-size="10.5" font-weight="700" fill="${curve.color || pal.curvePrimary}" class="mono">${curve.label}</text>
+                `;
+            });
+
+            // Blue Pill Draggable Helper Lines (exact strategy from index 18)
+            let guidesSvg = '';
+            if (guideXVisible) {
+                const gxPx = toPxX(guideX);
+                const downAttr = onPointerDownFn ? `onpointerdown="${onPointerDownFn}(event, 'x')"` : '';
+                guidesSvg += `
+                    <g class="guide-handle" ${downAttr}>
+                        <line x1="${gxPx.toFixed(1)}" y1="${pad}" x2="${gxPx.toFixed(1)}" y2="${size - pad}" stroke="${pal.guideLine}" stroke-width="2" stroke-dasharray="5,4" />
+                        <rect x="${(gxPx - 14).toFixed(1)}" y="${size - pad + 3}" width="28" height="16" rx="8" fill="${pal.guidePill}" />
+                        <line x1="${(gxPx - 3).toFixed(1)}" y1="${size - pad + 7}" x2="${(gxPx - 3).toFixed(1)}" y2="${size - pad + 15}" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                        <line x1="${(gxPx + 3).toFixed(1)}" y1="${size - pad + 7}" x2="${(gxPx + 3).toFixed(1)}" y2="${size - pad + 15}" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                    </g>
+                `;
+            }
+            if (guideYVisible) {
+                const gyPx = toPxY(guideY);
+                const downAttr = onPointerDownFn ? `onpointerdown="${onPointerDownFn}(event, 'y')"` : '';
+                guidesSvg += `
+                    <g class="guide-handle" ${downAttr}>
+                        <line x1="${pad}" y1="${gyPx.toFixed(1)}" x2="${size - pad}" y2="${gyPx.toFixed(1)}" stroke="${pal.guideLine}" stroke-width="2" stroke-dasharray="5,4" />
+                        <rect x="4" y="${(gyPx - 11).toFixed(1)}" width="20" height="22" rx="8" fill="${pal.guidePill}" />
+                        <line x1="10" y1="${(gyPx - 2.5).toFixed(1)}" x2="18" y2="${(gyPx - 2.5).toFixed(1)}" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                        <line x1="10" y1="${(gyPx + 2.5).toFixed(1)}" x2="18" y2="${(gyPx + 2.5).toFixed(1)}" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                    </g>
+                `;
+            }
+
+            // Active draggable point (for Tab 0: Begrepp & Graf)
+            let activePointSvg = '';
+            if (activePoint) {
+                const pPx = toPxX(activePoint.x);
+                const pPy = toPxY(activePoint.y);
+                const xAxisPx = toPxY(0);
+                const yAxisPx = toPxX(0);
+                const ptDownAttr = onPointDownFn ? `onpointerdown="${onPointDownFn}(event)"` : '';
+
+                if (activePoint.y >= minVal && activePoint.y <= maxVal) {
+                    activePointSvg += `
+                        <line x1="${pPx.toFixed(1)}" y1="${pPy.toFixed(1)}" x2="${pPx.toFixed(1)}" y2="${xAxisPx.toFixed(1)}" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,4" />
+                        <line x1="${pPx.toFixed(1)}" y1="${pPy.toFixed(1)}" x2="${yAxisPx.toFixed(1)}" y2="${pPy.toFixed(1)}" stroke="#e11d48" stroke-width="2" stroke-dasharray="4,4" />
+                        <g class="guide-handle" ${ptDownAttr}>
+                            <circle cx="${pPx.toFixed(1)}" cy="${pPy.toFixed(1)}" r="15" fill="transparent" />
+                            <circle cx="${pPx.toFixed(1)}" cy="${pPy.toFixed(1)}" r="7" fill="#7c3aed" stroke="#ffffff" stroke-width="2.5" />
+                        </g>
+                    `;
+                }
+            }
+
+            return `
+                <svg id="${svgId}" viewBox="0 0 ${size} ${size}" class="w-full h-full select-none" style="background-color: ${pal.gridBg};">
+                    ${gridLines}
+                    ${axisLabels}
+                    ${axisExtras}
+                    ${curvesSvg}
+                    ${labelsSvg}
+                    ${guidesSvg}
+                    ${activePointSvg}
+                </svg>
+            `;
+        }
+
+        function clientToSvgMathX(svgEl, clientX, minVal = -7, maxVal = 7) {
+            const rect = svgEl.getBoundingClientRect();
+            const size = 340;
+            const pad = 28;
+            const plotSize = size - 2 * pad;
+            const relX = ((clientX - rect.left) / rect.width) * size;
+            return minVal + ((relX - pad) / plotSize) * (maxVal - minVal);
+        }
+
+        function clientToSvgMathY(svgEl, clientY, minVal = -7, maxVal = 7) {
+            const rect = svgEl.getBoundingClientRect();
+            const size = 340;
+            const pad = 28;
+            const plotSize = size - 2 * pad;
+            const relY = ((clientY - rect.top) / rect.height) * size;
+            return maxVal - ((relY - pad) / plotSize) * (maxVal - minVal);
+        }
 
         /* ---------------- DROPDOWN GUIDE CONTROLS ---------------- */
         function toggleGuideDropdown(e) {
@@ -1005,7 +1225,7 @@
                 return;
             }
 
-            // Fas 1 keyboard support: 'x' or 'y' to answer, 'Enter' for next problem
+            // Fas 1 keyboard support
             if (activeTab === 1) {
                 const milestoneVisible = !document.getElementById('f1-milestone-banner').classList.contains('hidden');
                 if (milestoneVisible) return;
@@ -1023,7 +1243,7 @@
                 return;
             }
 
-            // Fas 2 Enter-to-next when problem is solved
+            // Fas 2 Enter-to-next
             if (activeTab === 2 && g1Answered && e.key === 'Enter') {
                 const milestoneVisible = !document.getElementById('g1-milestone-banner').classList.contains('hidden');
                 if (!milestoneVisible) {
@@ -1033,7 +1253,7 @@
                 return;
             }
 
-            // Fas 3 Enter-to-next when problem is solved
+            // Fas 3 Enter-to-next
             if (activeTab === 3 && pAnswered && e.key === 'Enter') {
                 const milestoneVisible = !document.getElementById('p-handoff-banner').classList.contains('hidden');
                 if (!milestoneVisible) {
@@ -1043,7 +1263,7 @@
                 return;
             }
 
-            // Fas 4 Enter-to-next when problem is solved
+            // Fas 4 Enter-to-next
             if (activeTab === 4 && f5Answered && e.key === 'Enter') {
                 const milestoneVisible = !document.getElementById('f5-celebration-banner').classList.contains('hidden');
                 if (!milestoneVisible) {
@@ -1102,9 +1322,9 @@
             }
 
             if (activeTab === 0) { drawExplorer(); renderTable(); }
-            else if (activeTab === 2) drawGame1Canvas();
-            else if (activeTab === 3) drawPractice();
-            else if (activeTab === 4) drawF5Canvas();
+            else if (activeTab === 2) drawGame1Svg();
+            else if (activeTab === 3) drawPracticeSvg();
+            else if (activeTab === 4) drawF5Svg();
         }
 
         function switchTab(tabIdx) {
@@ -1132,13 +1352,11 @@
                 else content.classList.add('hidden');
             });
 
-            setTimeout(() => {
-                if (tabIdx === 0) { resizeCanvas('exp-canvas'); drawExplorer(); renderTable(); }
-                else if (tabIdx === 1 && !f1Current) { nextFas1Question(); }
-                else if (tabIdx === 2) { resizeCanvas('g1-canvas'); drawGame1Canvas(); }
-                else if (tabIdx === 3) { resizeCanvas('p-canvas'); drawPractice(); }
-                else if (tabIdx === 4) { resizeCanvas('f5-canvas'); if (!f5CurrentProblem) loadDynamicF5Question(); else drawF5Canvas(); }
-            }, 40);
+            if (tabIdx === 0) { drawExplorer(); renderTable(); }
+            else if (tabIdx === 1 && !f1Current) { nextFas1Question(); }
+            else if (tabIdx === 2) { drawGame1Svg(); }
+            else if (tabIdx === 3) { drawPracticeSvg(); }
+            else if (tabIdx === 4) { if (!f5CurrentProblem) loadDynamicF5Question(); else drawF5Svg(); }
         }
 
         /* ---------------- TAB 0: BEGREPP & GRAF DEMO ---------------- */
@@ -1146,8 +1364,8 @@
             currentMachineFunc = key;
             ['f', 'g', 'h'].forEach(k => {
                 const btn = document.getElementById(`mfunc-${k}`);
-                if (k === key) btn.className = "mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold bg-indigo-600 text-white shadow";
-                else btn.className = "mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700";
+                if (k === key) btn.className = "mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold bg-indigo-600 text-white shadow mono";
+                else btn.className = "mfunc-btn px-3.5 py-1.5 rounded-xl text-base font-bold dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700 mono";
             });
 
             const fn = machineDefs[currentMachineFunc];
@@ -1196,9 +1414,9 @@
 
                 html += `
                     <tr onclick="setTablePoint(${x})" class="${rowClass}" id="t-row-${x}">
-                        <td class="p-2 text-center text-blue-600 dark:text-blue-400 font-semibold">${fmtNum(x)}</td>
-                        <td class="p-2 text-center">${calcStr}</td>
-                        <td class="p-2 text-center text-rose-600 dark:text-rose-400 font-semibold">${fmtNum(y)}</td>
+                        <td class="p-2 text-center text-sky-700 dark:text-sky-400 font-semibold mono">${fmtNum(x)}</td>
+                        <td class="p-2 text-center mono">${calcStr}</td>
+                        <td class="p-2 text-center text-rose-700 dark:text-rose-400 font-semibold mono">${fmtNum(y)}</td>
                     </tr>
                 `;
             }
@@ -1223,123 +1441,262 @@
             renderTable();
         }
 
-        /* ---------------- CANVAS DRAWING UTILITIES ---------------- */
-        function resizeCanvas(id) {
-            const c = document.getElementById(id);
-            if (!c || !c.parentElement) return;
-            const side = Math.min(c.parentElement.clientWidth, c.parentElement.clientHeight || 320);
-            c.width = side;
-            c.height = side;
-        }
-
-        function m2c(x, y, w, h, scale = 8) {
-            return {
-                cx: w / 2 + x * (w / (scale * 2)),
-                cy: h / 2 - y * (h / (scale * 2))
-            };
-        }
-
-        function c2m(cx, cy, w, h, scale = 8) {
-            return {
-                x: (cx - w / 2) / (w / (scale * 2)),
-                y: (h / 2 - cy) / (h / (scale * 2))
-            };
-        }
-
-        function drawGrid(ctx, w, h, scale = 8) {
-            ctx.clearRect(0, 0, w, h);
-            const stepX = w / (scale * 2);
-            const stepY = h / (scale * 2);
-
-            ctx.strokeStyle = isDarkMode ? '#334155' : '#cbd5e1';
-            ctx.lineWidth = isDarkMode ? 1.25 : 1.5;
-
-            for (let i = -scale; i <= scale; i++) {
-                if (i === 0) continue;
-                ctx.beginPath(); ctx.moveTo(w / 2 + i * stepX, 0); ctx.lineTo(w / 2 + i * stepX, h); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0, h / 2 - i * stepY); ctx.lineTo(w, h / 2 - i * stepY); ctx.stroke();
-            }
-
-            // Main Axes
-            ctx.lineWidth = 2.5;
-            ctx.strokeStyle = isDarkMode ? '#60a5fa' : '#2563eb';
-            ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
-
-            ctx.strokeStyle = isDarkMode ? '#fb7185' : '#e11d48';
-            ctx.beginPath(); ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h); ctx.stroke();
-
-            ctx.font = '600 14px "IBM Plex Sans", sans-serif';
-            ctx.fillStyle = isDarkMode ? '#f1f5f9' : '#0f172a';
-            for (let i = -scale; i <= scale; i += 2) {
-                if (i === 0) continue;
-                const lbl = fmtNum(i);
-                ctx.fillText(lbl, w / 2 + i * stepX - 8, h / 2 + 17);
-                ctx.fillText(lbl, w / 2 + 7, h / 2 - i * stepY + 5);
-            }
-        }
-
         function drawExplorer() {
-            const c = document.getElementById('exp-canvas');
-            if (!c) return;
-            const ctx = c.getContext('2d');
-            const w = c.width, h = c.height;
-
-            drawGrid(ctx, w, h, 8);
-
+            const container = document.getElementById('exp-svg-container');
+            if (!container) return;
             const fn = machineDefs[currentMachineFunc];
             const curY = fn.eval(expX);
 
-            ctx.strokeStyle = isDarkMode ? '#818cf8' : '#4f46e5';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            let first = true;
-            for (let px = 0; px <= w; px += 2) {
-                const mX = c2m(px, 0, w, h, 8).x;
-                const mY = fn.eval(mX);
-                const pt = m2c(mX, mY, w, h, 8);
-                if (first) { ctx.moveTo(pt.cx, pt.cy); first = false; }
-                else ctx.lineTo(pt.cx, pt.cy);
+            container.innerHTML = buildVectorGraphSvg({
+                svgId: 'exp-svg',
+                curves: [{ eval: fn.eval }],
+                minVal: -8,
+                maxVal: 8,
+                tickStep: 2,
+                activePoint: { x: expX, y: curY },
+                onPointDownFn: 'startExpPointDrag'
+            });
+
+            const svg = document.getElementById('exp-svg');
+            if (svg) {
+                svg.addEventListener('pointerdown', (e) => {
+                    startExpPointDrag(e);
+                });
             }
-            ctx.stroke();
-
-            const mainPt = m2c(expX, curY, w, h, 8);
-            const xPt = m2c(expX, 0, w, h, 8);
-            const yPt = m2c(0, curY, w, h, 8);
-
-            ctx.strokeStyle = isDarkMode ? '#3b82f6' : '#1d4ed8';
-            ctx.lineWidth = 2.5;
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath(); ctx.moveTo(mainPt.cx, mainPt.cy); ctx.lineTo(xPt.cx, xPt.cy); ctx.stroke();
-
-            ctx.strokeStyle = isDarkMode ? '#f43f5e' : '#be123c';
-            ctx.beginPath(); ctx.moveTo(mainPt.cx, mainPt.cy); ctx.lineTo(yPt.cx, yPt.cy); ctx.stroke();
-
-            ctx.setLineDash([]);
-
-            ctx.fillStyle = '#9333ea';
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2.5;
-            ctx.beginPath(); ctx.arc(mainPt.cx, mainPt.cy, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         }
 
-        function setupExpEvents() {
-            const c = document.getElementById('exp-canvas');
-            if (!c) return;
-            function move(e) {
-                if (!isExpDragging) return;
-                const rect = c.getBoundingClientRect();
-                const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                const mx = c2m(cx, 0, c.width, c.height, 8).x;
-                expX = Math.max(-6, Math.min(6, Math.round(mx)));
-                drawExplorer();
-                renderTable();
+        function startExpPointDrag(e) {
+            e.preventDefault();
+            function move(ev) {
+                const svg = document.getElementById('exp-svg');
+                if (!svg) return;
+                const mx = clientToSvgMathX(svg, ev.clientX, -8, 8);
+                const snapped = Math.max(-6, Math.min(6, Math.round(mx)));
+                if (snapped !== expX) {
+                    expX = snapped;
+                    drawExplorer();
+                    renderTable();
+                }
             }
-            c.addEventListener('mousedown', (e) => { isExpDragging = true; move(e); });
-            window.addEventListener('mousemove', move);
-            window.addEventListener('mouseup', () => { isExpDragging = false; });
-            c.addEventListener('touchstart', (e) => { isExpDragging = true; move(e); });
-            window.addEventListener('touchmove', move);
-            window.addEventListener('touchend', () => { isExpDragging = false; });
+            function up() {
+                window.removeEventListener('pointermove', move);
+                window.removeEventListener('pointerup', up);
+            }
+            move(e);
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
+        }
+
+        /* ---------------- SHARED CURVE GENERATOR (LINEAR -> NON-LINEAR: EXPONENTIAL, CUBIC, PARABOLA) ---------------- */
+        function isPointAllowedForStage(px, py, allowEqualAndZero) {
+            if (Math.abs(px) > 6 || Math.abs(py) > 6) return false;
+            if (!allowEqualAndZero) {
+                if (px === py) return false;
+                if (px === 0 || py === 0) return false;
+            }
+            return true;
+        }
+
+        function createFunctionTask(stageIndex, type, fnName) {
+            // stageIndex:
+            // 0..1 (Fas 2) or 0..2 (Fas 3): Linear, strictly no x === y and no x === 0 or y === 0
+            // 2..3 (Fas 2) or 3..4 (Fas 3): Non-linear (exponential, cubic, rational, parabola), avoiding x === y and 0 early
+            // 4+   (Fas 2) or 5+   (Fas 3): Full non-linear mix (including exponential, cubic, parabola, and x === y or 0 allowed)
+            const isNonLinear = stageIndex >= 2;
+            const allowEqualAndZero = stageIndex >= 4;
+
+            if (!isNonLinear) {
+                for (let attempt = 0; attempt < 150; attempt++) {
+                    const k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
+                    const m = Math.floor(Math.random() * 7) - 3;
+                    const px = Math.floor(Math.random() * 9) - 4; // -4..4
+                    const py = k * px + m;
+
+                    if (!isPointAllowedForStage(px, py, allowEqualAndZero)) continue;
+
+                    if (type === 'givenX') {
+                        return {
+                            isNonLinear: false,
+                            curveLabel: 'Rät linje',
+                            funcName: fnName,
+                            type: 'givenX',
+                            expr: `Bestäm ${fnName}(${fmtNum(px)})`,
+                            eval: (x) => k * x + m,
+                            val: px,
+                            targetAxis: 'x',
+                            numericAns: py,
+                            fullAns: `${fnName}(${fmtNum(px)}) = ${fmtNum(py)}`
+                        };
+                    } else {
+                        return {
+                            isNonLinear: false,
+                            curveLabel: 'Rät linje',
+                            funcName: fnName,
+                            type: 'givenY',
+                            expr: `Lös ekvationen ${fnName}(x) = ${fmtNum(py)}`,
+                            eval: (x) => k * x + m,
+                            val: py,
+                            targetAxis: 'y',
+                            numericAns: px,
+                            fullAns: `x = ${fmtNum(px)}`
+                        };
+                    }
+                }
+            }
+
+            // Non-linear curves: Exponential, Cubic (strictly monotonic -> 1-to-1!), and Parabola
+            const curveFamilies = ['exponential', 'cubic', 'exponential', 'parabola'];
+            for (let attempt = 0; attempt < 200; attempt++) {
+                const family = curveFamilies[(stageIndex + attempt) % curveFamilies.length];
+
+                if (family === 'exponential') {
+                    // Exponential: f(x) = a * 2^(x - h) + c  or  f(x) = a * 2^(-(x - h)) + c
+                    const dir = Math.random() < 0.5 ? 1 : -1;
+                    const a = Math.random() < 0.5 ? 1 : -1;
+                    const h = Math.floor(Math.random() * 5) - 2; // -2..2
+                    const c = a > 0 ? (Math.floor(Math.random() * 5) - 5) : (Math.floor(Math.random() * 5) + 1); // -5..-1 or 1..5
+                    const evalFn = (x) => a * Math.pow(2, dir * (x - h)) + c;
+
+                    const validPairs = [];
+                    for (let x = -5; x <= 5; x++) {
+                        const y = evalFn(x);
+                        if (Number.isInteger(y) && isPointAllowedForStage(x, y, allowEqualAndZero)) {
+                            validPairs.push({ x, y });
+                        }
+                    }
+                    if (validPairs.length === 0) continue;
+                    const chosen = validPairs[Math.floor(Math.random() * validPairs.length)];
+
+                    if (type === 'givenX') {
+                        return {
+                            isNonLinear: true,
+                            curveLabel: 'Exponentialfunktion',
+                            funcName: fnName,
+                            type: 'givenX',
+                            expr: `Bestäm ${fnName}(${fmtNum(chosen.x)})`,
+                            eval: evalFn,
+                            val: chosen.x,
+                            targetAxis: 'x',
+                            numericAns: chosen.y,
+                            fullAns: `${fnName}(${fmtNum(chosen.x)}) = ${fmtNum(chosen.y)}`
+                        };
+                    } else {
+                        return {
+                            isNonLinear: true,
+                            curveLabel: 'Exponentialfunktion',
+                            funcName: fnName,
+                            type: 'givenY',
+                            expr: `Lös ekvationen ${fnName}(x) = ${fmtNum(chosen.y)}`,
+                            eval: evalFn,
+                            val: chosen.y,
+                            targetAxis: 'y',
+                            numericAns: chosen.x,
+                            fullAns: `x = ${fmtNum(chosen.x)}`
+                        };
+                    }
+                } else if (family === 'cubic') {
+                    // Strictly monotonic cubic: f(x) = a * (x - h)^3 + k (always has a unique x for every y!)
+                    const a = Math.random() < 0.5 ? 1 : -1;
+                    const h = Math.floor(Math.random() * 5) - 2;
+                    const k = Math.floor(Math.random() * 7) - 3;
+                    const evalFn = (x) => a * Math.pow(x - h, 3) + k;
+
+                    const validPairs = [];
+                    for (let x = -5; x <= 5; x++) {
+                        const y = evalFn(x);
+                        if (Number.isInteger(y) && isPointAllowedForStage(x, y, allowEqualAndZero)) {
+                            validPairs.push({ x, y });
+                        }
+                    }
+                    if (validPairs.length === 0) continue;
+                    const chosen = validPairs[Math.floor(Math.random() * validPairs.length)];
+
+                    if (type === 'givenX') {
+                        return {
+                            isNonLinear: true,
+                            curveLabel: 'Tredjegradskurva',
+                            funcName: fnName,
+                            type: 'givenX',
+                            expr: `Bestäm ${fnName}(${fmtNum(chosen.x)})`,
+                            eval: evalFn,
+                            val: chosen.x,
+                            targetAxis: 'x',
+                            numericAns: chosen.y,
+                            fullAns: `${fnName}(${fmtNum(chosen.x)}) = ${fmtNum(chosen.y)}`
+                        };
+                    } else {
+                        return {
+                            isNonLinear: true,
+                            curveLabel: 'Tredjegradskurva',
+                            funcName: fnName,
+                            type: 'givenY',
+                            expr: `Lös ekvationen ${fnName}(x) = ${fmtNum(chosen.y)}`,
+                            eval: evalFn,
+                            val: chosen.y,
+                            targetAxis: 'y',
+                            numericAns: chosen.x,
+                            fullAns: `x = ${fmtNum(chosen.x)}`
+                        };
+                    }
+                } else {
+                    // Parabola: f(x) = a * (x - hShift)^2 + kShift (single vertex reading for givenY)
+                    const a = Math.random() < 0.5 ? 1 : -1;
+                    const hShift = Math.floor(Math.random() * 5) - 2;
+                    const kShift = a > 0 ? (Math.floor(Math.random() * 3) - 4) : (Math.floor(Math.random() * 3) + 2);
+                    const evalFn = (x) => a * Math.pow(x - hShift, 2) + kShift;
+
+                    if (type === 'givenX') {
+                        const candidateXs = [-4, -3, -2, -1, 0, 1, 2, 3, 4].filter(x => {
+                            const y = evalFn(x);
+                            return Number.isInteger(y) && isPointAllowedForStage(x, y, allowEqualAndZero);
+                        });
+                        if (candidateXs.length === 0) continue;
+                        const val = candidateXs[Math.floor(Math.random() * candidateXs.length)];
+                        const numericAns = evalFn(val);
+                        return {
+                            isNonLinear: true,
+                            curveLabel: 'Andragradskurva',
+                            funcName: fnName,
+                            type: 'givenX',
+                            expr: `Bestäm ${fnName}(${fmtNum(val)})`,
+                            eval: evalFn,
+                            val: val,
+                            targetAxis: 'x',
+                            numericAns: numericAns,
+                            fullAns: `${fnName}(${fmtNum(val)}) = ${fmtNum(numericAns)}`
+                        };
+                    } else {
+                        // Vertex point (hShift, kShift) has unique x solution
+                        if (!isPointAllowedForStage(hShift, kShift, allowEqualAndZero)) continue;
+                        return {
+                            isNonLinear: true,
+                            curveLabel: 'Andragradskurva',
+                            funcName: fnName,
+                            type: 'givenY',
+                            expr: `Lös ekvationen ${fnName}(x) = ${fmtNum(kShift)}`,
+                            eval: evalFn,
+                            val: kShift,
+                            targetAxis: 'y',
+                            numericAns: hShift,
+                            fullAns: `x = ${fmtNum(hShift)}`
+                        };
+                    }
+                }
+            }
+
+            // Fallback linear guaranteed non-equal non-zero
+            return {
+                isNonLinear: false,
+                curveLabel: 'Rät linje',
+                funcName: fnName,
+                type: 'givenX',
+                expr: `Bestäm ${fnName}(2)`,
+                eval: (x) => 2 * x + 1,
+                val: 2,
+                targetAxis: 'x',
+                numericAns: 5,
+                fullAns: `${fnName}(2) = 5`
+            };
         }
 
         /* ---------------- TAB 1: FAS 1 — BALANCED 50-50 & MAX 2 IN A ROW ---------------- */
@@ -1397,7 +1754,7 @@
             do {
                 attempts++;
                 fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
-                num = Math.floor(Math.random() * 17) - 8; // -8 to 8
+                num = Math.floor(Math.random() * 17) - 8;
                 sig = `${fnName}:${type}:${num}`;
             } while (sig === f1LastSignature && attempts < 30);
 
@@ -1425,7 +1782,7 @@
 
             const btnX = document.getElementById('f1-btn-x');
             const btnY = document.getElementById('f1-btn-y');
-            const baseClass = "py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 text-slate-900 dark:text-white hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm";
+            const baseClass = "py-4 px-8 rounded-xl border-2 dark:border-slate-700 border-slate-300 dark:bg-slate-900 bg-slate-50 text-slate-900 dark:text-white hover:border-indigo-500 hover:bg-indigo-600 hover:text-white text-3xl sm:text-4xl font-bold transition shadow-sm mono";
             btnX.className = baseClass;
             btnY.className = baseClass;
             btnX.disabled = false;
@@ -1449,12 +1806,12 @@
                 document.getElementById('f1-score').innerText = `Framsteg: ${f1Score} / ${f1Target}`;
 
                 const chosenBtn = selectedType === 'givenX' ? btnX : btnY;
-                chosenBtn.className = "py-4 px-8 rounded-xl border-2 border-emerald-500 bg-emerald-500 text-slate-950 text-3xl sm:text-4xl font-bold transition shadow-sm";
+                chosenBtn.className = "py-4 px-8 rounded-xl border-2 border-emerald-500 bg-emerald-500 text-slate-950 text-3xl sm:text-4xl font-bold transition shadow-sm mono";
                 btnX.disabled = true;
                 btnY.disabled = true;
 
                 fbBox.className = "w-full rounded-xl p-3.5 text-lg font-medium flex items-center justify-between gap-2 dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 dark:text-emerald-200 text-emerald-900";
-                fbText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i> Rätt! (<strong class="font-bold">${selectedType === 'givenX' ? 'x' : 'y'}</strong>)`;
+                fbText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i> Rätt! (<strong class="font-bold mono">${selectedType === 'givenX' ? 'x' : 'y'}</strong>)`;
 
                 if (f1Score >= f1Target && !f1MilestoneShown) {
                     unlockPhase2();
@@ -1464,7 +1821,7 @@
                 }
             } else {
                 const wrongBtn = selectedType === 'givenX' ? btnX : btnY;
-                wrongBtn.className = "py-4 px-8 rounded-xl border-2 border-rose-500 bg-rose-500/20 dark:text-rose-400 text-rose-700 text-3xl sm:text-4xl font-bold transition shadow-sm";
+                wrongBtn.className = "py-4 px-8 rounded-xl border-2 border-rose-500 bg-rose-500/20 dark:text-rose-400 text-rose-700 text-3xl sm:text-4xl font-bold transition shadow-sm mono";
                 fbBox.className = "w-full rounded-xl p-3.5 text-lg font-medium flex items-center justify-between gap-2 dark:bg-rose-950/90 bg-rose-100 border border-rose-500 dark:text-rose-200 text-rose-900";
                 fbText.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1.5"></i> Försök igen.`;
                 nextBtn.classList.add('hidden');
@@ -1482,51 +1839,53 @@
             nextFas1Question();
         }
 
-        /* ---------------- TAB 2: FAS 2 — 2. Guidad (4 STEPS) ---------------- */
+        /* ---------------- TAB 2: FAS 2 — 2. Guidad (LINEAR -> NON-LINEAR + PILL GUIDES) ---------------- */
+        function resetG1Step1And3ButtonsUI() {
+            const s1Base = "py-1.5 px-3 dark:bg-slate-950 bg-white text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-center text-xl font-bold transition mono";
+            document.getElementById('g1-s1-x-btn').className = s1Base;
+            document.getElementById('g1-s1-y-btn').className = s1Base;
+
+            document.getElementById('g1-s3-x-btn').className = "py-1.5 px-3 dark:bg-slate-950 bg-white border border-sky-500 rounded-xl text-center transition";
+            document.getElementById('g1-s3-x-btn').innerHTML = `<span class="block text-base sm:text-lg font-semibold text-sky-700 dark:text-sky-400">x-axeln</span>`;
+
+            document.getElementById('g1-s3-y-btn').className = "py-1.5 px-3 dark:bg-slate-950 bg-white border border-rose-500 rounded-xl text-center transition";
+            document.getElementById('g1-s3-y-btn').innerHTML = `<span class="block text-base sm:text-lg font-semibold text-rose-700 dark:text-rose-400">y-axeln</span>`;
+        }
+
         function generateNextFas2Question() {
             const type = (lastFas2Type === 'givenX') ? 'givenY' : 'givenX';
             lastFas2Type = type;
 
+            // g1Score: 0..1 = linear (no x===y or 0), 2..3 = non-linear (exp/cubic/parabola, no x===y or 0), 4+ = all
+            const stageIndex = g1Score;
             const fnNames = ['f', 'g', 'h'];
-            const fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
 
-            const k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
-            const m = Math.floor(Math.random() * 5) - 2;
+            let task, sig, attempts = 0;
+            do {
+                attempts++;
+                const fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
+                task = createFunctionTask(stageIndex, type, fnName);
+                sig = `${task.expr}:${task.fullAns}`;
+            } while (sig === lastFas2Signature && attempts < 20);
+            lastFas2Signature = sig;
 
-            let val, targetAxis, numericAns, expr, fullAns;
-
-            if (type === 'givenX') {
-                val = Math.floor(Math.random() * 5) - 2;
-                numericAns = k * val + m;
-                targetAxis = 'x';
-                expr = `Bestäm ${fnName}(${fmtNum(val)})`;
-                fullAns = `${fnName}(${fmtNum(val)}) = ${fmtNum(numericAns)}`;
-            } else {
-                numericAns = Math.floor(Math.random() * 5) - 2;
-                val = k * numericAns + m;
-                targetAxis = 'y';
-                expr = `Lös ekvationen ${fnName}(x) = ${fmtNum(val)}`;
-                fullAns = `x = ${fmtNum(numericAns)}`;
-            }
-
-            g1Current = {
-                funcName: fnName,
-                type: type,
-                expr: expr,
-                k: k,
-                m: m,
-                val: val,
-                targetAxis: targetAxis,
-                numericAns: numericAns,
-                fullAns: fullAns
-            };
-
+            g1Current = task;
             g1Step = 1;
             g1Answered = false;
             g1SentenceGiven = null;
             g1SentenceFind = null;
-            g1UserLineX = null;
-            g1UserLineY = null;
+            g1GuideX = 0;
+            g1GuideY = 0;
+            g1GuideXVisible = false;
+            g1GuideYVisible = false;
+
+            const badge = document.getElementById('g1-curve-badge');
+            badge.innerText = task.curveLabel;
+            if (task.isNonLinear) {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700';
+            } else {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-700';
+            }
 
             document.getElementById('g1-prompt-title').innerText = g1Current.expr;
             document.getElementById('g1-dyn-func-btn').innerText = `${g1Current.funcName}() =`;
@@ -1535,8 +1894,9 @@
             document.getElementById('g1-feedback-banner').classList.add('hidden');
             document.getElementById('g1-milestone-banner').classList.add('hidden');
             document.getElementById('g1-next-row').classList.remove('hidden');
-            document.getElementById('g1-canvas-hint').innerText = "Slutför steg 1–3 för att låsa upp hjälplinjen.";
+            document.getElementById('g1-canvas-hint').innerText = "Slutför steg 1–3 för att låsa upp hjälplinjerna.";
 
+            resetG1Step1And3ButtonsUI();
             resetG1SentenceButtonsUI();
 
             setG1StepState(1, 'active');
@@ -1544,13 +1904,13 @@
             setG1StepState(3, 'disabled');
             setG1StepState(4, 'disabled');
 
-            drawGame1Canvas();
+            drawGame1Svg();
         }
 
         function resetG1Helplines() {
-            g1UserLineX = null;
-            g1UserLineY = null;
-            drawGame1Canvas();
+            g1GuideX = 0;
+            g1GuideY = 0;
+            drawGame1Svg();
         }
 
         function setG1StepState(stepNum, state) {
@@ -1574,10 +1934,15 @@
             }
         }
 
-        // Step 1: Pure x or y
+        // Step 1: Pure x or y (keep chosen correct button highlighted in emerald)
         function answerG1Step1(selectedType) {
             if (!g1Current || g1Step !== 1) return;
             if (selectedType === g1Current.type) {
+                const winBtn = document.getElementById(selectedType === 'givenX' ? 'g1-s1-x-btn' : 'g1-s1-y-btn');
+                const loseBtn = document.getElementById(selectedType === 'givenX' ? 'g1-s1-y-btn' : 'g1-s1-x-btn');
+                winBtn.className = "py-1.5 px-3 bg-emerald-500 text-slate-950 border-2 border-emerald-600 rounded-xl text-center text-xl font-bold transition shadow-sm mono";
+                loseBtn.className = "py-1.5 px-3 dark:bg-slate-950 bg-white text-slate-400 dark:text-slate-600 border border-slate-300 dark:border-slate-800 rounded-xl text-center text-xl font-bold transition opacity-50 mono";
+
                 document.getElementById('g1-feedback-banner').classList.add('hidden');
                 setG1StepState(1, 'completed');
                 setG1StepState(2, 'active');
@@ -1587,9 +1952,9 @@
             }
         }
 
-        // Step 2: Sentence Fill-in
+        // Step 2: Sentence Fill-in (Original wording preserved, keep correct answers highlighted in emerald)
         function resetG1SentenceButtonsUI() {
-            const base = "px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition";
+            const base = "px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition mono";
             document.getElementById('g1-s2-given-x').className = base;
             document.getElementById('g1-s2-given-y').className = base + " border-l dark:border-slate-700 border-slate-300";
             document.getElementById('g1-s2-find-x').className = base;
@@ -1605,8 +1970,8 @@
                 g1SentenceFind = letter;
             }
 
-            const activeCls = "px-3.5 py-0.5 text-lg font-bold bg-indigo-600 text-white transition";
-            const inactiveLeft = "px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition";
+            const activeCls = "px-3.5 py-0.5 text-lg font-bold bg-indigo-600 text-white transition mono";
+            const inactiveLeft = "px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-900 dark:text-white hover:bg-indigo-600 hover:text-white transition mono";
             const inactiveRight = inactiveLeft + " border-l dark:border-slate-700 border-slate-300";
 
             document.getElementById('g1-s2-given-x').className = (g1SentenceGiven === 'x') ? activeCls : inactiveLeft;
@@ -1620,6 +1985,16 @@
                 const expectedFind = (g1Current.type === 'givenX') ? 'y' : 'x';
 
                 if (g1SentenceGiven === expectedGiven && g1SentenceFind === expectedFind) {
+                    const correctCls = "px-3.5 py-0.5 text-lg font-bold bg-emerald-500 text-slate-950 transition mono";
+                    const mutedLeft = "px-3.5 py-0.5 text-lg font-bold dark:bg-slate-950 bg-white text-slate-400 dark:text-slate-600 opacity-50 transition mono";
+                    const mutedRight = mutedLeft + " border-l dark:border-slate-700 border-slate-300";
+
+                    document.getElementById('g1-s2-given-x').className = (expectedGiven === 'x') ? correctCls : mutedLeft;
+                    document.getElementById('g1-s2-given-y').className = (expectedGiven === 'y') ? correctCls + " border-l dark:border-slate-700 border-slate-300" : mutedRight;
+
+                    document.getElementById('g1-s2-find-x').className = (expectedFind === 'x') ? correctCls : mutedLeft;
+                    document.getElementById('g1-s2-find-y').className = (expectedFind === 'y') ? correctCls + " border-l dark:border-slate-700 border-slate-300" : mutedRight;
+
                     document.getElementById('g1-feedback-banner').classList.add('hidden');
                     setG1StepState(2, 'completed');
                     setG1StepState(3, 'active');
@@ -1630,23 +2005,33 @@
             }
         }
 
-        // Step 3: Which axis to start on
+        // Step 3: Which axis to start on -> keep selected axis highlighted in emerald & unlock blue pill helper lines
         function answerG1Step3(axis) {
             if (!g1Current || g1Step !== 3) return;
             if (axis === g1Current.targetAxis) {
+                const xBtn = document.getElementById('g1-s3-x-btn');
+                const yBtn = document.getElementById('g1-s3-y-btn');
+                if (axis === 'x') {
+                    xBtn.className = "py-1.5 px-3 bg-emerald-500 border-2 border-emerald-600 rounded-xl text-center transition shadow-sm";
+                    xBtn.innerHTML = `<span class="block text-base sm:text-lg font-bold text-slate-950">x-axeln</span>`;
+                    yBtn.className = "py-1.5 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-800 rounded-xl text-center transition opacity-50";
+                } else {
+                    yBtn.className = "py-1.5 px-3 bg-emerald-500 border-2 border-emerald-600 rounded-xl text-center transition shadow-sm";
+                    yBtn.innerHTML = `<span class="block text-base sm:text-lg font-bold text-slate-950">y-axeln</span>`;
+                    xBtn.className = "py-1.5 px-3 dark:bg-slate-950 bg-white border border-slate-300 dark:border-slate-800 rounded-xl text-center transition opacity-50";
+                }
+
                 document.getElementById('g1-feedback-banner').classList.add('hidden');
                 setG1StepState(3, 'completed');
                 setG1StepState(4, 'active');
                 g1Step = 4;
 
-                if (g1Current.type === 'givenX') {
-                    g1UserLineX = 0; g1UserLineY = null;
-                    document.getElementById('g1-canvas-hint').innerText = "Dra den blå vertikala linjen till rätt x-värde.";
-                } else {
-                    g1UserLineY = 0; g1UserLineX = null;
-                    document.getElementById('g1-canvas-hint').innerText = "Dra den röda horisontella linjen till rätt y-värde.";
-                }
-                drawGame1Canvas();
+                g1GuideX = 0;
+                g1GuideY = 0;
+                g1GuideXVisible = true;
+                g1GuideYVisible = true;
+                document.getElementById('g1-canvas-hint').innerText = "Dra i de blå markörerna för att avläsa på axlarna.";
+                drawGame1Svg();
                 document.getElementById('g1-final-input').focus();
             } else {
                 showG1InlineError(g1Current.targetAxis === 'x' ? 
@@ -1705,13 +2090,9 @@
                 input.blur();
                 document.getElementById('g1-score').innerText = `Framsteg: ${g1Score} / ${g1TotalTarget}`;
 
-                if (g1Current.type === 'givenX' && g1UserLineY === null) g1UserLineY = 0;
-                else if (g1Current.type === 'givenY' && g1UserLineX === null) g1UserLineX = 0;
-                drawGame1Canvas();
-
                 setG1StepState(4, 'completed');
                 banner.className = "dark:bg-emerald-950/90 bg-emerald-100 border border-emerald-500 rounded-2xl p-3 text-base space-y-2 dark:text-emerald-200 text-emerald-900";
-                txt.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt! <strong class="font-bold">${g1Current.fullAns}</strong>`;
+                txt.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt! <strong class="font-bold mono">${g1Current.fullAns}</strong>`;
 
                 if (g1Score >= g1TotalTarget && !g1MilestoneShown) {
                     unlockPhase3();
@@ -1722,7 +2103,7 @@
             } else {
                 nextRow.classList.add('hidden');
                 banner.className = "dark:bg-rose-950/90 bg-rose-100 border border-rose-500 rounded-2xl p-3 text-base space-y-2 dark:text-rose-200 text-rose-900";
-                txt.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt: Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${g1Current.fullAns}</span>`;
+                txt.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt: Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold mono">${g1Current.fullAns}</span>`;
             }
         }
 
@@ -1737,142 +2118,92 @@
             generateNextFas2Question();
         }
 
-        function drawGame1Canvas() {
-            const c = document.getElementById('g1-canvas');
-            if (!c) return;
-            const ctx = c.getContext('2d');
-            const w = c.width, h = c.height;
+        function drawGame1Svg() {
+            const container = document.getElementById('g1-svg-container');
+            if (!container || !g1Current) return;
 
-            drawGrid(ctx, w, h, 8);
-            if (!g1Current) return;
-
-            ctx.strokeStyle = isDarkMode ? '#818cf8' : '#4f46e5';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            const p1 = m2c(-8, g1Current.k * (-8) + g1Current.m, w, h, 8);
-            const p2 = m2c(8, g1Current.k * 8 + g1Current.m, w, h, 8);
-            ctx.moveTo(p1.cx, p1.cy); ctx.lineTo(p2.cx, p2.cy); ctx.stroke();
-
-            ctx.setLineDash([5, 5]);
-            if (g1UserLineX !== null) {
-                const lineXPt = m2c(g1UserLineX, 0, w, h, 8);
-                const topPt = m2c(g1UserLineX, g1Current.k * g1UserLineX + g1Current.m, w, h, 8);
-                ctx.strokeStyle = isDarkMode ? '#3b82f6' : '#1d4ed8';
-                ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(lineXPt.cx, lineXPt.cy); ctx.lineTo(topPt.cx, topPt.cy); ctx.stroke();
-                ctx.fillStyle = '#2563eb';
-                ctx.beginPath(); ctx.arc(topPt.cx, topPt.cy, 7, 0, Math.PI * 2); ctx.fill();
-            }
-
-            if (g1UserLineY !== null) {
-                const lineYPt = m2c(0, g1UserLineY, w, h, 8);
-                const endPt = m2c((g1UserLineY - g1Current.m) / g1Current.k, g1UserLineY, w, h, 8);
-                ctx.strokeStyle = isDarkMode ? '#f43f5e' : '#be123c';
-                ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(lineYPt.cx, lineYPt.cy); ctx.lineTo(endPt.cx, endPt.cy); ctx.stroke();
-                ctx.fillStyle = '#e11d48';
-                ctx.beginPath(); ctx.arc(endPt.cx, endPt.cy, 7, 0, Math.PI * 2); ctx.fill();
-            }
-            ctx.setLineDash([]);
+            container.innerHTML = buildVectorGraphSvg({
+                svgId: 'g1-svg',
+                curves: [{ eval: g1Current.eval }],
+                minVal: -7,
+                maxVal: 7,
+                tickStep: 2,
+                guideX: g1GuideX,
+                guideY: g1GuideY,
+                guideXVisible: g1GuideXVisible,
+                guideYVisible: g1GuideYVisible,
+                onPointerDownFn: 'startG1GuideDrag'
+            });
         }
 
-        function setupG1CanvasEvents() {
-            const c = document.getElementById('g1-canvas');
-            if (!c) return;
-            function handleDrag(e) {
-                if (!activeDragLine || g1Step < 4) return;
-                const rect = c.getBoundingClientRect();
-                const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                const cy = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-                const mathPt = c2m(cx, cy, c.width, c.height, 8);
-
-                if (activeDragLine === 'x') {
-                    g1UserLineX = Math.max(-6, Math.min(6, Math.round(mathPt.x * 2) / 2));
-                    if (g1UserLineY === null) g1UserLineY = 0;
-                } else if (activeDragLine === 'y') {
-                    g1UserLineY = Math.max(-6, Math.min(6, Math.round(mathPt.y * 2) / 2));
-                    if (g1UserLineX === null) g1UserLineX = 0;
-                }
-                drawGame1Canvas();
-            }
-
-            function startDrag(e) {
-                if (g1Step < 4) return;
-                const rect = c.getBoundingClientRect();
-                const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                const cy = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-                const mathPt = c2m(cx, cy, c.width, c.height, 8);
-
-                if (g1Current.type === 'givenX') {
-                    if (g1UserLineY !== null && Math.abs(mathPt.y - g1UserLineY) < 1.5) activeDragLine = 'y';
-                    else activeDragLine = 'x';
+        function startG1GuideDrag(e, axis) {
+            e.preventDefault();
+            if (g1Step < 4) return;
+            function move(ev) {
+                const svg = document.getElementById('g1-svg');
+                if (!svg) return;
+                if (axis === 'x') {
+                    const mx = clientToSvgMathX(svg, ev.clientX, -7, 7);
+                    const snapped = Math.max(-6.5, Math.min(6.5, Math.round(mx * 2) / 2));
+                    if (snapped !== g1GuideX) {
+                        g1GuideX = snapped;
+                        drawGame1Svg();
+                    }
                 } else {
-                    if (g1UserLineX !== null && Math.abs(mathPt.x - g1UserLineX) < 1.5) activeDragLine = 'x';
-                    else activeDragLine = 'y';
+                    const my = clientToSvgMathY(svg, ev.clientY, -7, 7);
+                    const snapped = Math.max(-6.5, Math.min(6.5, Math.round(my * 2) / 2));
+                    if (snapped !== g1GuideY) {
+                        g1GuideY = snapped;
+                        drawGame1Svg();
+                    }
                 }
-                handleDrag(e);
             }
-
-            c.addEventListener('mousedown', startDrag);
-            window.addEventListener('mousemove', handleDrag);
-            window.addEventListener('mouseup', () => { activeDragLine = null; });
-            c.addEventListener('touchstart', startDrag);
-            window.addEventListener('touchmove', handleDrag);
-            window.addEventListener('touchend', () => { activeDragLine = null; });
+            function up() {
+                window.removeEventListener('pointermove', move);
+                window.removeEventListener('pointerup', up);
+            }
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
         }
 
-        /* ---------------- TAB 3: FAS 3 — 3. Direkt ---------------- */
+        /* ---------------- TAB 3: FAS 3 — 3. Direkt (LINEAR -> NON-LINEAR, NO HELPER LINES) ---------------- */
         function generateNextPractice() {
-            const fnName = ['f', 'g', 'h', 'k'][Math.floor(Math.random() * 4)];
-            const isStage2 = (pScore >= 3);
-            
-            let k, m, xVal, yVal, type, ansNum, ansStr;
+            const type = (lastFas3Type === 'givenX') ? 'givenY' : 'givenX';
+            lastFas3Type = type;
 
-            if (isStage2 && Math.random() < 0.45) {
-                if (Math.random() < 0.5) {
-                    type = 'givenX';
-                    k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
-                    m = Math.floor(Math.random() * 5) - 2;
-                    xVal = 0;
-                    ansNum = m;
-                    ansStr = `${fnName}(0) = ${fmtNum(ansNum)}`;
-                } else {
-                    type = 'givenY';
-                    k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
-                    ansNum = Math.floor(Math.random() * 5) - 2;
-                    m = -k * ansNum;
-                    yVal = 0;
-                    ansStr = `x = ${fmtNum(ansNum)}`;
-                }
-            } else {
-                type = Math.random() < 0.5 ? 'givenX' : 'givenY';
-                k = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
-                m = Math.floor(Math.random() * 5) - 2;
+            // pScore: 0..1 = linear (no x===y or 0), 2..3 = non-linear (exp/cubic/parabola, no x===y or 0), 4+ = all
+            const stageIndex = pScore;
+            const fnNames = ['f', 'g', 'h', 'k'];
 
-                if (type === 'givenX') {
-                    xVal = Math.floor(Math.random() * 5) - 2;
-                    ansNum = k * xVal + m;
-                    ansStr = `${fnName}(${fmtNum(xVal)}) = ${fmtNum(ansNum)}`;
-                } else {
-                    ansNum = Math.floor(Math.random() * 5) - 2;
-                    yVal = k * ansNum + m;
-                    ansStr = `x = ${fmtNum(ansNum)}`;
-                }
-            }
+            let task, sig, attempts = 0;
+            do {
+                attempts++;
+                const fnName = fnNames[Math.floor(Math.random() * fnNames.length)];
+                task = createFunctionTask(stageIndex, type, fnName);
+                sig = `${task.expr}:${task.fullAns}`;
+            } while (sig === lastFas3Signature && attempts < 20);
+            lastFas3Signature = sig;
 
             pCurrent = {
-                funcName: fnName,
-                type: type,
-                verb: type === 'givenX' ? 'Bestäm' : 'Lös ekvationen',
-                k: k,
-                m: m,
-                x: xVal,
-                y: yVal,
-                ansNum: ansNum,
-                ansStr: ansStr
+                isNonLinear: task.isNonLinear,
+                funcName: task.funcName,
+                type: task.type,
+                expr: task.expr,
+                eval: task.eval,
+                val: task.val,
+                ansNum: task.numericAns,
+                ansStr: task.fullAns
             };
 
             pAnswered = false;
+
+            const badge = document.getElementById('p-curve-badge');
+            badge.innerText = task.curveLabel;
+            if (task.isNonLinear) {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700';
+            } else {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-700';
+            }
 
             document.getElementById('p-next-banner').classList.add('hidden');
             document.getElementById('p-handoff-banner').classList.add('hidden');
@@ -1883,16 +2214,10 @@
             input.value = '';
             input.disabled = false;
 
-            const title = document.getElementById('p-question-title');
+            document.getElementById('p-question-title').innerText = pCurrent.expr;
             document.getElementById('p-dyn-func-btn').innerText = `${pCurrent.funcName}() =`;
 
-            if (pCurrent.type === 'givenX') {
-                title.innerText = `${pCurrent.verb} ${pCurrent.funcName}(${fmtNum(pCurrent.x)})`;
-            } else {
-                title.innerText = `${pCurrent.verb} ${pCurrent.funcName}(x) = ${fmtNum(pCurrent.y)}`;
-            }
-
-            drawPractice();
+            drawPracticeSvg();
             if (activeTab === 3) input.focus();
         }
 
@@ -1928,8 +2253,7 @@
             const msg = document.getElementById('p-feedback-msg');
             const nextRow = document.getElementById('p-next-row');
 
-            const givenVal = (pCurrent.type === 'givenX') ? pCurrent.x : pCurrent.y;
-            const isCorrect = validateMathNotation(userVal, pCurrent.type, pCurrent.funcName, givenVal, pCurrent.ansNum);
+            const isCorrect = validateMathNotation(userVal, pCurrent.type, pCurrent.funcName, pCurrent.val, pCurrent.ansNum);
 
             if (isCorrect) {
                 pAnswered = true;
@@ -1940,7 +2264,7 @@
                 document.getElementById('p-score').innerText = `Klarade: ${pScore} / 6`;
 
                 banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-3.5 text-base dark:text-emerald-200 text-emerald-900 space-y-2";
-                msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt svar! (<strong class="font-bold">${pCurrent.ansStr}</strong>)`;
+                msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt svar! (<strong class="font-bold mono">${pCurrent.ansStr}</strong>)`;
                 banner.classList.remove('hidden');
                 revertBanner.classList.add('hidden');
 
@@ -1953,7 +2277,7 @@
             } else {
                 pConsecutiveErrors++;
                 banner.className = "dark:bg-rose-950/80 bg-rose-100 border border-rose-500 rounded-2xl p-3.5 text-base dark:text-rose-200 text-rose-900 space-y-2";
-                msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt. Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${pCurrent.ansStr}</span>`;
+                msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt. Ange hela noteringen, t.ex. <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold mono">${pCurrent.ansStr}</span>`;
                 banner.classList.remove('hidden');
                 nextRow.classList.add('hidden');
 
@@ -1974,29 +2298,28 @@
             generateNextPractice();
         }
 
-        function drawPractice() {
-            const c = document.getElementById('p-canvas');
-            if (!c) return;
-            const ctx = c.getContext('2d');
-            const w = c.width, h = c.height;
+        function drawPracticeSvg() {
+            const container = document.getElementById('p-svg-container');
+            if (!container || !pCurrent) return;
 
-            drawGrid(ctx, w, h, 8);
-            if (!pCurrent) return;
-
-            ctx.strokeStyle = isDarkMode ? '#818cf8' : '#4f46e5';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            const p1 = m2c(-8, pCurrent.k * (-8) + pCurrent.m, w, h, 8);
-            const p2 = m2c(8, pCurrent.k * 8 + pCurrent.m, w, h, 8);
-            ctx.moveTo(p1.cx, p1.cy); ctx.lineTo(p2.cx, p2.cy); ctx.stroke();
+            container.innerHTML = buildVectorGraphSvg({
+                svgId: 'p-svg',
+                curves: [{ eval: pCurrent.eval }],
+                minVal: -7,
+                maxVal: 7,
+                tickStep: 2,
+                guideXVisible: false,
+                guideYVisible: false
+            });
         }
 
-        /* ---------------- TAB 4: FAS 4 — 4. Utmaning ---------------- */
+        /* ---------------- TAB 4: FAS 4 — 4. Utmaning (CRISP SVG + PILL HELPER LINES) ---------------- */
         function loadDynamicF5Question() {
             f5QIndex++;
             f5Step1Passed = false;
             f5Answered = false;
-            f5UserLineVal = 0;
+            f5GuideX = 0;
+            f5GuideY = 0;
 
             document.getElementById('f5-feedback-banner').classList.add('hidden');
             document.getElementById('f5-step1-error-banner').classList.add('hidden');
@@ -2009,20 +2332,18 @@
                 if (el) { el.value = ''; el.disabled = false; }
             });
 
-            const archetypes = ['parabola_dual', 'parabola_givenX', 'composite', 'equality'];
+            const archetypes = ['parabola_dual', 'composite', 'equality'];
             const chosenType = archetypes[f5QIndex % archetypes.length];
 
             if (chosenType === 'parabola_dual') {
                 setupF5ParabolaProblem();
-            } else if (chosenType === 'parabola_givenX') {
-                setupF5ParabolaGivenXProblem();
             } else if (chosenType === 'composite') {
                 setupF5CompositeProblem();
             } else {
                 setupF5EqualityProblem();
             }
 
-            drawF5Canvas();
+            drawF5Svg();
         }
 
         function setupF5ParabolaProblem() {
@@ -2040,10 +2361,9 @@
 
             f5CurrentProblem = {
                 type: 'parabola_dual',
-                startAxis: 'y',
-                exprHtml: `Lös ekvationen h(x) = ${fmtNum(targetY)}`,
+                exprHtml: `Lös ekvationen <span class="mono">h(x) = ${fmtNum(targetY)}</span>`,
                 desc: `Hitta alla x-värden där parabeln h(x) = ${fmtNum(targetY)}.`,
-                curves: [{ key: 'h', type: 'parabola', eval: (x) => a * Math.pow(x - hShift, 2) + kShift, color: '#818cf8', label: fnLabel }],
+                curves: [{ key: 'h', eval: (x) => a * Math.pow(x - hShift, 2) + kShift, color: '#0284c7', label: fnLabel }],
                 roots: [r1, r2],
                 ansStr: `x₁ = ${fmtNum(r1)} och x₂ = ${fmtNum(r2)}`
             };
@@ -2060,49 +2380,6 @@
             document.getElementById('f5-add-root-btn').classList.remove('hidden');
             isF5SecondInputActive = false;
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den röda horisontella linjen:";
-            document.getElementById('f5-input-x1').focus();
-        }
-
-        function setupF5ParabolaGivenXProblem() {
-            let a, hShift, inputX, kShift, yAns;
-            let attempts = 0;
-
-            do {
-                a = Math.random() < 0.5 ? 1 : -1;
-                hShift = Math.floor(Math.random() * 5) - 2;
-                inputX = Math.floor(Math.random() * 5) - 2;
-                kShift = a > 0 ? (Math.floor(Math.random() * 3) - 4) : (Math.floor(Math.random() * 3) + 2);
-                yAns = a * Math.pow(inputX - hShift, 2) + kShift;
-                attempts++;
-            } while ((yAns === inputX || yAns < -6 || yAns > 6) && attempts < 50);
-
-            const fnLabel = `h(x) = ${a < 0 ? MINUS : ''}(x ${hShift >= 0 ? MINUS + ' ' + hShift : '+ ' + Math.abs(hShift)})² ${kShift >= 0 ? '+ ' + kShift : MINUS + ' ' + Math.abs(kShift)}`;
-
-            f5CurrentProblem = {
-                type: 'parabola_givenX',
-                startAxis: 'x',
-                exprHtml: `Bestäm h(${fmtNum(inputX)})`,
-                desc: `Läs av y-värdet för parabeln vid x = ${fmtNum(inputX)}.`,
-                inputX: inputX,
-                curves: [{ key: 'h', type: 'parabola', eval: (x) => a * Math.pow(x - hShift, 2) + kShift, color: '#818cf8', label: fnLabel }],
-                roots: [yAns],
-                ansStr: `h(${fmtNum(inputX)}) = ${fmtNum(yAns)}`
-            };
-
-            document.getElementById('f5-title').innerHTML = f5CurrentProblem.exprHtml;
-            document.getElementById('f5-prompt-desc').innerText = f5CurrentProblem.desc;
-
-            document.getElementById('f5-composite-workflow').classList.add('hidden');
-            document.getElementById('f5-standard-workflow').classList.remove('hidden');
-            document.getElementById('f5-submit-btn').classList.remove('hidden');
-
-            document.getElementById('f5-label-x1').innerText = `h(${fmtNum(inputX)}) =`;
-            document.getElementById('f5-box-x2').classList.add('hidden');
-            document.getElementById('f5-add-root-btn').classList.add('hidden');
-            isF5SecondInputActive = false;
-
-            document.getElementById('f5-canvas-title').innerText = "Dra den blå vertikala linjen:";
             document.getElementById('f5-input-x1').focus();
         }
 
@@ -2132,16 +2409,15 @@
 
             f5CurrentProblem = {
                 type: 'composite',
-                startAxis: 'x',
-                exprHtml: `Bestäm g(f(${fmtNum(inputX)}))`,
+                exprHtml: `Bestäm <span class="mono">g(f(${fmtNum(inputX)}))</span>`,
                 desc: `Utvärdera den inre funktionen f(${fmtNum(inputX)}) på den blå linjen först.`,
                 inputX: inputX,
                 innerVal: innerVal,
                 wrongInnerVal: wrongInnerVal,
                 finalAns: finalAns,
                 curves: [
-                    { key: 'f', type: 'linear', k: f_k, m: f_m, color: '#3b82f6', label: `f(x) = ${f_k === -1 ? MINUS : ''}x ${f_m >= 0 ? '+ ' + f_m : MINUS + ' ' + Math.abs(f_m)}` },
-                    { key: 'g', type: 'parabola', eval: (x) => x*x + g_c, color: '#f59e0b', label: `g(x) = x² ${g_c >= 0 ? '+ ' + g_c : MINUS + ' ' + Math.abs(g_c)}` }
+                    { key: 'f', eval: (x) => f_k * x + f_m, color: '#0284c7', labelX: -3.2, label: `f(x)` },
+                    { key: 'g', eval: (x) => x * x + g_c, color: '#d97706', labelX: 2.1, label: `g(x)` }
                 ],
                 ansStr: `g(f(${fmtNum(inputX)})) = ${fmtNum(finalAns)}`
             };
@@ -2163,7 +2439,6 @@
             step2Box.className = "dark:bg-slate-900 bg-slate-100 border dark:border-slate-800 border-slate-300 rounded-2xl p-3 space-y-2 opacity-40 pointer-events-none transition";
             document.getElementById('f5-cstep2-prefix').innerText = `g(f(${fmtNum(inputX)})) =`;
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den blå vertikala linjen:";
             document.getElementById('f5-input-cstep1').focus();
         }
 
@@ -2185,11 +2460,11 @@
                 document.getElementById('f5-cstep2-label').innerText = `Bra! f(${fmtNum(p.inputX)}) = ${fmtNum(p.innerVal)}. Steg 2: Bestäm g(${fmtNum(p.innerVal)})`;
                 document.getElementById('f5-input-cstep2').focus();
 
-                drawF5Canvas();
+                drawF5Svg();
             } else {
                 errBanner.classList.remove('hidden');
                 if (val === p.wrongInnerVal) {
-                    errText.innerHTML = `Du läste av värdet på <strong class="font-semibold">g(x)</strong> (gula kurvan)! Läs först av värdet på <strong class="font-semibold">f(x)</strong> (blå kurvan).`;
+                    errText.innerHTML = `Du läste av värdet på <strong class="font-semibold">g(x)</strong> (gula kurvan)! Läs först av värdet på <strong class="font-semibold">f(x)</strong> (blå linjen).`;
                 } else {
                     errText.innerHTML = `Läs av x = ${fmtNum(p.inputX)} på den blå linjen f(x) för att hitta det inre värdet.`;
                 }
@@ -2210,13 +2485,12 @@
 
             f5CurrentProblem = {
                 type: 'equality',
-                startAxis: 'x',
-                exprHtml: `För vilket x gäller:<br><span class="dark:text-amber-400 text-amber-600 font-bold">f(x) = g(x)?</span>`,
+                exprHtml: `För vilket x gäller:<br><span class="dark:text-amber-400 text-amber-600 font-bold mono">f(x) = g(x)?</span>`,
                 desc: `Läs av x-koordinaten där graferna f(x) och g(x) skär varandra.`,
                 roots: [targetX],
                 curves: [
-                    { key: 'f', type: 'linear', k: 1, m: m1, color: '#3b82f6', label: `f(x)` },
-                    { key: 'g', type: 'linear', k: -1, m: m2, color: '#f43f5e', label: `g(x)` }
+                    { key: 'f', eval: (x) => x + m1, color: '#0284c7', labelX: -3.2, label: `f(x)` },
+                    { key: 'g', eval: (x) => -x + m2, color: '#e11d48', labelX: 2.5, label: `g(x)` }
                 ],
                 ansStr: `x = ${fmtNum(targetX)}`
             };
@@ -2232,7 +2506,6 @@
             document.getElementById('f5-box-x2').classList.add('hidden');
             document.getElementById('f5-add-root-btn').classList.add('hidden');
 
-            document.getElementById('f5-canvas-title').innerText = "Dra den blå vertikala linjen:";
             document.getElementById('f5-input-x1').focus();
         }
 
@@ -2248,8 +2521,9 @@
         }
 
         function resetF5Helplines() {
-            f5UserLineVal = 0;
-            drawF5Canvas();
+            f5GuideX = 0;
+            f5GuideY = 0;
+            drawF5Svg();
         }
 
         function checkF5Answer() {
@@ -2271,14 +2545,6 @@
                 const userVal = toAsciiMinus(document.getElementById('f5-input-x1').value.trim());
                 const clean = userVal.replace(/\s+/g, '').toLowerCase();
                 isCorrect = (clean === q.roots[0].toString() || clean === `x=${q.roots[0]}`);
-            } else if (q.type === 'parabola_givenX') {
-                const userVal = toAsciiMinus(document.getElementById('f5-input-x1').value.trim());
-                const numericInput = parseFloat(userVal);
-                
-                const isBareNumberCorrect = !isNaN(numericInput) && numericInput === q.roots[0];
-                const isFullNotationCorrect = validateMathNotation(userVal, 'givenX', 'h', q.inputX, q.roots[0]);
-                
-                isCorrect = isBareNumberCorrect || isFullNotationCorrect;
             }
 
             processF5Result(isCorrect);
@@ -2303,7 +2569,7 @@
 
                 document.getElementById('f5-score').innerText = `Klarade: ${f5Score} / 6`;
                 banner.className = "dark:bg-emerald-950/80 bg-emerald-100 border border-emerald-500 rounded-2xl p-3 text-base dark:text-emerald-200 text-emerald-900 space-y-2";
-                msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt! <strong class="font-bold">${q.ansStr}</strong>`;
+                msg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i> Rätt! <strong class="font-bold mono">${q.ansStr}</strong>`;
 
                 if (f5Score >= 6 && !f5MilestoneShown) {
                     showFas4Milestone();
@@ -2318,7 +2584,7 @@
                 if (q.type === 'parabola_dual' && !isF5SecondInputActive) {
                     msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Glöm inte den andra roten: Klicka på '+ Lägg till lösning'.`;
                 } else {
-                    msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt: Kontrollera avläsningen. Rätt format: <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold">${q.ansStr}</span>`;
+                    msg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i> Inte riktigt: Kontrollera avläsningen. Rätt format: <span class="bg-rose-200/50 dark:bg-rose-900/50 px-2 py-0.5 rounded font-bold mono">${q.ansStr}</span>`;
                 }
 
                 nextBtn.disabled = true;
@@ -2345,91 +2611,51 @@
             loadDynamicF5Question();
         }
 
-        function drawF5Canvas() {
-            const c = document.getElementById('f5-canvas');
-            if (!c) return;
-            const ctx = c.getContext('2d');
-            const w = c.width, h = c.height;
+        function drawF5Svg() {
+            const container = document.getElementById('f5-svg-container');
+            if (!container || !f5CurrentProblem) return;
 
-            drawGrid(ctx, w, h, 8);
-            const q = f5CurrentProblem;
-            if (!q) return;
-
-            q.curves.forEach(curve => {
-                ctx.strokeStyle = curve.color;
-                ctx.lineWidth = 3.5;
-                ctx.beginPath();
-                let first = true;
-
-                for (let px = 0; px <= w; px += 2) {
-                    const mX = c2m(px, 0, w, h, 8).x;
-                    let mY = (curve.type === 'linear') ? (curve.k * mX + curve.m) : curve.eval(mX);
-                    const pt = m2c(mX, mY, w, h, 8);
-                    if (first) { ctx.moveTo(pt.cx, pt.cy); first = false; }
-                    else ctx.lineTo(pt.cx, pt.cy);
-                }
-                ctx.stroke();
-            });
-
-            ctx.setLineDash([5, 5]);
-            if (q.startAxis === 'y') {
-                const lineYPt = m2c(0, f5UserLineVal, w, h, 8);
-                ctx.strokeStyle = isDarkMode ? '#f43f5e' : '#be123c';
-                ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(0, lineYPt.cy); ctx.lineTo(w, lineYPt.cy); ctx.stroke();
-            } else {
-                const lineXPt = m2c(f5UserLineVal, 0, w, h, 8);
-                ctx.strokeStyle = isDarkMode ? '#3b82f6' : '#1d4ed8';
-                ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(lineXPt.cx, 0); ctx.lineTo(lineXPt.cx, h); ctx.stroke();
-            }
-            ctx.setLineDash([]);
-
-            q.curves.forEach(curve => {
-                ctx.font = '600 14px "IBM Plex Sans", sans-serif';
-                const labelX = 2.0;
-                const labelY = (curve.type === 'linear') ? (curve.k * labelX + curve.m) : curve.eval(labelX);
-                const lblPt = m2c(labelX, labelY, w, h, 8);
-                const textW = ctx.measureText(curve.label).width;
-                
-                ctx.fillStyle = isDarkMode ? '#0f172a' : '#ffffff';
-                ctx.fillRect(lblPt.cx + 2, lblPt.cy - 20, textW + 12, 23);
-                ctx.strokeStyle = curve.color;
-                ctx.lineWidth = 1.5;
-                ctx.strokeRect(lblPt.cx + 2, lblPt.cy - 20, textW + 12, 23);
-
-                ctx.fillStyle = curve.color;
-                ctx.fillText(curve.label, lblPt.cx + 8, lblPt.cy - 4);
+            container.innerHTML = buildVectorGraphSvg({
+                svgId: 'f5-svg',
+                curves: f5CurrentProblem.curves,
+                minVal: -7,
+                maxVal: 7,
+                tickStep: 2,
+                guideX: f5GuideX,
+                guideY: f5GuideY,
+                guideXVisible: true,
+                guideYVisible: true,
+                onPointerDownFn: 'startF5GuideDrag'
             });
         }
 
-        function setupF5Events() {
-            const c = document.getElementById('f5-canvas');
-            if (!c) return;
-
-            function move(e) {
-                if (!f5ActiveDrag || !f5CurrentProblem) return;
-                const rect = c.getBoundingClientRect();
-                const q = f5CurrentProblem;
-
-                if (q.startAxis === 'y') {
-                    const cy = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-                    const mathY = c2m(0, cy, c.width, c.height, 8).y;
-                    f5UserLineVal = Math.max(-6, Math.min(6, Math.round(mathY * 2) / 2));
+        function startF5GuideDrag(e, axis) {
+            e.preventDefault();
+            function move(ev) {
+                const svg = document.getElementById('f5-svg');
+                if (!svg) return;
+                if (axis === 'x') {
+                    const mx = clientToSvgMathX(svg, ev.clientX, -7, 7);
+                    const snapped = Math.max(-6.5, Math.min(6.5, Math.round(mx * 2) / 2));
+                    if (snapped !== f5GuideX) {
+                        f5GuideX = snapped;
+                        drawF5Svg();
+                    }
                 } else {
-                    const cx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                    const mathX = c2m(cx, 0, c.width, c.height, 8).x;
-                    f5UserLineVal = Math.max(-6, Math.min(6, Math.round(mathX * 2) / 2));
+                    const my = clientToSvgMathY(svg, ev.clientY, -7, 7);
+                    const snapped = Math.max(-6.5, Math.min(6.5, Math.round(my * 2) / 2));
+                    if (snapped !== f5GuideY) {
+                        f5GuideY = snapped;
+                        drawF5Svg();
+                    }
                 }
-                drawF5Canvas();
             }
-
-            c.addEventListener('mousedown', (e) => { f5ActiveDrag = true; move(e); });
-            window.addEventListener('mousemove', move);
-            window.addEventListener('mouseup', () => { f5ActiveDrag = false; });
-            c.addEventListener('touchstart', (e) => { f5ActiveDrag = true; move(e); });
-            window.addEventListener('touchmove', move);
-            window.addEventListener('touchend', () => { f5ActiveDrag = false; });
+            function up() {
+                window.removeEventListener('pointermove', move);
+                window.removeEventListener('pointerup', up);
+            }
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
         }
 
         /* ---------------- INPUT KEYDOWN & SMART SPACING INIT ---------------- */
@@ -2488,23 +2714,12 @@
 
         /* ---------------- INIT ON WINDOW LOAD ---------------- */
         window.onload = function() {
-            window.addEventListener('resize', () => {
-                if (activeTab === 0) { resizeCanvas('exp-canvas'); drawExplorer(); renderTable(); }
-                else if (activeTab === 2) { resizeCanvas('g1-canvas'); drawGame1Canvas(); }
-                else if (activeTab === 3) { resizeCanvas('p-canvas'); drawPractice(); }
-                else if (activeTab === 4) { resizeCanvas('f5-canvas'); drawF5Canvas(); }
-            });
-
-            setupExpEvents();
-            setupG1CanvasEvents();
-            setupF5Events();
             setupInputListeners();
 
             nextFas1Question();
             generateNextFas2Question();
             generateNextPractice();
 
-            resizeCanvas('exp-canvas');
             selectMachineFunc('f');
         };
     </script>
